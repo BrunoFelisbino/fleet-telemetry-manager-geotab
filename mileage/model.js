@@ -27,7 +27,7 @@ function range(preset,customStart,customEnd,clock=new Date()){
   const now=new Date(clock);
   let from,to;
   if(preset==='current'){from=localDate(now.getFullYear(),now.getMonth(),1);to=now;}
-  else if(preset==='previous'){from=localDate(now.getFullYear(),now.getMonth()-1,1);to=localDate(now.getFullYear(),now.getMonth(),1);}
+  else if(preset==='previous'){from=localDate(now.getFullYear(),now.getMonth()-1,1);to=new Date(localDate(now.getFullYear(),now.getMonth(),1).getTime()-1);}
   else if(preset==='custom'){from=new Date(customStart);to=new Date(customEnd);}
   else if(['7','30','90'].includes(String(preset))){to=now;from=new Date(now.getTime()-Number(preset)*MS_DAY);}
   else throw Error('Selecione um período válido.');
