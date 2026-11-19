@@ -22,3 +22,4 @@ jobs:
           node scripts/verify.mjs
           node scripts/verify-incidents.mjs
           node scripts/verify-mileage.mjs
+          node scripts/verify-mileage-pdf.mjs
