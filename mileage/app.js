@@ -81,6 +81,8 @@ function invalidate(){
   $('cancelBtn').hidden=true;$('loadBtn').disabled=false;
   $('groupCsv').disabled=true;$('vehicleCsv').disabled=true;$('pdfBtn').disabled=true;
   $('progressWrap').hidden=true;
+  resetVisual();
+  $('scope').textContent='Filtros alterados. Clique em Consultar para carregar os dados da nova seleção.';
   $('status').textContent=api?'Filtros alterados':'Aguardando MyGeotab';
   message('Filtros alterados. Clique em Consultar para atualizar os resultados.');
 }
