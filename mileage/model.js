@@ -3,7 +3,7 @@
 'use strict';
 const MS_DAY=86400000;
 function id(v){return v&&typeof v==='object'?String(v.id||''):String(v||'');}
-function isActive(d,at=new Date()){return !d.activeTo||new Date(d.activeTo)>at;}
+function isActive(d,at=new Date()){return (!d.activeFrom||new Date(d.activeFrom)<=at)&&(!d.activeTo||new Date(d.activeTo)>at);}
 function groupMembers(groupId,groups){
   if(!groupId)return null;
   const index=new Map((groups||[]).map(g=>[String(g.id),g]));
