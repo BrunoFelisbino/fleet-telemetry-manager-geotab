@@ -57,3 +57,7 @@
  #app .filter-hint{grid-column:span 2}
  #app .filter-chips{max-width:100%}
 }
+
+/* Specificity guard: global bar-label grid rules must not affect checkbox rows. */
+#app .mileage-filters .filter-multi .picker-option{display:flex;flex:none;min-width:0;flex-direction:row;align-items:center;gap:10px;font-size:12px;font-weight:500;color:var(--txt)}
+#app .mileage-filters .filter-multi .picker-option input[type="checkbox"]{width:16px;height:16px;min-width:16px;flex:none;padding:0;cursor:pointer}
