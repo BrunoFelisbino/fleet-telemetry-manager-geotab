@@ -94,7 +94,7 @@ function summarizeVehicle(device,trips,period){
 }
 function primaryGroup(vehicle,groups,selectedGroup){
   if(Array.isArray(selectedGroup)){const matched=selectedGroupForVehicle(vehicle,groups,selectedGroup);if(matched)return matched;}
-  if(selectedGroup){const group=(groups||[]).find(g=>String(g.id)===String(selectedGroup));return {id:String(selectedGroup),name:group?String(group.name):String(selectedGroup)};}
+  if(typeof selectedGroup==='string'&&selectedGroup){const group=(groups||[]).find(g=>String(g.id)===String(selectedGroup));return {id:String(selectedGroup),name:group?String(group.name):String(selectedGroup)};}
   const map=new Map((groups||[]).map(g=>[String(g.id),g]));
   const attached=vehicle.groups.filter(g=>map.has(String(g))&&g!=='GroupCompanyId');
   if(attached.length===0)return{id:'none',name:'Sem grupo definido'};
