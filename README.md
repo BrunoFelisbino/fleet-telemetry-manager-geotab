@@ -1,5 +1,16 @@
 # Fleet Telemetry Manager (MyGeotab Add-In)
 
+## Diagnóstico de regressão e correção do carregador · v0.4.4
+
+A versão original do Trip 360 funcionava como Add-In independente e possuía um único script de inicialização no HTML. Durante a unificação, os recursos JavaScript foram embutidos em blocos separados no HTML; isso é uma possível causa de o MyGeotab renderizar a mensagem `Carregando Fleet Trip 360...` sem executar o ciclo de vida da página. **Essa causa ainda precisa de validação em uma sessão real.**
+
+A v0.4.4 mantém uma única instalação `fleetTelemetryManager`, com seis páginas e todas as URLs no domínio sem hífens, mas combina o JavaScript de cada página em **um único `<script>` em ordem definida**, executado após o HTML. Inclui testes estáticos para garantir um script por página e simulação do ciclo de vida `initialize/focus/blur`. Para o Trip 360, o teste confirma que `initialize` chama o callback e substitui o texto `Carregando` por uma interface.
+
+Para diagnosticar em operação, cada módulo registra no Console `[Fleet TM v0.4.4]` ao executar seu script. Ausência dessa linha indica que a página foi inserida, mas o JavaScript não foi executado. Os avisos de Osano, Sentry e Pendo são do MyGeotab ou extensões e não provam falha no Trip.
+
+**Publicação:** o manifesto deve ser substituído na instalação existente pelo v0.4.4 depois que a hospedagem servir a nova versão. Um merge no GitHub não garante atualização da Vercel se o limite diário de builds estiver esgotado. Verificar o deploy e testar no MyGeotab antes de afirmar resolução.
+
+
 ## Correção de abertura no MyGeotab · v0.4.3
 
 A instalação continua sendo **um único Fleet Telemetry Manager**, com seis páginas no mesmo manifesto. Não é necessário criar seis Add-Ins separados.
