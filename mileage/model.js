@@ -22,6 +22,27 @@ function devicesInScope(devices,groups,groupId,vehicleId){
   return (devices||[]).filter(d=>isActive(d)).filter(d=>!allowed||(d.groups||[]).some(g=>allowed.has(id(g))))
     .filter(d=>!vehicleId||String(d.id)===String(vehicleId));
 }
+function devicesInMultiScope(devices,groups,selectedGroups,selectedVehicles){
+  const groupIds=[...new Set((selectedGroups||[]).map(id).filter(Boolean))];
+  const vehicleIds=new Set((selectedVehicles||[]).map(id).filter(Boolean));
+  const allowed=groupIds.length?new Set():null;
+  if(allowed)for(const groupId of groupIds)for(const member of groupMembers(groupId,groups)||[])allowed.add(member);
+  return (devices||[]).filter(d=>isActive(d)).filter(d=>
+    !allowed||(d.groups||[]).some(g=>allowed.has(id(g)))
+  ).filter(d=>!vehicleIds.size||vehicleIds.has(String(d.id)));
+}
+function selectedGroupForVehicle(vehicle,groups,selectedGroups){
+  const selected=[...new Set((selectedGroups||[]).map(id).filter(Boolean))];
+  if(!selected.length)return null;
+  const attached=new Set(vehicle.groups||[]);
+  const matching=selected.filter(g=>[...groupMembers(g,groups)].some(member=>attached.has(member)));
+  if(matching.length>1)return {id:'multiple',name:'Múltiplos grupos selecionados'};
+  if(matching.length===1){
+    const group=groups.find(g=>String(g.id)===matching[0]);
+    return {id:matching[0],name:group?String(group.name):matching[0]};
+  }
+  return {id:'unassigned-selected',name:'Grupo não identificado'};
+}
 function localDate(y,m,d){return new Date(y,m,d,0,0,0,0);}
 function range(preset,customStart,customEnd,clock=new Date()){
   const now=new Date(clock);
@@ -72,6 +93,7 @@ function summarizeVehicle(device,trips,period){
     boundaryTrips:overlap,odoStart:odometerStart,odoEnd:odometerEnd,odoOrigin:odometerOrigin};
 }
 function primaryGroup(vehicle,groups,selectedGroup){
+  if(Array.isArray(selectedGroup)){const matched=selectedGroupForVehicle(vehicle,groups,selectedGroup);if(matched)return matched;}
   if(selectedGroup){const group=(groups||[]).find(g=>String(g.id)===String(selectedGroup));return {id:String(selectedGroup),name:group?String(group.name):String(selectedGroup)};}
   const map=new Map((groups||[]).map(g=>[String(g.id),g]));
   const attached=vehicle.groups.filter(g=>map.has(String(g))&&g!=='GroupCompanyId');
@@ -97,5 +119,5 @@ function summarizeFleet(devices,data,groups,selectedGroup){
     withOdometer:odometerAvailable,boundaryTrips:boundary,vehiclesRows:rows.slice().sort((a,b)=>b.km-a.km),
     groupsRows:[...buckets.values()].sort((a,b)=>b.km-a.km)};
 }
-root.FleetMileageModel={MS_DAY,id,isActive,groupMembers,devicesInScope,range,tripIdentity,boundaryTrip,summarizeVehicle,summarizeFleet};
+root.FleetMileageModel={MS_DAY,id,isActive,groupMembers,devicesInScope,devicesInMultiScope,range,tripIdentity,boundaryTrip,summarizeVehicle,summarizeFleet};
 })(typeof globalThis!=='undefined'?globalThis:this);
