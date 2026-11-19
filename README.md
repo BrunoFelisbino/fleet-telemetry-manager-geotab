@@ -46,7 +46,10 @@ Nova página \`/mileage/\`, separada para não sobrecarregar o painel geral com 
 - Escala: uma consulta por veículo, com ritmo moderado, três consultas em paralelo e divisão recursiva de intervalos que atinjam o limite de registros. Não existe corte artificial em 50 veículos nesta nova página; o processo demora conforme tamanho da frota e volume de dados.
 - Se alguma consulta falhar ou vier truncada, a página **não publica total parcial** como resultado completo. Há progresso visual e cancelamento.
 - Viagens que cruzam as datas de corte são consideradas integralmente. O sistema alerta sobre este limite; o cálculo exato do trecho da viagem dentro do filtro exige leituras de odômetro/telemetria nos limites do período.
-- A classificação por grupo é exclusiva. Dispositivos associados a vários grupos aparecem sob "Múltiplos grupos" na visão da frota total.
+- **Explorar um grupo no resultado:** depois da consulta de vários grupos, clique na barra ou na linha do grupo em **KM por grupo operacional**. Os outros ficam opacos e todos os demais KPIs, gráfico diário, Top 5 e ranking de veículos passam a considerar somente os veículos contabilizados naquele grupo. Clique no mesmo grupo novamente, em outro grupo ou em **Mostrar todos** para alternar, sem nova chamada à API.
+- **Exportações por grupo em foco:** o PDF e o CSV usam o mesmo subconjunto exibido no dashboard. O nome do grupo em foco aparece no relatório.
+- A classificação por grupo é exclusiva. Dispositivos associados a vários grupos aparecem sob "Múltiplos grupos" na visão da frota total. Selecionar um grupo no resultado mantém essa atribuição exclusiva e não soma veículos de outro grupo.
+
 
 ### Testar agora
 
