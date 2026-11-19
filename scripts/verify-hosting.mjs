@@ -12,14 +12,14 @@ assert.equal(headers['access-control-allow-origin'],'*','MyGeotab origin needs c
 assert.ok(headers['access-control-allow-methods'].includes('GET'));
 for(const filename of ['addin-config.json','addin-config.preview.json']){
  const manifest=JSON.parse(read(filename));
- assert.equal(manifest.version,'0.4.3');
+ assert.equal(manifest.version,'0.4.4');
  assert.equal(manifest.items.length,6);
  assert.ok(manifest.items.every(x=>x.category==='AddIns'),'Os seis módulos precisam da categoria AddIns');
  assert.equal(manifest.name,'fleetTelemetryManager');
  const routes=['index.html','mileage/index.html','incidents/index.html','health/index.html','exceptions/index.html','trips/index.html'];
  for(let i=0;i<routes.length;i++){
    const item=manifest.items[i];
-   assert.equal(item.url,host+'/'+routes[i]+'?v=0.4.3','Every Add-In page must use the verified public host');
+   assert.equal(item.url,host+'/'+routes[i]+'?v=0.4.4','Every Add-In page must use the verified public host');
    assert.equal(item.svgIcon,host+'/icon.svg','Public icon must share CORS-enabled host');
    assert.ok(!/[\-@#]/.test(item.url),'Geotab does not support - @ # in Add-In page URLs');
    assert.ok(existsSync(routes[i]));
@@ -41,7 +41,12 @@ for(const path of pages){
    assert.ok(existsSync((dir?dir+'/':'')+'translations/'+lang+'.json'),'Missing translation for '+path);
  }
 }
+for(const path of pages){
+  const inline=[...read(path).matchAll(/<script(?![^>]*\bsrc=)[^>]*>([\s\S]*?)<\/script>/gi)];
+  assert.equal(inline.length,1,path+' has multiple inline scripts and may not bootstrap');
+}
+
 const trip=read('trips/index.html');
 assert.ok(trip.includes("function init(api){shell();"),'Trip page should mount UI before handling missing API');
 assert.ok(trip.includes('inicialização não recebida do MyGeotab'),'Trip must not stay indefinitely on loading');
-console.log('OK: v0.4.3 host no-hyphen, menu categories, CORS and translations.');
+console.log('OK: v0.4.4 host no-hyphen, menu categories, CORS and translations.');
