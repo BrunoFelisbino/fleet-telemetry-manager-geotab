@@ -5,18 +5,1173 @@
 <meta name="viewport" content="width=device-width,initial-scale=1">
 <meta http-equiv="Cache-Control" content="no-cache,no-store,must-revalidate">
 <title>Quilometragem | Fleet Telemetry Manager</title>
-<link rel="stylesheet" href="https://fleet-telemetry-manager-geotab.vercel.app/assets/app.css?v=0.4.1">
-<link rel="stylesheet" href="https://fleet-telemetry-manager-geotab.vercel.app/mileage/style.css?v=0.4.1">
-<script src="https://fleet-telemetry-manager-geotab.vercel.app/mileage/model.js?v=0.4.1"></script>
-<script src="https://fleet-telemetry-manager-geotab.vercel.app/mileage/filters.js?v=0.4.1"></script>
-<script src="https://fleet-telemetry-manager-geotab.vercel.app/mileage/pdf.js?v=0.4.1"></script>
-<script src="https://fleet-telemetry-manager-geotab.vercel.app/mileage/chart.js?v=0.4.1"></script>
-<script defer src="https://fleet-telemetry-manager-geotab.vercel.app/mileage/app.js?v=0.4.1"></script>
+<style data-bundle="assets/app.css">
+html,body{margin:0;padding:0;background:#f5f8fc;color:#172033;font-family:'Segoe UI',system-ui,sans-serif}
+
+*{box-sizing:border-box}:root{--bg:#f5f8fc;--card:#fff;--card2:#f8fbff;--txt:#172033;--mut:#64748b;--mut2:#94a3b8;--bd:#e5eaf1;--blue:#0ea5e9;--blue2:#0369a1;--green:#10b981;--yellow:#f59e0b;--orange:#f97316;--red:#ef4444;--gray:#64748b;--shadow:0 12px 28px rgba(15,23,42,.06);--mono:Consolas,monospace}body,#app{font-family:'Segoe UI',system-ui,sans-serif;background:var(--bg);min-height:100vh;color:var(--txt);padding:16px 20px;background-image:radial-gradient(circle,rgba(15,23,42,.045) 1px,transparent 1px);background-size:24px 24px}.head,.bar,.info,.panel,.kpi{background:var(--card);border:1px solid var(--bd);border-radius:16px;box-shadow:var(--shadow)}.head{display:flex;align-items:center;justify-content:space-between;padding:14px 16px;margin-bottom:12px}.title{display:flex;gap:10px;align-items:center;font-weight:800;font-size:18px}.ico{width:46px;height:46px;border-radius:10px;background:#000;display:grid;place-items:center;overflow:hidden}.ico img{width:100%;height:100%;object-fit:contain;display:block}.sub{font-family:var(--mono);font-size:10px;color:var(--mut);font-weight:400}.pill{font-family:var(--mono);font-size:10px;color:var(--blue2);background:#fff;border:1px solid var(--bd);border-radius:99px;padding:5px 12px}.bar{display:flex;gap:8px;flex-wrap:wrap;align-items:center;padding:12px;margin-bottom:12px}.info{display:flex;gap:16px;flex-wrap:wrap;padding:9px 14px;margin-bottom:12px;color:var(--mut);font-size:12px}button,select,input{height:32px;border-radius:8px;border:1px solid var(--bd);background:#fff;color:var(--txt);font-size:11px;padding:0 10px}button{font-weight:700;cursor:pointer}.primary{background:linear-gradient(135deg,var(--blue),var(--blue2));color:#fff;border:0}.alert{padding:10px 14px;border-radius:10px;margin-bottom:12px;font-size:12px;background:rgba(14,165,233,.1);border:1px solid rgba(14,165,233,.22);color:var(--blue2)}.alert.ok{background:rgba(16,185,129,.12);border-color:rgba(16,185,129,.22);color:#047857}.alert.err{background:rgba(239,68,68,.11);border-color:rgba(239,68,68,.22);color:#991b1b}.grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(180px,1fr));gap:10px;margin-bottom:12px}.kpi{padding:16px 14px;min-height:116px;position:relative;overflow:hidden}.kpi span{display:block;color:var(--mut2);font-size:9px;font-weight:800;letter-spacing:.08em;text-transform:uppercase;margin-bottom:8px}.kpi b{font-family:var(--mono);font-size:30px;line-height:1}.kpi small{display:block;color:var(--mut);font-size:12px;margin-top:4px}.mini{height:28px;margin-top:8px;display:flex;align-items:end;gap:4px}.mini i{display:block;flex:1;min-width:3px;border-radius:4px 4px 0 0;background:var(--blue);opacity:.85}.cols{display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-bottom:12px}.cols3{display:grid;grid-template-columns:1fr 1fr .75fr;gap:12px;margin-bottom:12px}.panel{padding:16px 18px;margin-bottom:12px}.pt{font-size:12px;font-weight:800;color:var(--blue2);letter-spacing:.06em;text-transform:uppercase;margin-bottom:12px}.pt:before{content:'';display:inline-block;width:3px;height:12px;background:linear-gradient(var(--blue),var(--blue2));border-radius:2px;margin-right:7px;vertical-align:-2px}table{width:100%;border-collapse:collapse;font-size:11px}th{text-align:left;background:#f0f9ff;color:var(--blue2);font-size:9px;text-transform:uppercase;letter-spacing:.06em;padding:8px 10px}td{padding:8px 10px;border-bottom:1px solid #edf2f7;color:var(--mut);vertical-align:middle}tr:hover td{background:#f8fbff}.badge{display:inline-block;border-radius:99px;padding:2px 9px;font-size:10px;font-weight:800;font-family:var(--mono)}.okb{background:rgba(16,185,129,.12);color:#047857}.warnb{background:rgba(245,158,11,.13);color:#92400e}.orangeb{background:rgba(249,115,22,.12);color:#9a3412}.riskb{background:rgba(239,68,68,.11);color:#991b1b}.map{height:380px;border:1px solid var(--bd);border-radius:16px;overflow:hidden}.detail{display:grid;grid-template-columns:1fr 1fr;gap:10px;font-size:12px}.detail label{display:block;color:var(--mut2);font-size:10px;text-transform:uppercase;margin-bottom:2px}.detail span{font-family:var(--mono);color:var(--txt)}.reason{margin-top:12px;display:grid;gap:7px}.reason div{padding:8px 10px;background:var(--card2);border:1px solid var(--bd);border-radius:9px;color:var(--mut);font-size:12px}.reason div.hot{background:rgba(239,68,68,.08);border-color:rgba(239,68,68,.22);color:#991b1b}.problem{cursor:pointer}.problem.active td{background:#e0f2fe!important}.filterpill{display:inline-flex;align-items:center;gap:6px;background:#e0f2fe;border:1px solid #bae6fd;color:var(--blue2);border-radius:999px;padding:4px 10px;font-size:11px;font-weight:700}.clear{color:var(--red);cursor:pointer;font-weight:800;margin-left:8px}.barrow{display:grid;grid-template-columns:130px 1fr 70px;gap:10px;align-items:center;padding:7px 0;border-bottom:1px solid #edf2f7}.barrow:last-child{border-bottom:0}.track{height:11px;background:#eaf4fb;border-radius:20px;overflow:hidden}.fill{height:11px;border-radius:20px;background:var(--blue)}.donutwrap{display:flex;align-items:center;gap:20px;min-height:170px}.donut{width:132px;height:132px;border-radius:50%;display:grid;place-items:center;position:relative}.donut:after{content:'';width:82px;height:82px;background:#fff;border-radius:50%;position:absolute}.donut div{position:relative;z-index:1;text-align:center}.donut b{font-size:28px;font-family:var(--mono)}.legend{display:grid;gap:9px;font-size:12px;color:var(--mut)}.legend i{display:inline-block;width:12px;height:12px;border-radius:3px;margin-right:7px;vertical-align:-2px}.diaglist{display:grid;gap:8px;font-size:12px}.diaglist div{display:flex;justify-content:space-between;border-bottom:1px solid #edf2f7;padding-bottom:6px;color:var(--mut)}.diaglist b{color:var(--txt);font-family:var(--mono)}@media(max-width:900px){.cols,.cols3{grid-template-columns:1fr}.donutwrap{flex-direction:column;align-items:flex-start}}@media(max-width:700px){body,#app{padding:10px}.bar{align-items:stretch;flex-direction:column}.grid{grid-template-columns:1fr}}
+button[disabled]{opacity:.78;cursor:wait}.spinner{width:14px;height:14px;display:inline-block;border:2px solid rgba(255,255,255,.5);border-top-color:#fff;border-radius:50%;vertical-align:-2px;margin-right:7px;animation:spin .7s linear infinite}@keyframes spin{to{transform:rotate(360deg)}}
+
+.project-credit{margin:16px 0 4px;padding:8px 12px;display:flex;justify-content:center;align-items:center;gap:6px;flex-wrap:wrap;font-size:11px;line-height:1.6;color:var(--mut)}
+.project-credit a{color:var(--blue2);text-decoration:none;font-weight:600}
+.project-credit a:hover,.project-credit a:focus-visible{text-decoration:underline}
+.trend-panel{background:linear-gradient(160deg,#0b1220,#111a2e)!important;border-color:#1e293b!important;color:#e2e8f0}
+.trend-panel .pt{color:#7dd3fc}
+.trend-panel .pt:before{background:linear-gradient(#38bdf8,#0ea5e9)}
+.trend-pt{display:flex;justify-content:space-between;align-items:center;gap:8px;flex-wrap:wrap}
+.trend-sub{font-size:9px;color:#64748b;letter-spacing:.08em;text-transform:uppercase;font-weight:800}
+.trend-head{display:flex;justify-content:space-between;align-items:flex-end;gap:14px;flex-wrap:wrap;margin-bottom:4px}
+.trend-total b{font-family:var(--mono);font-size:30px;color:#f8fafc;line-height:1}
+.trend-total span{display:block;font-size:10px;color:#94a3b8;margin-top:2px}
+.trend-legend{display:flex;gap:14px;flex-wrap:wrap}
+.trend-key{display:flex;align-items:center;gap:6px;font-size:11px;color:#cbd5e1}
+.trend-key i{width:9px;height:9px;border-radius:99px;display:inline-block}
+.trend-key b{font-family:var(--mono);color:#f8fafc;font-size:11px}
+.trend-svg{width:100%;height:260px;display:block;margin-top:6px;overflow:visible}
+.trend-axis{font-size:10px;color:#64748b;text-align:right;margin-top:2px}
+.trend-empty{padding:22px;text-align:center;color:#94a3b8;font-size:12px}
+
+
+/* Fleet Telemetry Manager dashboard keeps the same Health Score design tokens. */
+.section-head{font-size:12px;font-weight:800;color:var(--blue2);letter-spacing:.06em;text-transform:uppercase;margin:18px 0 10px}
+.section-head:before{content:"";display:inline-block;background:var(--blue);width:3px;height:12px;margin-right:8px;border-radius:3px;vertical-align:-2px}
+#app .metric-grid{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:10px;margin-bottom:12px}
+#app .metric-grid .kpi{min-height:120px}
+#app .kpi .context{display:block;color:var(--mut);font-size:11px;line-height:1.4;margin-top:10px}
+#app .kpi .value{font:800 27px var(--mono);display:block;margin-top:9px;color:var(--txt)}
+#app .kpi .target{font-size:10px;color:var(--mut)}
+#app .hint{font-size:12px;color:var(--mut);line-height:1.6}
+#app .warning{padding:13px;border:1px dashed var(--bd);background:var(--card2);border-radius:12px}
+#app .scope{font-size:11px;color:var(--mut);margin-bottom:14px}
+#app .tag{border-radius:99px;padding:3px 8px;font-size:10px;display:inline-block;background:#e2e8f0}
+#app .tag.ok{background:#dcfce7;color:#166534}#app .tag.err{background:#ffe4e6;color:#9f1239}
+#app .note-list{padding-left:20px;line-height:1.7;font-size:12px;color:var(--mut)}
+#app select,#app button{height:34px}
+#app label{font-size:11px}
+#app .subnav{font-size:11px;line-height:1.6;color:var(--mut)}
+#printLogo{max-width:180px;max-height:48px;object-fit:contain}
+@media(max-width:1150px){#app .metric-grid{grid-template-columns:repeat(2,1fr)}}
+@media(max-width:650px){#app .metric-grid{grid-template-columns:1fr}#app .bar{align-items:stretch}#app .bar select{width:100%}}
+@media print{@page{size:A4;margin:12mm}body{background:white!important}#app{padding:0!important}.bar,.alert,.subnav,.project-credit{display:none!important}.kpi,.panel,.head{break-inside:avoid;box-shadow:none!important}#app .metric-grid{grid-template-columns:repeat(4,1fr)}#app .kpi .value{font-size:20px}#printLogo:not([hidden]){display:block}}
+
+</style>
+<style data-bundle="mileage/style.css">
+#app .mileage-filters{align-items:end}
+#app .mileage-filters label{display:grid;gap:5px;flex:1;min-width:145px;font-weight:700;color:var(--mut);font-size:11px}
+#app .mileage-filters .custom-date[hidden]{display:none}
+#app .mileage-filters input,#app .mileage-filters select{width:100%;height:36px;max-width:none;min-width:0;border:1px solid var(--bd);border-radius:8px;padding:0 8px;background:#fff;color:var(--txt);font:12px "Segoe UI",system-ui,sans-serif}
+#app .progress{margin:12px 0;padding:12px 14px;background:#fff;border:1px solid var(--bd);border-radius:12px;display:grid;grid-template-columns:1fr auto;gap:12px;align-items:center;color:var(--mut);font-size:12px}
+#app .progress[hidden]{display:none}#app .progress-track{height:7px;background:#edf2f7;border-radius:99px;overflow:hidden}
+#app .progress-fill{height:100%;background:var(--blue);width:0;transition:width .15s linear}
+#app .mileage-cols{grid-template-columns:1fr 1.45fr}
+#app .panel-heading{display:flex;align-items:center;justify-content:space-between;gap:10px}
+#app .panel-heading .pt{margin-bottom:12px}
+#app .table-scroll{max-height:460px;overflow:auto;border:1px solid var(--bd);border-radius:10px}
+#app .table-scroll table{width:100%}#app .table-scroll th{position:sticky;top:0;z-index:1}
+#app .table-scroll td:nth-child(n+2){font-variant-numeric:tabular-nums}
+#app .bar-chart{display:grid;gap:10px;margin:14px 0;min-height:60px}
+#app .bar-item{display:grid;grid-template-columns:minmax(90px,1fr) minmax(55px,4fr) 86px;gap:10px;align-items:center;font-size:11px}
+#app .bar-name{white-space:nowrap;text-overflow:ellipsis;overflow:hidden;color:var(--mut)}
+#app .bar-rail{height:9px;background:#e9f0f7;border-radius:10px;overflow:hidden}
+#app .bar-fill{height:100%;background:linear-gradient(90deg,#0ea5e9,#0369a1);border-radius:10px}
+#app .bar-value{text-align:right;font:700 11px Consolas,monospace}
+#app .data-note{font-weight:400;color:var(--mut2);font-size:10px;display:block}
+#app .warn-text{color:#a16207}
+#app .table-scroll table{min-width:520px}
+#app .metric-grid .kpi .value{font-size:27px}
+#app .metric-grid .context{display:block;margin-top:9px;font-size:11px;color:var(--mut)}
+@media(max-width:1100px){#app .mileage-cols{grid-template-columns:1fr}}
+@media(max-width:600px){#app .mileage-filters{display:grid;grid-template-columns:1fr 1fr}#app .mileage-filters label{min-width:0}#app .mileage-filters button{width:100%}#app .metric-grid{grid-template-columns:1fr 1fr}#app .metric-grid .kpi .value{font-size:22px}#app .bar-item{grid-template-columns:1fr 2fr 70px}}
+@media print{#app .progress,.mileage-filters,.panel-heading button,#message{display:none!important}#app .mileage-cols{grid-template-columns:1fr}#app .table-scroll{max-height:none;overflow:visible}}
+
+
+/* Searchable, keyboard-accessible group/vehicle multiselects. */
+#app .filter-multi{position:relative;display:flex;flex:1 1 245px;min-width:215px;flex-direction:column;align-self:flex-start;gap:5px}
+#app .filter-label{font-size:11px;font-weight:700;color:var(--mut)}
+#app .filter-multi .picker-toggle{display:flex;align-items:center;justify-content:space-between;text-align:left;gap:10px;width:100%;height:36px;min-width:0;border:1px solid var(--bd);border-radius:9px;background:#fff;color:var(--txt);font-weight:600;font-size:12px;padding:0 10px;cursor:pointer}
+#app .filter-multi .picker-toggle[aria-expanded="true"]{border-color:var(--blue);box-shadow:0 0 0 2px rgba(14,165,233,.12)}
+#app .filter-multi .picker-toggle span:first-child{overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+#app .picker-popover{z-index:40;position:absolute;top:65px;left:0;min-width:260px;width:min(380px,calc(100vw - 28px));background:#fff;border:1px solid var(--bd);border-radius:14px;box-shadow:0 18px 55px rgba(15,23,42,.18);padding:10px}
+#app .picker-popover[hidden]{display:none}
+#app .picker-popover input[type="search"]{height:37px;width:100%;min-width:0;max-width:none;border-radius:9px;border:1px solid var(--bd);font-size:12px;padding:0 11px}
+#app .picker-options{display:grid;align-content:start;gap:1px;max-height:230px;overflow:auto;margin-top:7px;padding:3px 0}
+#app .picker-option{display:flex;align-items:center;gap:10px;padding:8px;border-radius:8px;cursor:pointer;font-size:12px;font-weight:500;color:var(--txt);line-height:1.35;min-width:0}
+#app .picker-option:hover,#app .picker-option:focus-within{background:#f0f7fc}
+#app .picker-option input{width:16px;height:16px;min-width:16px;accent-color:#0369a1;margin:0}
+#app .picker-option .option-label{min-width:0;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+#app .picker-empty{color:var(--mut);font-size:12px;padding:13px 8px;line-height:1.45}
+#app .picker-footer{display:flex;align-items:center;justify-content:space-between;gap:8px;border-top:1px solid var(--bd);padding-top:10px;color:var(--mut);font-size:10px}
+#app .picker-footer button{height:29px;white-space:nowrap;font-size:11px;padding:0 9px;border-radius:8px}
+#app .filter-chips{display:flex;gap:5px;align-items:flex-start;flex-wrap:wrap;max-width:430px}
+#app .filter-chips:empty{display:none}
+#app .filter-chip{display:inline-flex;align-items:center;gap:7px;border:1px solid #dce4ed;border-radius:999px;background:#eff4f9;min-height:25px;padding:2px 7px 2px 9px;font-size:10px;color:var(--txt);max-width:100%}
+#app .filter-chip .chip-label{overflow:hidden;text-overflow:ellipsis;white-space:nowrap;max-width:220px}
+#app .filter-chip button{height:17px;width:17px;display:grid;place-items:center;padding:0;border:0;background:transparent;color:var(--mut);font-size:15px;line-height:1;border-radius:99px}
+#app .filter-chip button:hover{background:#dce4ed;color:var(--txt)}
+#app .filter-hint{flex-basis:100%;width:100%;font-size:11px;color:var(--mut);padding:2px 0}
+@media(max-width:600px){
+ #app .filter-multi{min-width:0;flex:1 1 100%;grid-column:span 2}
+ #app .filter-multi .picker-popover{width:100%;min-width:0;top:65px}
+ #app .filter-hint{grid-column:span 2}
+ #app .filter-chips{max-width:100%}
+}
+
+/* Specificity guard: global bar-label grid rules must not affect checkbox rows. */
+#app .mileage-filters .filter-multi .picker-option{display:flex;flex:none;min-width:0;flex-direction:row;align-items:center;gap:10px;font-size:12px;font-weight:500;color:var(--txt)}
+#app .mileage-filters .filter-multi .picker-option input[type="checkbox"]{width:16px;height:16px;min-width:16px;flex:none;padding:0;cursor:pointer}
+
+
+/* Fleet mileage executive dashboard, neutral visual language. */
+#app .mileage-dashboard{grid-template-columns:minmax(0,1.7fr) minmax(0,1fr);margin-top:16px;margin-bottom:12px}
+#app .mileage-dashboard .panel{min-height:290px}
+#app .dashboard-meta{color:var(--mut);font-size:11px;white-space:nowrap}
+#app .trend-chart{display:flex;align-items:stretch;justify-content:space-between;gap:3px;height:178px;padding:8px 0 4px;border-bottom:1px solid var(--bd);overflow:hidden}
+#app .trend-chart .trend-col{height:100%;display:flex;flex:1 1 0;min-width:0;flex-direction:column;align-items:center;justify-content:end;gap:4px}
+#app .trend-chart .trend-fill-zone{flex:1;min-height:0;width:100%;display:flex;align-items:end;justify-content:center;position:relative}
+#app .trend-chart .trend-fill{width:min(100%,19px);min-height:1px;max-height:100%;background:#111827;border-radius:4px 4px 0 0;transition:height .2s ease-out}
+#app .trend-chart .trend-col:hover .trend-fill{background:#475569}
+#app .trend-chart .trend-label{font:10px/1 Consolas,monospace;color:var(--mut);white-space:nowrap;text-overflow:clip}
+#app .trend-chart .trend-placeholder{height:100%;display:grid;place-items:center;width:100%;color:var(--mut);font-size:12px}
+#app .trend-footer{display:flex;gap:12px;align-items:center;justify-content:space-between;color:var(--mut);font-size:11px;margin-top:12px}
+#app .top-vehicles-chart{display:grid;gap:13px;align-content:start;padding-top:12px}
+#app .top-vehicles-chart .top-row{display:grid;gap:5px}
+#app .top-vehicles-chart .top-label{display:flex;align-items:center;justify-content:space-between;gap:10px;font-size:11px;color:var(--mut);min-width:0}
+#app .top-vehicles-chart .top-label span:first-child{overflow:hidden;white-space:nowrap;text-overflow:ellipsis}
+#app .top-vehicles-chart .top-label strong{color:var(--txt);font:700 11px Consolas,monospace}
+#app .top-vehicles-chart .top-track{width:100%;height:7px;border-radius:7px;background:#ebeff3;overflow:hidden}
+#app .top-vehicles-chart .top-fill{height:100%;border-radius:7px;background:#252a30}
+#app .top-vehicles-chart .trend-placeholder{color:var(--mut);font-size:12px}
+#app #pdfBtn:not([disabled]){background:#111827;color:#fff;border:1px solid #111827}
+#app #pdfBtn[disabled]{opacity:.45}
+@media(max-width:1080px){#app .mileage-dashboard{grid-template-columns:1fr}}
+@media(max-width:600px){
+ #app .mileage-dashboard{margin-top:12px}
+ #app .trend-chart{gap:2px;height:156px}
+ #app .trend-chart .trend-label{font-size:8px}
+ #app .trend-footer{flex-wrap:wrap}
+}
+@media print{#app .mileage-dashboard{grid-template-columns:1fr 1fr}#app .trend-chart .trend-fill,#app .top-vehicles-chart .top-fill{print-color-adjust:exact;-webkit-print-color-adjust:exact}}
+
+
+/* Mileage daily chart: override the inherited dark Health Score panel. */
+#app .mileage-dashboard .trend-panel{
+  background:#ffffff!important;
+  background-image:none!important;
+  border-color:var(--bd)!important;
+  color:var(--txt)!important;
+}
+#app .mileage-dashboard .trend-panel .pt{color:var(--blue2)!important}
+#app .mileage-dashboard .trend-panel .pt:before{background:var(--blue)!important}
+#app .mileage-dashboard .trend-panel .hint,
+#app .mileage-dashboard .trend-panel .dashboard-meta,
+#app .mileage-dashboard .trend-panel .trend-footer{color:var(--mut)!important}
+#app .trend-chart{
+  display:block;
+  width:100%;
+  height:auto;
+  min-height:252px;
+  max-width:100%;
+  padding:0 0 2px;
+  border:0;
+  background:#fff;
+  overflow-x:auto;
+  overflow-y:hidden;
+  scrollbar-color:#cbd5e1 #f8fafc;
+  scrollbar-width:thin;
+}
+#app .trend-chart .daily-svg{
+  display:block;
+  width:100%;
+  height:244px;
+  max-width:none;
+  background:#fff;
+}
+#app .daily-svg .daily-gridline{
+  stroke:#e3e9f0;
+  stroke-width:1;
+  stroke-dasharray:3 4;
+}
+#app .daily-svg .daily-axis-text,
+#app .daily-svg .daily-date-label{
+  fill:#65758b;
+  font:11px Consolas,monospace;
+}
+#app .daily-svg .daily-date-label{font-size:10px}
+#app .daily-svg .daily-unit{
+  font:700 9px "Segoe UI",system-ui,sans-serif;
+  letter-spacing:.08em;
+  fill:#64748b;
+}
+#app .daily-svg .daily-bar-rect{
+  fill:#273445;
+  transition:fill .14s ease;
+}
+#app .daily-svg .daily-bar-rect:hover{fill:#0369a1}
+#app .daily-svg .daily-zero-dot{fill:#94a3b8}
+#app .mileage-dashboard .trend-footer{
+  border-top:1px solid var(--bd);
+  padding-top:10px;
+  line-height:1.4;
+}
+@media(max-width:650px){
+  #app .trend-chart{min-height:242px}
+  #app .trend-chart .daily-svg{height:235px}
+}
+
+
+/* Seleção interativa de grupo no resultado, sem interferir nos filtros de consulta. */
+#app .group-focus-actions{display:flex;align-items:center;gap:7px;flex-wrap:wrap;justify-content:flex-end}
+#app .group-focus-actions button[hidden]{display:none!important}
+#app .group-focus-actions #clearGroupFocus{
+  background:#f1f5f9;
+  border:1px solid #cbd5e1;
+  color:#334155;
+  border-radius:8px;
+  font-size:11px;
+  font-weight:700;
+  height:31px;
+  padding:0 11px;
+  cursor:pointer;
+}
+#app .group-focus-actions #clearGroupFocus:hover{background:#e2e8f0}
+#app .group-focus-status{
+  padding:8px 11px;
+  margin:10px 0;
+  font-size:11px;
+  line-height:1.4;
+  color:var(--mut);
+  background:#f8fafc;
+  border:1px solid var(--bd);
+  border-radius:9px;
+}
+#app .bar-chart .group-action{
+  display:grid;
+  width:100%;
+  height:auto;
+  min-height:37px;
+  grid-template-columns:minmax(90px,1fr) minmax(55px,4fr) 86px;
+  align-items:center;
+  gap:10px;
+  padding:7px 9px;
+  text-align:left;
+  background:#fff;
+  color:var(--txt);
+  border:1px solid transparent;
+  border-radius:9px;
+  font:inherit;
+  cursor:pointer;
+  transition:opacity .16s ease,background .16s ease,border-color .16s ease;
+}
+#app .bar-chart .group-action:hover{background:#f1f5f9;border-color:var(--bd)}
+#app .bar-chart .group-action:focus-visible,
+#app .group-table-button:focus-visible{outline:2px solid #0369a1;outline-offset:2px}
+#app .bar-chart .group-action.is-dim{opacity:.28}
+#app .bar-chart .group-action.is-dim:hover,
+#app .bar-chart .group-action.is-dim:focus-visible{opacity:.85}
+#app .bar-chart .group-action.is-focused{
+  background:#eff6ff;
+  border-color:#93c5fd;
+}
+#app .bar-chart .group-action.is-focused .bar-fill{background:#1e293b}
+#app .bar-chart .group-action .bar-rail{display:block}
+#app .group-result-row{cursor:pointer}
+#app .group-result-row.is-dim td{opacity:.32}
+#app .group-result-row.is-dim:hover td{opacity:.90}
+#app .group-result-row.is-focused td{background:#eff6ff;color:#0f172a}
+#app .group-result-row .group-table-button{
+  display:inline-block;
+  height:auto;
+  width:100%;
+  padding:4px;
+  margin:0;
+  text-align:left;
+  background:transparent;
+  border:0;
+  color:inherit;
+  font:inherit;
+  cursor:pointer;
+}
+#app .group-result-row.is-focused .group-table-button{font-weight:800}
+@media(max-width:600px){
+  #app .bar-chart .group-action{grid-template-columns:minmax(80px,1fr) minmax(50px,2fr) 76px;gap:6px}
+  #app .group-focus-actions{justify-content:flex-start}
+}
+@media(prefers-reduced-motion:reduce){
+  #app .bar-chart .group-action{transition:none}
+}
+
+</style>
+<script data-bundle="mileage/model.js">
+/* Motor de quilometragem independente de DOM/API. Distância Trip.distance em km, Trip.odometer em metros. */
+(function(root){
+'use strict';
+const MS_DAY=86400000;
+function id(v){return v&&typeof v==='object'?String(v.id||''):String(v||'');}
+function isActive(d,at=new Date()){return (!d.activeFrom||new Date(d.activeFrom)<=at)&&(!d.activeTo||new Date(d.activeTo)>at);}
+function groupMembers(groupId,groups){
+  if(!groupId)return null;
+  const index=new Map((groups||[]).map(g=>[String(g.id),g]));
+  const found=new Set(),pending=[String(groupId)];
+  while(pending.length){
+    const key=pending.pop();
+    if(found.has(key))continue;
+    found.add(key);
+    const g=index.get(key);
+    for(const child of (g&&g.children||[])){const childId=id(child);if(childId&&!found.has(childId))pending.push(childId);}
+  }
+  return found;
+}
+function devicesInScope(devices,groups,groupId,vehicleId){
+  const allowed=groupMembers(groupId,groups);
+  return (devices||[]).filter(d=>isActive(d)).filter(d=>!allowed||(d.groups||[]).some(g=>allowed.has(id(g))))
+    .filter(d=>!vehicleId||String(d.id)===String(vehicleId));
+}
+function devicesInMultiScope(devices,groups,selectedGroups,selectedVehicles){
+  const groupIds=[...new Set((selectedGroups||[]).map(id).filter(Boolean))];
+  const vehicleIds=new Set((selectedVehicles||[]).map(id).filter(Boolean));
+  const allowed=groupIds.length?new Set():null;
+  if(allowed)for(const groupId of groupIds)for(const member of groupMembers(groupId,groups)||[])allowed.add(member);
+  return (devices||[]).filter(d=>isActive(d)).filter(d=>
+    !allowed||(d.groups||[]).some(g=>allowed.has(id(g)))
+  ).filter(d=>!vehicleIds.size||vehicleIds.has(String(d.id)));
+}
+function selectedGroupForVehicle(vehicle,groups,selectedGroups){
+  const selected=[...new Set((selectedGroups||[]).map(id).filter(Boolean))];
+  if(!selected.length)return null;
+  const attached=new Set(vehicle.groups||[]);
+  const matching=selected.filter(g=>[...groupMembers(g,groups)].some(member=>attached.has(member)));
+  if(matching.length>1)return {id:'multiple',name:'Múltiplos grupos selecionados'};
+  if(matching.length===1){
+    const group=groups.find(g=>String(g.id)===matching[0]);
+    return {id:matching[0],name:group?String(group.name):matching[0]};
+  }
+  return {id:'unassigned-selected',name:'Grupo não identificado'};
+}
+function localDate(y,m,d){return new Date(y,m,d,0,0,0,0);}
+function range(preset,customStart,customEnd,clock=new Date()){
+  const now=new Date(clock);
+  let from,to;
+  if(preset==='current'){from=localDate(now.getFullYear(),now.getMonth(),1);to=now;}
+  else if(preset==='previous'){from=localDate(now.getFullYear(),now.getMonth()-1,1);to=new Date(localDate(now.getFullYear(),now.getMonth(),1).getTime()-1);}
+  else if(preset==='custom'){from=new Date(customStart);to=new Date(customEnd);}
+  else if(['7','30','90'].includes(String(preset))){to=now;from=new Date(now.getTime()-Number(preset)*MS_DAY);}
+  else throw Error('Selecione um período válido.');
+  if(!Number.isFinite(from.getTime())||!Number.isFinite(to.getTime())||from>=to)throw Error('Intervalo de datas inválido.');
+  if(to.getTime()-from.getTime()>366*MS_DAY)throw Error('Período máximo: 366 dias.');
+  if(to.getTime()>now.getTime()+MS_DAY)throw Error('A data final não pode estar no futuro.');
+  return {from,to,label:preset==='current'?'Mês atual':preset==='previous'?'Mês anterior':preset==='custom'?'Personalizado':'Últimos '+preset+' dias'};
+}
+function tripIdentity(t){
+  if(t.id)return 'id:'+String(t.id);
+  return 't:'+String(t.start||'')+'/'+String(t.stop||'')+'/'+String(t.distance||0);
+}
+function dateOf(t,which){const value=which==='start'?(t.start||t.startDateTime):(t.stop||t.nextTripStart||t.stopDateTime);return new Date(value).getTime();}
+function boundaryTrip(t,range){
+  const a=dateOf(t,'start'),b=dateOf(t,'stop');
+  return Number.isFinite(a)&&Number.isFinite(b)&&(a<range.from.getTime()||b>range.to.getTime());
+}
+function summarizeVehicle(device,trips,period){
+  const unique=new Map();
+  for(const trip of trips||[])unique.set(tripIdentity(trip),trip);
+  const list=[...unique.values()].filter(t=>Number.isFinite(dateOf(t,'start'))).sort((a,b)=>dateOf(a,'start')-dateOf(b,'start'));
+  let totalKm=0,validCount=0,invalid=0,overlap=0;
+  const dailyKm={};
+  for(const t of list){
+    const km=Number(t.distance);
+    if(!Number.isFinite(km)||km<0){invalid++;continue;}
+    validCount++;totalKm+=km;
+    const start=new Date(dateOf(t,'start'));
+    const key=start.getFullYear()+'-'+String(start.getMonth()+1).padStart(2,'0')+'-'+String(start.getDate()).padStart(2,'0');
+    dailyKm[key]=(dailyKm[key]||0)+km;
+    if(boundaryTrip(t,period))overlap++;
+  }
+  const odometerTrips=list.filter(t=>t.odometer!==null&&t.odometer!==undefined&&t.odometer!==''&&Number.isFinite(Number(t.odometer))&&Number(t.odometer)>=0);
+  let odometerStart=null,odometerEnd=null,odometerOrigin='';
+  if(odometerTrips.length===list.length&&list.length>0&&invalid===0){
+    const first=list[0],last=list[list.length-1];
+    // API fornece odômetro ao fim da viagem, não leitura de entrada no período.
+    const inferred=Number(first.odometer)/1000-Number(first.distance||0);
+    const final=Number(last.odometer)/1000;
+    if(Number.isFinite(inferred)&&inferred>=0&&final>=inferred&&inferred<1e9){
+      odometerStart=inferred;odometerEnd=final;odometerOrigin='Inicial inferido da primeira viagem; final informado pela Geotab';
+    }
+  }
+  return {deviceId:String(device.id),name:String(device.name||device.licensePlate||device.id),plate:String(device.licensePlate||''),
+    groups:(device.groups||[]).map(id),km:totalKm,tripCount:validCount,invalidCount:invalid,
+    boundaryTrips:overlap,dailyKm,odoStart:odometerStart,odoEnd:odometerEnd,odoOrigin:odometerOrigin};
+}
+function primaryGroup(vehicle,groups,selectedGroup){
+  if(Array.isArray(selectedGroup)){const matched=selectedGroupForVehicle(vehicle,groups,selectedGroup);if(matched)return matched;}
+  if(typeof selectedGroup==='string'&&selectedGroup){const group=(groups||[]).find(g=>String(g.id)===String(selectedGroup));return {id:String(selectedGroup),name:group?String(group.name):String(selectedGroup)};}
+  const map=new Map((groups||[]).map(g=>[String(g.id),g]));
+  const attached=vehicle.groups.filter(g=>map.has(String(g))&&g!=='GroupCompanyId');
+  if(attached.length===0)return{id:'none',name:'Sem grupo definido'};
+  // Dupla contagem de veículo em grupos é vedada. Grupo múltiplo recebe bucket exclusivo.
+  if(attached.length>1)return{id:'multiple',name:'Múltiplos grupos'};
+  const g=map.get(String(attached[0]));return{id:String(g.id),name:String(g.name||g.id)};
+}
+function summarizeFleet(devices,data,groups,selectedGroup){
+  const rows=(devices||[]).map(d=>({...data.get(String(d.id))||summarizeVehicle(d,[],{from:new Date(0),to:new Date()})}));
+  const withKm=rows.filter(r=>r.invalidCount===0);
+  let km=0,trips=0,stopped=0,odometerAvailable=0,boundary=0;
+  const buckets=new Map(),dailyTotals=new Map();
+  for(const r of withKm){
+    km+=r.km;trips+=r.tripCount;if(!r.tripCount)stopped++;
+    if(r.odoStart!=null&&r.odoEnd!=null)odometerAvailable++;
+    boundary+=r.boundaryTrips;
+    for(const [day,dist] of Object.entries(r.dailyKm||{}))dailyTotals.set(day,(dailyTotals.get(day)||0)+dist);
+    const group=primaryGroup(r,groups,selectedGroup),key=group.id;
+    r.groupId=key;
+    if(!buckets.has(key))buckets.set(key,{groupId:key,name:group.name,km:0,vehicles:0,trips:0});
+    const groupRow=buckets.get(key);groupRow.km+=r.km;groupRow.trips+=r.tripCount;groupRow.vehicles++;
+  }
+  return {km,trips,vehicles:rows.length,stopped,average:rows.length?km/rows.length:null,
+    withOdometer:odometerAvailable,boundaryTrips:boundary,
+    dailyRows:[...dailyTotals].sort((a,b)=>a[0].localeCompare(b[0])).map(([day,km])=>({day,km})),
+    vehiclesRows:rows.slice().sort((a,b)=>b.km-a.km),
+    groupsRows:[...buckets.values()].sort((a,b)=>b.km-a.km)};
+}
+
+/* Isola um grupo já agregado, sem requisição adicional nem dupla contagem. */
+function focusSummary(summary,groupId){
+  if(!summary||!Array.isArray(summary.groupsRows)||!Array.isArray(summary.vehiclesRows))throw Error('Faça uma consulta completa antes de escolher um grupo.');
+  const id=String(groupId||'');
+  const group=summary.groupsRows.find(g=>String(g.groupId)===id);
+  if(!group)throw Error('Grupo não disponível no resultado consultado.');
+  const rows=summary.vehiclesRows.filter(r=>String(r.groupId)===id);
+  const dailyTotals=new Map();
+  let km=0,trips=0,stopped=0,withOdometer=0,boundaryTrips=0;
+  for(const r of rows){
+    km+=r.km;trips+=r.tripCount;
+    if(!r.tripCount)stopped++;
+    if(r.odoStart!=null&&r.odoEnd!=null)withOdometer++;
+    boundaryTrips+=r.boundaryTrips||0;
+    for(const [day,dist] of Object.entries(r.dailyKm||{}))dailyTotals.set(day,(dailyTotals.get(day)||0)+dist);
+  }
+  return {
+    km,trips,stopped,vehicles:rows.length,
+    average:rows.length?km/rows.length:null,
+    withOdometer,boundaryTrips,
+    dailyRows:[...dailyTotals].sort((a,b)=>a[0].localeCompare(b[0])).map(([day,km])=>({day,km})),
+    vehiclesRows:rows.slice(),
+    groupsRows:[{...group,km,trips,vehicles:rows.length}]
+  };
+}
+
+function dailySeries(rows,period){
+  if(!period||!period.from||!period.to)return [];
+  const begin=new Date(period.from),end=new Date(period.to);
+  if(!Number.isFinite(begin.getTime())||!Number.isFinite(end.getTime())||begin>end)return [];
+  const dateOnly=d=>d.getFullYear()+'-'+String(d.getMonth()+1).padStart(2,'0')+'-'+String(d.getDate()).padStart(2,'0');
+  const start=new Date(begin.getFullYear(),begin.getMonth(),begin.getDate());
+  const finish=new Date(end.getFullYear(),end.getMonth(),end.getDate());
+  const series=[],lookup=new Map();
+  for(let d=new Date(start);d<=finish;d.setDate(d.getDate()+1)){
+    const day=dateOnly(d);
+    const row={day,label:String(d.getDate()).padStart(2,'0')+'/'+String(d.getMonth()+1).padStart(2,'0'),km:0};
+    series.push(row);lookup.set(day,row);
+    if(series.length>367)throw Error('Limite de 367 dias no gráfico diário.');
+  }
+  if(!series.length)return [];
+  const first=series[0].day,last=series[series.length-1].day;
+  for(const row of rows||[]){
+    const day=String(row.day||'');
+    if(!/^\d{4}-\d{2}-\d{2}$/.test(day))continue;
+    const km=Number(row.km);
+    if(!Number.isFinite(km)||km<0)continue;
+    // Viagem sobreposta ao limite: a distância total é atribuída ao 1º ou último dia exibido.
+    const target=day<first?first:day>last?last:day;
+    const entry=lookup.get(target);
+    if(entry)entry.km+=km;
+  }
+  return series;
+}
+
+function trendBuckets(rows,period,maxBars=18){
+  if(!period||!period.from||!period.to)return [];
+  const utcDay=d=>Date.UTC(d.getFullYear(),d.getMonth(),d.getDate());
+  const first=utcDay(new Date(period.from)),last=utcDay(new Date(period.to));
+  const days=Math.max(1,Math.floor((last-first)/MS_DAY)+1);
+  const size=Math.max(1,Math.ceil(days/Math.max(1,maxBars)));
+  const bars=[];
+  for(let i=0;i<days;i+=size){
+    const a=new Date(first+i*MS_DAY),b=new Date(first+Math.min(days-1,i+size-1)*MS_DAY);
+    const short=d=>String(d.getUTCDate()).padStart(2,'0')+'/'+String(d.getUTCMonth()+1).padStart(2,'0');
+    bars.push({label:short(a)+(i+size<days?'–'+short(b):''),km:0});
+  }
+  for(const row of rows||[]){
+    const p=String(row.day||'').split('-').map(Number);
+    if(p.length!==3||p.some(x=>!Number.isFinite(x)))continue;
+    const day=Date.UTC(p[0],p[1]-1,p[2]);
+    const index=Math.max(0,Math.min(days-1,Math.floor((day-first)/MS_DAY)));
+    bars[Math.floor(index/size)].km+=Math.max(0,Number(row.km)||0);
+  }
+  return bars;
+}
+
+root.FleetMileageModel={MS_DAY,id,isActive,groupMembers,devicesInScope,devicesInMultiScope,range,tripIdentity,boundaryTrip,summarizeVehicle,summarizeFleet,focusSummary,trendBuckets,dailySeries};
+})(typeof globalThis!=='undefined'?globalThis:this);
+
+</script>
+<script data-bundle="mileage/filters.js">
+/* Buscador multisseleção reutilizável para filtros de quilometragem. */
+(function(root){
+'use strict';
+const LIMIT_OPTIONS=150;
+const $=id=>document.getElementById(id);
+const safe=v=>String(v==null?'':v).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;').replace(/'/g,'&#39;');
+const normalized=v=>String(v==null?'':v).normalize('NFD').replace(/[\u0300-\u036f]/g,'').toLowerCase().trim();
+function filterOptions(options,query){
+  const needle=normalized(query);
+  return (options||[]).filter(item=>!needle||normalized(item.label+' '+(item.plate||'')).includes(needle));
+}
+function create({model,onChange}){
+  let groups=[],vehicles=[],selectedGroups=new Set(),selectedVehicles=new Set(),activeOptions={groups:[],vehicles:[]};
+  const selected=type=>type==='groups'?selectedGroups:selectedVehicles;
+  const heading=type=>type==='groups'?'group':'vehicle';
+  function availableVehicles(){return model.devicesInMultiScope(vehicles,groups,[...selectedGroups],[]);}
+  function labelGroup(id){const g=groups.find(g=>String(g.id)===String(id));return g?String(g.name||g.id):String(id);}
+  function labelVehicle(id){const v=vehicles.find(v=>String(v.id)===String(id));return v?String(v.name||v.licensePlate||v.id):String(id);}
+  function list(type){
+    if(type==='groups')return activeOptions.groups;
+    return activeOptions.vehicles;
+  }
+  function close(type){
+    const name=heading(type),popover=$(name+'Popover'),button=$(name+'Toggle');
+    popover.hidden=true;button.setAttribute('aria-expanded','false');
+  }
+  function open(type){
+    const name=heading(type),popover=$(name+'Popover'),button=$(name+'Toggle');
+    close(type==='groups'?'vehicles':'groups');
+    popover.hidden=false;button.setAttribute('aria-expanded','true');
+    $(name+'Search').focus();
+    renderOptions(type);
+  }
+  function renderOptions(type){
+    const name=heading(type),q=normalized($(name+'Search').value);
+    const available=list(type);
+    const matching=filterOptions(available,q);
+    const shown=matching.slice(0,LIMIT_OPTIONS),chosen=selected(type);
+    $(name+'Options').innerHTML=shown.length?shown.map(item=>
+      '<label class="picker-option"><input type="checkbox" value="'+safe(item.id)+'"'+(chosen.has(item.id)?' checked':'')+'><span class="option-label" title="'+safe(item.label)+'">'+safe(item.label)+'</span></label>'
+    ).join(''):'<div class="picker-empty">Nenhum resultado. Tente outro nome ou placa.</div>';
+    const plural=type==='groups'?'grupos':'veículos';
+    $(name+'OptionCount').textContent=matching.length>LIMIT_OPTIONS?'Mostrando '+LIMIT_OPTIONS+' de '+matching.length+' '+plural+'. Digite para refinar.':matching.length+' '+plural+' encontrados';
+  }
+  function renderChips(type){
+    const name=heading(type),chosen=selected(type),label=type==='groups'?labelGroup:labelVehicle;
+    $(name+'Caption').textContent=chosen.size?chosen.size+' '+(type==='groups'?'grupo(s)':'veículo(s)')+' selecionado(s)':type==='groups'?'Frota total acessível':'Todos os veículos';
+    $(name+'Chips').innerHTML=[...chosen].map(id=>
+      '<span class="filter-chip"><span class="chip-label" title="'+safe(label(id))+'">'+safe(label(id))+'</span><button type="button" data-remove="'+safe(id)+'" aria-label="Remover '+safe(label(id))+'">×</button></span>'
+    ).join('');
+  }
+  function renderAll(){
+    renderChips('groups');renderChips('vehicles');
+    renderOptions('groups');renderOptions('vehicles');
+    const grp=selectedGroups.size?selectedGroups.size+' grupo(s)':'frota total';
+    const veh=selectedVehicles.size?selectedVehicles.size+' veículo(s)':'todos os veículos';
+    $('activeFilters').textContent='Consulta: '+grp+' · '+veh+'. '+(!selectedGroups.size&&!selectedVehicles.size?'Nenhum filtro específico aplicado.':'Seleção múltipla ativa.');
+  }
+  function refreshVehicles(){
+    const allowed=new Set(availableVehicles().map(v=>String(v.id)));
+    for(const id of [...selectedVehicles])if(!allowed.has(id))selectedVehicles.delete(id);
+    activeOptions.vehicles=availableVehicles().map(v=>({id:String(v.id),label:String(v.name||v.licensePlate||v.id),plate:String(v.licensePlate||'')}))
+      .sort((a,b)=>a.label.localeCompare(b.label,'pt-BR'));
+    renderAll();
+  }
+  function setData(deviceData,groupData){
+    vehicles=(deviceData||[]).filter(v=>model.isActive(v));groups=groupData||[];
+    const seen=new Set(vehicles.flatMap(v=>(v.groups||[]).map(model.id)));
+    activeOptions.groups=groups.filter(g=>g.id&&g.name&&[...model.groupMembers(g.id,groups)].some(id=>seen.has(id)))
+      .map(g=>({id:String(g.id),label:String(g.name)})).sort((a,b)=>a.label.localeCompare(b.label,'pt-BR'));
+    const allowed=new Set(activeOptions.groups.map(g=>g.id));
+    for(const id of [...selectedGroups])if(!allowed.has(id))selectedGroups.delete(id);
+    refreshVehicles();
+  }
+  function notify(type){
+    if(type==='groups')refreshVehicles();else renderAll();
+    if(typeof onChange==='function')onChange();
+  }
+  function init(){
+    for(const type of ['groups','vehicles']){
+      const name=heading(type);
+      $(name+'Toggle').addEventListener('click',()=>$(name+'Popover').hidden?open(type):close(type));
+      $(name+'Search').addEventListener('input',()=>renderOptions(type));
+      $(name+'Options').addEventListener('change',event=>{
+        const input=event.target;
+        if(!input||input.type!=='checkbox')return;
+        const id=input.value,valid=list(type).some(item=>item.id===id);
+        if(!valid)return;
+        if(input.checked)selected(type).add(id);else selected(type).delete(id);
+        notify(type);
+      });
+      $(name+'Chips').addEventListener('click',event=>{
+        const btn=event.target.closest('button[data-remove]');
+        if(!btn)return;
+        selected(type).delete(btn.dataset.remove);
+        notify(type);
+      });
+      $(name+'Clear').addEventListener('click',()=>{
+        selected(type).clear();notify(type);
+      });
+      $(name+'Popover').addEventListener('keydown',event=>{
+        if(event.key==='Escape'){close(type);$(name+'Toggle').focus();event.preventDefault();}
+      });
+    }
+    document.addEventListener('click',event=>{
+      for(const type of ['groups','vehicles']){
+        const name=heading(type);
+        if(!$(name+'Picker').contains(event.target))close(type);
+      }
+    });
+    renderAll();
+  }
+  return {init,setData,refreshVehicles,groups:()=>[...selectedGroups],vehicles:()=>[...selectedVehicles],
+    scope:()=>model.devicesInMultiScope(vehicles,groups,[...selectedGroups],[...selectedVehicles])};
+}
+root.FleetMileageFilters={create,filterOptions};
+})(typeof globalThis!=='undefined'?globalThis:this);
+
+</script>
+<script data-bundle="mileage/pdf.js">
+/* PDF nativo, sem bibliotecas externas: gera download direto com resumo, gráficos e tabelas. */
+(function(root){
+'use strict';
+const W=595.28,H=841.89,L=36,R=W-36,CW=R-L,DK='#111111';
+const cp1252=new Map([[0x20ac,128],[0x201a,130],[0x0192,131],[0x201e,132],[0x2026,133],[0x2020,134],[0x2021,135],[0x02c6,136],[0x2030,137],[0x0160,138],[0x2039,139],[0x0152,140],[0x017d,142],[0x2018,145],[0x2019,146],[0x201c,147],[0x201d,148],[0x2022,149],[0x2013,150],[0x2014,151],[0x02dc,152],[0x2122,153],[0x0161,154],[0x203a,155],[0x0153,156],[0x017e,158],[0x0178,159]]);
+function toWinAnsi(value){
+  let out='';
+  for(const char of String(value==null?'':value)){
+    const n=char.codePointAt(0);
+    if(n===10||n===13||n===9){out+=' ';continue;}
+    if(n>=32&&n<=126||n>=160&&n<=255){out+=String.fromCharCode(n);continue;}
+    if(cp1252.has(n)){out+=String.fromCharCode(cp1252.get(n));continue;}
+    out+=n===0x2192?'>':n===0x2265?'>=':n===0x2264?'<=':'?';
+  }
+  return out;
+}
+function literal(v){return '('+toWinAnsi(v).replace(/\\/g,'\\\\').replace(/\(/g,'\\(').replace(/\)/g,'\\)')+')';}
+function n(v){return Number(v).toFixed(2);}
+function fmt(value,dec=1){return Number(value||0).toLocaleString('pt-BR',{minimumFractionDigits:dec,maximumFractionDigits:dec});}
+function shorten(v,max){const s=String(v==null?'':v);return s.length>max?s.slice(0,max-1)+'…':s;}
+function create(){
+  const pages=[];
+  function newPage(){const p={ops:[]};pages.push(p);return p;}
+  function rect(p,x,y,w,h,gray=0.94){p.ops.push(n(gray)+' g '+n(x)+' '+n(H-y-h)+' '+n(w)+' '+n(h)+' re f');}
+  function stroke(p,x1,y1,x2,y2,gray=0.86){p.ops.push(n(gray)+' G 0.7 w '+n(x1)+' '+n(H-y1)+' m '+n(x2)+' '+n(H-y2)+' l S');}
+  function text(p,x,y,value,size=10,weight=false,gray=0.15){
+    p.ops.push(n(gray)+' g BT /F'+(weight?'2':'1')+' '+n(size)+' Tf 1 0 0 1 '+n(x)+' '+n(H-y-size)+' Tm '+literal(value)+' Tj ET');
+  }
+  function pageHead(p,section,detail,demo=false){
+    rect(p,0,0,W,7,0.10);
+    text(p,L,30,'FLEET TELEMETRY MANAGER',11,true,0.10);
+    text(p,L,48,'Relatório de quilometragem da frota',9,false,0.37);
+    text(p,L,75,section.toUpperCase(),17,true,0.10);
+    if(detail)text(p,L,102,shorten(detail,110),8,false,0.40);
+    stroke(p,L,122,R,122,0.82);
+    if(demo){rect(p,R-148,28,148,21,0.92);text(p,R-140,32,'SIMULAÇÃO · DADOS FICTÍCIOS',7,true,0.27);}
+  }
+  function heading(p,y,label){text(p,L,y,label.toUpperCase(),10,true,0.18);stroke(p,L,y+18,R,y+18,0.85);}
+  function table(p,columns,rows,{top=150,rowHeight=19,colWidths}={}){
+    let y=top;
+    const widths=colWidths||columns.map(()=>CW/columns.length);
+    rect(p,L,y,CW,25,0.90);
+    let x=L;
+    columns.forEach((col,i)=>{text(p,x+8,y+7,shorten(col,Math.floor((widths[i]-16)/5.1)),8,true,0.22);x+=widths[i];});
+    y+=25;
+    for(let i=0;i<rows.length;i++){
+      const row=rows[i];if(i%2===1)rect(p,L,y,CW,rowHeight,0.965);
+      x=L;
+      for(let j=0;j<row.length;j++){
+        const max=Math.max(2,Math.floor((widths[j]-14)/4.6));
+        text(p,x+8,y+5,shorten(row[j],max),8,false,j===0?0.16:0.31);
+        x+=widths[j];
+      }
+      stroke(p,L,y+rowHeight,R,y+rowHeight,0.91);
+      y+=rowHeight;
+    }
+    return y;
+  }
+  function footer(p,pageNumber,totalPages){
+    stroke(p,L,796,R,796,0.86);
+    text(p,L,806,'Fonte: viagens (Trip) da sessão MyGeotab. Resultados limitados à seleção consultada.',7,false,0.42);
+    text(p,R-85,806,'Página '+pageNumber+' / '+totalPages,7,false,0.35);
+  }
+  function bytesFromString(s){const a=new Uint8Array(s.length);for(let i=0;i<s.length;i++)a[i]=s.charCodeAt(i)&255;return a;}
+  function finalize(){
+    pages.forEach((p,i)=>footer(p,i+1,pages.length));
+    const objects=['','',
+      '<< /Type /Font /Subtype /Type1 /BaseFont /Helvetica /Encoding /WinAnsiEncoding >>',
+      '<< /Type /Font /Subtype /Type1 /BaseFont /Helvetica-Bold /Encoding /WinAnsiEncoding >>'
+    ],pageIds=[];
+    for(const p of pages){
+      const stream=p.ops.join('\n')+'\n';
+      const contentId=objects.push('<< /Length '+stream.length+' >>\nstream\n'+stream+'endstream');
+      const pageId=objects.push('<< /Type /Page /Parent 2 0 R /MediaBox [0 0 '+n(W)+' '+n(H)+'] /Resources << /Font << /F1 3 0 R /F2 4 0 R >> >> /Contents '+contentId+' 0 R >>');
+      pageIds.push(pageId);
+    }
+    objects[0]='<< /Type /Catalog /Pages 2 0 R >>';
+    objects[1]='<< /Type /Pages /Kids ['+pageIds.map(x=>x+' 0 R').join(' ')+'] /Count '+pageIds.length+' >>';
+    let output='%PDF-1.4\n%\xE2\xE3\xCF\xD3\n';
+    const offsets=[0];
+    objects.forEach((o,i)=>{offsets.push(output.length);output+=(i+1)+' 0 obj\n'+o+'\nendobj\n';});
+    const xref=output.length;
+    output+='xref\n0 '+(objects.length+1)+'\n0000000000 65535 f \n';
+    for(let i=1;i<=objects.length;i++)output+=String(offsets[i]).padStart(10,'0')+' 00000 n \n';
+    output+='trailer\n<< /Size '+(objects.length+1)+' /Root 1 0 R >>\nstartxref\n'+xref+'\n%%EOF';
+    return bytesFromString(output);
+  }
+  return {pages,newPage,rect,stroke,text,heading,table,pageHead,finalize};
+}
+function make(report){
+  if(!report||!report.summary||!report.period||!Array.isArray(report.summary.vehiclesRows))throw Error('Consulte a frota antes de gerar o PDF.');
+  const {summary,period}=report,groups=report.groupNames||[],cars=report.vehicleNames||[],trend=report.trend||[],demo=!!report.demo;
+  const C=create(),p=C.newPage();
+  const selection=(groups.length?'Grupos: '+groups.join(', '):'Grupos: frota total')+' | '+(cars.length?'Veículos: '+cars.join(', '):'Veículos: todos');
+  C.pageHead(p,'Resumo executivo',period.label+' · '+new Date(period.from).toLocaleDateString('pt-BR')+' a '+new Date(period.to).toLocaleDateString('pt-BR'),demo);
+  C.text(p,L,136,shorten(selection,104),8,false,0.40);
+  const cards=[['KM TOTAL',fmt(summary.km,1)+' km'],['VEÍCULOS',String(summary.vehicles)],['MÉDIA / VEÍCULO',fmt(summary.average||0,1)+' km'],['SEM VIAGEM',String(summary.stopped)]];
+  const gap=9,w=(CW-3*gap)/4;
+  cards.forEach((card,i)=>{
+    const x=L+i*(w+gap);
+    C.rect(p,x,160,w,83,0.948);
+    C.text(p,x+10,172,card[0],8,true,0.42);
+    C.text(p,x+10,197,shorten(card[1],16),15,true,0.10);
+  });
+  C.heading(p,267,'Evolução diária da quilometragem');
+  const maxTrend=Math.max(1,...trend.map(d=>d.km)),space=CW/Math.max(1,trend.length);
+  C.stroke(p,L,457,R,457,0.72);
+  trend.forEach((d,i)=>{
+    const x=L+i*space+space*0.17,bw=Math.max(.7,Math.min(13,space*0.66)),height=(Math.max(0,d.km)/maxTrend)*132;
+    C.rect(p,x,456-height,bw,Math.max(.6,height),0.22);
+    if(trend.length<=12||i%Math.ceil(trend.length/10)===0)C.text(p,x-1,466,shorten(d.label,10),6,false,0.42);
+  });
+  C.text(p,L,292,'Maior dia: '+fmt(maxTrend,1)+' km | '+trend.length+' dias no gráfico',8,false,0.38);
+  C.heading(p,500,'Grupos com maior quilometragem');
+  const maxGroup=Math.max(1,...summary.groupsRows.map(x=>x.km));
+  summary.groupsRows.slice(0,5).forEach((row,i)=>{
+    const y=532+i*32;
+    C.text(p,L,y,shorten(row.name,28),9,false,0.24);
+    C.rect(p,L+175,y+1,240,9,0.92);
+    C.rect(p,L+175,y+1,240*(row.km/maxGroup),9,0.26);
+    C.text(p,R-96,y,fmt(row.km,1)+' km',9,true,0.18);
+  });
+  if(!summary.groupsRows.length)C.text(p,L,540,'Nenhum grupo disponível nesta seleção.',10,false,0.50);
+  C.heading(p,728,'Integridade do relatório');
+  C.text(p,L,756,'Viagens no período: '+summary.trips+' | Odômetros disponíveis: '+summary.withOdometer+'/'+summary.vehicles+' | Viagens em limite de datas: '+summary.boundaryTrips,8,false,0.37);
+  C.text(p,L,772,'Odômetro inicial é estimado. Viagens que cruzam o período são contabilizadas integralmente.',8,false,0.37);
+
+  const dateDetail=period.label+' · '+new Date(period.from).toLocaleDateString('pt-BR')+' até '+new Date(period.to).toLocaleDateString('pt-BR');
+  const pageRows=(items,chunk)=>{const out=[];for(let i=0;i<items.length;i+=chunk)out.push(items.slice(i,i+chunk));return out.length?out:[[]];};
+  for(const [ix,batch] of pageRows(summary.groupsRows,29).entries()){
+    const q=C.newPage();C.pageHead(q,'Quilometragem por grupo',dateDetail,demo);
+    C.text(q,L,137,'Distribuição exclusiva: cada veículo é contabilizado uma vez.',8,false,0.43);
+    C.table(q,['Grupo / operação','Veículos','Viagens','KM rodado'],batch.map(g=>[g.name,String(g.vehicles),String(g.trips),fmt(g.km,1)]),
+      {top:159,rowHeight:20,colWidths:[263,72,72,116]});
+  }
+  for(const [ix,batch] of pageRows(summary.vehiclesRows,29).entries()){
+    const q=C.newPage();C.pageHead(q,'Ranking por veículo',dateDetail,demo);
+    C.text(q,L,135,'Odôm. inicial*: estimado da primeira viagem; odôm. final: informado pela Geotab.',8,false,0.43);
+    C.table(q,['Veículo / placa','Viagens','KM rodado','Odôm. ini.*','Odôm. final'],batch.map(v=>[
+      v.name+(v.plate?' / '+v.plate:''),String(v.tripCount),fmt(v.km,1),
+      v.odoStart==null?'N/D':fmt(v.odoStart,1),v.odoEnd==null?'N/D':fmt(v.odoEnd,1)
+    ]),{top:159,rowHeight:20,colWidths:[205,57,84,89,88]});
+  }
+  return C.finalize();
+}
+function save(report){
+  const bytes=make(report),url=URL.createObjectURL(new Blob([bytes],{type:'application/pdf'})),a=document.createElement('a');
+  const date=new Date();
+  const pad=n=>String(n).padStart(2,'0');
+  a.href=url;a.download='quilometragem-frota-'+date.getFullYear()+'-'+pad(date.getMonth()+1)+'-'+pad(date.getDate())+'.pdf';
+  document.body.appendChild(a);a.click();a.remove();
+  setTimeout(()=>URL.revokeObjectURL(url),30000);
+  return bytes.length;
+}
+root.FleetMileagePdf={make,save};
+})(typeof globalThis!=='undefined'?globalThis:this);
+
+</script>
+<script data-bundle="mileage/chart.js">
+/* Gráfico SVG diário, independente de bibliotecas e com contraste acessível. */
+(function(root){
+'use strict';
+function safe(v){
+  return String(v==null?'':v).replace(/&/g,'&amp;').replace(/</g,'&lt;')
+    .replace(/>/g,'&gt;').replace(/"/g,'&quot;').replace(/'/g,'&#39;');
+}
+function fmt(v,dec=1){
+  return Number(v).toLocaleString('pt-BR',{minimumFractionDigits:dec,maximumFractionDigits:dec});
+}
+function tickLabel(value){
+  if(value===0)return '0';
+  if(value>=1000)return fmt(value/1000,value>=10000?0:1)+' mil';
+  return fmt(value,0);
+}
+function svg(daily){
+  const rows=Array.isArray(daily)?daily:[];
+  if(!rows.length)return '<div class="trend-placeholder">Sem dados no período consultado.</div>';
+  const count=rows.length, width=Math.max(620,64+count*34),height=244;
+  const left=54,right=14,top=18,bottom=198,plotHeight=bottom-top,usable=width-left-right;
+  const slot=usable/count,barWidth=Math.min(23,slot*0.66);
+  const peak=Math.max(0,...rows.map(r=>Number(r.km)||0));
+  const magnitude=Math.pow(10,Math.floor(Math.log10(Math.max(1,peak))));
+  const step=Math.max(1,Math.ceil(peak/(4*magnitude))*magnitude);
+  const axisMax=step*4;
+  const every=count<=31?1:count<=62?2:count<=120?4:7;
+  const parts=[
+    '<svg class="daily-svg" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 '+width+' '+height+'" style="min-width:'+width+'px" role="img" aria-label="Quilometragem diária: '+count+' dias">'
+  ];
+  for(let i=0;i<=4;i++){
+    const value=i*step,y=bottom-(value/axisMax)*plotHeight;
+    parts.push('<line class="daily-gridline" x1="'+left+'" x2="'+(width-right)+'" y1="'+y.toFixed(2)+'" y2="'+y.toFixed(2)+'"/>');
+    parts.push('<text class="daily-axis-text" x="'+(left-8)+'" y="'+(y+3).toFixed(2)+'" text-anchor="end">'+safe(tickLabel(value))+'</text>');
+  }
+  rows.forEach((row,i)=>{
+    const km=Math.max(0,Number(row.km)||0),x=left+i*slot+slot/2,y=bottom-(km/axisMax)*plotHeight;
+    const h=Math.max(0,(km/axisMax)*plotHeight),label=String(row.label||row.day||'');
+    const title=label+': '+fmt(km,1)+' km';
+    parts.push('<g class="daily-bar">');
+    if(km>0)parts.push('<rect class="daily-bar-rect" x="'+(x-barWidth/2).toFixed(2)+'" y="'+y.toFixed(2)+'" width="'+barWidth.toFixed(2)+'" height="'+h.toFixed(2)+'" rx="3"><title>'+safe(title)+'</title></rect>');
+    else parts.push('<circle class="daily-zero-dot" cx="'+x.toFixed(2)+'" cy="'+bottom+'" r="2"><title>'+safe(title)+'</title></circle>');
+    if(i%every===0||i===count-1)parts.push('<text class="daily-date-label" x="'+x.toFixed(2)+'" y="221" text-anchor="middle">'+safe(label)+'</text>');
+    parts.push('</g>');
+  });
+  parts.push('<text class="daily-unit" x="'+left+'" y="12">KM / DIA</text></svg>');
+  return parts.join('');
+}
+root.FleetMileageDailyChart={svg,tickLabel};
+})(typeof globalThis!=='undefined'?globalThis:this);
+
+</script>
+<script data-bundle="mileage/app.js">
+/* Consulta Geotab: lote por veículo, limite adaptativo, sem truncar o total da frota. */
+(function(){
+'use strict';
+const Model=window.FleetMileageModel;
+const $=id=>document.getElementById(id);
+const LIMIT=4000,MIN_WINDOW=60000;
+let api=null,devices=[],groups=[],loaded=false,loading=false,token=0,last=null,rateSlot=0,bootstrapPromise=null,demoMode=false,filters=null,fullReport=null,focusGroupId=null;
+const safe=v=>String(v==null?'':v).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;').replace(/'/g,'&#39;');
+const fmt=(n,d=1)=>Number(n).toLocaleString('pt-BR',{minimumFractionDigits:d,maximumFractionDigits:d});
+const dt=iso=>{const d=new Date(iso);return Number.isFinite(d.getTime())?d.toLocaleString('pt-BR'):'N/D';};
+const wait=ms=>new Promise(resolve=>setTimeout(resolve,ms));
+function message(value,kind=''){const e=$('message');e.textContent=value;e.className='alert'+(kind?' '+kind:'');}
+function call(type,search,limit){
+  return new Promise((resolve,reject)=>{
+    if(!api)return reject(Error('Sessão MyGeotab indisponível'));
+    try{api.call('Get',{typeName:type,search:search||{},resultsLimit:limit||LIMIT},resolve,reject);}
+    catch(e){reject(e);}
+  });
+}
+function checkToken(req){if(req!==token)throw Error('CONSULTA_CANCELADA');}
+async function pace(req){
+  checkToken(req);
+  const now=Date.now();
+  const allowed=Math.max(now,rateSlot);
+  rateSlot=allowed+170;
+  if(allowed>now)await wait(allowed-now);
+  checkToken(req);
+}
+async function tripsInWindow(device,from,to,req,depth=0){
+  checkToken(req);await pace(req);
+  const search={deviceSearch:{id:device.id},fromDate:from.toISOString(),toDate:to.toISOString(),includeOverlappedTrips:true};
+  let trips;
+  for(let attempt=0;attempt<2;attempt++){
+    try{trips=await call('Trip',search,LIMIT);break;}
+    catch(e){if(attempt===1)throw e;await wait(1100);checkToken(req);}
+  }
+  checkToken(req);
+  if(!Array.isArray(trips))throw Error('A Geotab não retornou uma lista de viagens.');
+  if(trips.length<LIMIT)return trips;
+  const width=to.getTime()-from.getTime();
+  if(width<=MIN_WINDOW||depth>=16)throw Error('Limite de viagens atingido em janela pequena para '+(device.name||device.id)+'.');
+  const mid=new Date(Math.floor((from.getTime()+to.getTime())/2));
+  // As consultas podem repetir viagens que cruzam as janelas: desduplicação por Trip.id.
+  const a=await tripsInWindow(device,from,mid,req,depth+1);
+  const b=await tripsInWindow(device,mid,to,req,depth+1);
+  return a.concat(b);
+}
+async function bootstrap(){
+  if(loaded)return;
+  if(bootstrapPromise)return bootstrapPromise;
+  bootstrapPromise=(async()=>{
+    message('Carregando frota e grupos autorizados...');
+    const res=await Promise.allSettled([call('Device',{},50000),call('Group',{},10000)]);
+    if(res[0].status==='rejected')throw Error('Sem acesso ao cadastro de veículos: '+String(res[0].reason));
+    if(res[1].status==='rejected')throw Error('Sem acesso aos grupos: '+String(res[1].reason));
+    devices=res[0].value||[];groups=res[1].value||[];
+    if(devices.length>=50000||groups.length>=10000)throw Error('Cadastros no limite de resposta: não é seguro fazer o cálculo sem paginação dos cadastros.');
+    fillGroups();fillVehicles();
+    loaded=true;
+    $('status').textContent='MyGeotab conectado';
+    message('Frota carregada ('+devices.length+' cadastros). Escolha os filtros e clique em Consultar.','ok');
+  })();
+  try{return await bootstrapPromise;}
+  finally{bootstrapPromise=null;}
+}
+function fillGroups(){filters.setData(devices,groups);}
+function fillVehicles(){filters.refreshVehicles();}
+
+function localInput(d){const pad=x=>String(x).padStart(2,'0');return d.getFullYear()+'-'+pad(d.getMonth()+1)+'-'+pad(d.getDate())+'T'+pad(d.getHours())+':'+pad(d.getMinutes());}
+function toggleDates(){
+  const show=$('periodFilter').value==='custom';
+  $('customFromWrap').hidden=!show;$('customToWrap').hidden=!show;
+  if(show&&!$('fromInput').value){const d=new Date(),b=new Date(d.getTime()-7*86400000);$('fromInput').value=localInput(b);$('toInput').value=localInput(d);}
+}
+function invalidate(){
+  token++;
+  fullReport=null;focusGroupId=null;last=null;
+  $('clearGroupFocus').hidden=true;
+  $('groupFocusStatus').textContent='Visão completa dos grupos consultados.';
+  last=null;loading=false;
+  $('cancelBtn').hidden=true;$('loadBtn').disabled=false;
+  $('groupCsv').disabled=true;$('vehicleCsv').disabled=true;$('pdfBtn').disabled=true;
+  $('progressWrap').hidden=true;
+  resetVisual();
+  $('scope').textContent='Filtros alterados. Clique em Consultar para carregar os dados da nova seleção.';
+  $('status').textContent=api?'Filtros alterados':'Aguardando MyGeotab';
+  message('Filtros alterados. Clique em Consultar para atualizar os resultados.');
+}
+function updateProgress(done,total){
+  $('progressFill').style.width=(total?100*done/total:0).toFixed(1)+'%';
+  $('progressText').textContent=done+' / '+total+' veículos processados';
+}
+function resetVisual(){
+  $('kpiBox').querySelectorAll('.value').forEach(e=>e.textContent='N/D');
+  $('trendChart').innerHTML='<div class="trend-placeholder">Consulte a frota para visualizar a evolução.</div>';
+  $('topVehicles').innerHTML='<div class="trend-placeholder">Consulte a frota para visualizar o ranking.</div>';
+  $('trendInfo').textContent='Aguardando dados de viagens.';
+  $('trendPeriod').textContent='Sem período consultado';
+  $('groupChart').innerHTML='';
+  $('groupFocusStatus').textContent='Visão completa dos grupos consultados.';
+  $('clearGroupFocus').hidden=true;
+  $('groupRows').innerHTML='<tr><td colspan="3">Sem resultados consolidados</td></tr>';
+  $('vehicleRows').innerHTML='<tr><td colspan="5">Sem resultados consolidados</td></tr>';
+  $('notes').innerHTML='<li>Os resultados só são exibidos quando a consulta completa terminar.</li>';
+}
+function card(title,value,note){return '<article class="kpi"><span>'+safe(title)+'</span><strong class="value">'+safe(value)+'</strong><small class="context">'+safe(note)+'</small></article>';}
+function primaryLabel(total){return total.vehicles+' veículo(s) · '+total.trips+' viagens no período · '+total.withOdometer+' com odômetro disponível';}
+function renderVisualDashboard(summary,period){
+  const trend=Model.dailySeries(summary.dailyRows||[],period);
+  const max=Math.max(0,...trend.map(x=>x.km));
+  const peak=trend.reduce((a,b)=>b.km>a.km?b:a,trend[0]||{label:'-',km:0});
+  const total=trend.reduce((n,x)=>n+x.km,0);
+  $('trendPeriod').textContent=period.label;
+  $('trendChart').innerHTML=window.FleetMileageDailyChart.svg(trend);
+  $('trendChart').setAttribute('aria-label','Evolução diária da quilometragem: '+trend.map(x=>x.label+' '+fmt(x.km,1)+' km').join('; '));
+  $('trendInfo').textContent=trend.length+' dias · Pico: '+peak.label+' ('+fmt(max,1)+' km) · Total diário: '+fmt(total,1)+' km';
+  const top=summary.vehiclesRows.slice(0,5),maxTop=Math.max(1,...top.map(x=>x.km));
+  $('topVehicles').innerHTML=top.length?top.map((v,i)=>
+    '<div class="top-row"><div class="top-label"><span title="'+safe(v.name)+'">'+(i+1)+'. '+safe(v.name)+'</span><strong>'+fmt(v.km,1)+' km</strong></div>'+
+    '<div class="top-track"><div class="top-fill" style="width:'+Math.min(100,100*v.km/maxTop)+'%"></div></div></div>'
+  ).join(''):'<div class="trend-placeholder">Nenhum veículo elegível.</div>';
+  return trend;
+}
+function render(summary,period,selected){
+  fullReport={summary,period,selected};
+  focusGroupId=null;
+  renderFocusedView();
+}
+function renderFocusedView(){
+  if(!fullReport)return;
+  const {summary:all,period,selected}=fullReport;
+  const focus=focusGroupId===null?null:all.groupsRows.find(g=>String(g.groupId)===String(focusGroupId));
+  if(focusGroupId!==null&&!focus){focusGroupId=null;}
+  const chosen=focusGroupId===null?null:all.groupsRows.find(g=>String(g.groupId)===String(focusGroupId));
+  const summary=chosen?Model.focusSummary(all,chosen.groupId):all;
+  const trend=renderVisualDashboard(summary,period);
+  last={summary,period,selected,trend,groupFocus:chosen?{id:chosen.groupId,name:chosen.name}:null};
+  $('groupFocusStatus').textContent=chosen?'Grupo em foco: '+chosen.name+' · '+summary.vehicles+' veículo(s) e '+fmt(summary.km,1)+' km. Clique em outro grupo para trocar.':'Visão completa dos grupos consultados.';
+  $('clearGroupFocus').hidden=!chosen;
+  $('kpiBox').innerHTML=[
+    card('KM total rodado',fmt(summary.km,1)+' km','Soma das viagens de todos os veículos elegíveis'),
+    card('Frota selecionada',String(summary.vehicles),'Todos os veículos do filtro, com e sem viagem'),
+    card('Média por veículo',summary.average==null?'N/D':fmt(summary.average,1)+' km','KM total dividido por veículos selecionados'),
+    card('Veículos sem viagem',String(summary.stopped),'Sem viagens retornadas no período')
+  ].join('');
+  // Navegação sempre usa o resultado completo; demais seções mostram somente o grupo em foco.
+  const max=Math.max(1,...all.groupsRows.map(g=>g.km));
+  const groupClass=g=>!chosen?'':String(g.groupId)===String(chosen.groupId)?' is-focused':' is-dim';
+  const selectedGroup=g=>!!chosen&&String(g.groupId)===String(chosen.groupId);
+  $('groupChart').innerHTML=all.groupsRows.slice(0,10).map(g=>
+    '<button type="button" class="bar-item group-action'+groupClass(g)+'" data-group-id="'+safe(g.groupId)+'" aria-pressed="'+selectedGroup(g)+'" title="Mostrar apenas '+safe(g.name)+'">'+
+      '<span class="bar-name">'+safe(g.name)+'</span><span class="bar-rail"><span class="bar-fill" style="width:'+Math.min(100,100*g.km/max)+'%"></span></span><span class="bar-value">'+fmt(g.km,1)+' km</span></button>'
+  ).join('')||'<p class="hint">Nenhum grupo identificado.</p>';
+  $('groupRows').innerHTML=all.groupsRows.length?all.groupsRows.map(g=>
+    '<tr class="group-result-row'+groupClass(g)+'" data-group-id="'+safe(g.groupId)+'"><td><button type="button" class="group-table-button" data-group-id="'+safe(g.groupId)+'" aria-pressed="'+selectedGroup(g)+'" title="Mostrar apenas '+safe(g.name)+'">'+safe(g.name)+'</button></td><td>'+g.vehicles+'</td><td>'+fmt(g.km,1)+'</td></tr>'
+  ).join(''):'<tr><td colspan="3">Sem grupo para exibir</td></tr>';
+  $('vehicleRows').innerHTML=summary.vehiclesRows.length?summary.vehiclesRows.map(v=>
+    '<tr><td><b>'+safe(v.name)+'</b>'+(v.plate?'<span class="data-note">'+safe(v.plate)+'</span>':'')+'</td><td>'+v.tripCount+'</td><td><b>'+fmt(v.km,1)+'</b></td><td>'+(v.odoStart==null?'N/D':fmt(v.odoStart,1))+'</td><td>'+(v.odoEnd==null?'N/D':fmt(v.odoEnd,1))+'</td></tr>'
+  ).join(''):'<tr><td colspan="5">Sem veículos elegíveis</td></tr>';
+  const notes=[
+    'O total corresponde às viagens retornadas pela API Trip dentro da janela filtrada. Não é leitura de odômetro da frota.',
+    'A evolução apresenta um ponto por dia; dias sem viagens aparecem com 0 km. Para períodos longos, arraste o gráfico horizontalmente.',
+    'Odômetros: Trip.odometer vem em metros. O início é inferido do odômetro da primeira viagem menos sua distância; não é uma medição direta da hora inicial.',
+    'Os dados são consultados somente no escopo permitido pela conta MyGeotab e na seleção atual.',
+    'Não há contagem duplicada de veículos com vários grupos: eles são exibidos no grupo exclusivo “Múltiplos grupos”.'
+  ];
+  if(summary.boundaryTrips)notes.push(summary.boundaryTrips+' viagem(ns) cruzaram o limite do período e foram contadas integralmente. No gráfico diário, essas viagens são atribuídas ao primeiro/último dia do intervalo se começaram fora dele.');
+  if(summary.withOdometer<summary.vehicles)notes.push(summary.vehicles-summary.withOdometer+' veículo(s) sem odômetro confiável na seleção: exibidos como N/D.');
+  $('notes').innerHTML=notes.map(n=>'<li>'+safe(n)+'</li>').join('');
+  $('scope').textContent=(demoMode?'SIMULAÇÃO · ':'')+period.label+' · '+dt(period.from)+' até '+dt(period.to)+(chosen?' · Grupo em foco: '+chosen.name:'')+' · '+primaryLabel(summary);
+  $('groupCsv').disabled=false;$('vehicleCsv').disabled=false;$('pdfBtn').disabled=false;
+  message((demoMode?'SIMULAÇÃO COM DADOS FICTÍCIOS. ':'Consulta completa. ')+(chosen?'Grupo em foco: '+chosen.name+'. ':'')+primaryLabel(summary)+'.',demoMode?'err':'ok');
+}
+function selectResultGroup(event){
+  const target=event.target.closest('[data-group-id]');
+  if(!target||!fullReport)return;
+  const groupId=String(target.dataset.groupId||'');
+  if(!fullReport.summary.groupsRows.some(g=>String(g.groupId)===groupId))return;
+  focusGroupId=focusGroupId===groupId?null:groupId;
+  renderFocusedView();
+}
+function clearResultGroup(){
+  if(!fullReport)return;
+  focusGroupId=null;
+  renderFocusedView();
+}
+function bootDemo(){
+  demoMode=true;loaded=true;
+  groups=[
+    {id:'grupo-norte',name:'Operação Norte',children:[{id:'base-norte'}]},
+    {id:'base-norte',name:'Base Norte',children:[]},
+    {id:'grupo-sul',name:'Operação Sul',children:[]},
+    {id:'grupo-central',name:'Operação Central',children:[]}
+  ];
+  devices=Array.from({length:12},(_,i)=>({
+    id:'teste-'+(i+1),name:'TESTE-'+String(i+1).padStart(3,'0'),licensePlate:'AAA'+String(1000+i),
+    groups:i===8?[{id:'base-norte'},{id:'grupo-central'}]:
+      [{id:i%3===0?'base-norte':i%3===1?'grupo-sul':'grupo-central'}]
+  }));
+  fillGroups();fillVehicles();
+  $('status').textContent='PRÉVIA FICTÍCIA';
+  $('scope').textContent='Dados demonstrativos inventados, sem conexão com uma base Geotab.';
+  message('PRÉVIA VISUAL: todos os dados deste modo são fictícios. Para dados reais, instale o Add-In no MyGeotab.','err');
+}
+function fakeTrips(device){
+  const i=Number(device.id.split('-').pop()),result=[];
+  if(i===12||i===11)return result; // Duas unidades sem viagem para conferir o KPI.
+  const now=new Date(),base=new Date(now.getFullYear(),now.getMonth()-2,1);
+  let odometer=115000000+i*6500000,n=0;
+  for(let month=0;month<3;month++){
+    for(let day=2;day<=27;day+=4){
+      const start=new Date(base.getFullYear(),base.getMonth()+month,day,8+(i%4),0);
+      const end=new Date(start.getTime()+75*60000);
+      if(start.getTime()>now.getTime())continue;
+      const km=12+i*3+(day%7);odometer+=km*1000;
+      result.push({id:'demo-'+device.id+'-'+(++n),start:start.toISOString(),stop:end.toISOString(),distance:km,odometer});
+    }
+  }
+  return result;
+}
+function renderDemo(){
+  try{
+    const period=Model.range($('periodFilter').value,$('fromInput').value,$('toInput').value);
+    const ds=filters.scope();
+    const map=new Map();
+    for(const d of ds){
+      const selected=fakeTrips(d).filter(t=>new Date(t.start)<=period.to&&new Date(t.stop)>=period.from);
+      map.set(String(d.id),Model.summarizeVehicle(d,selected,period));
+    }
+    render(Model.summarizeFleet(ds,map,groups,filters.groups()),period,ds);
+    $('status').textContent='PRÉVIA FICTÍCIA';
+    message('PRÉVIA VISUAL COM DADOS FICTÍCIOS: filtros, totais e ranking calculados sobre veículos de exemplo.','err');
+    $('scope').textContent='SIMULAÇÃO · '+period.label+' · '+ds.length+' veículos fictícios. Não representa cliente ou base Geotab.';
+    $('notes').insertAdjacentHTML('afterbegin','<li><strong>SIMULAÇÃO:</strong> esta visualização foi gerada apenas para conferir a interface e filtros. Nenhuma informação real foi consultada.</li>');
+  }catch(e){message('Filtro da prévia inválido: '+String(e.message||e),'err');}
+}
+async function load(){
+  if(demoMode){renderDemo();return;}
+  if(!api){message('Abra este Add-In dentro do MyGeotab para buscar dados reais.','err');return;}
+  if(loading){invalidate();}
+  const req=++token;
+  loading=true;fullReport=null;focusGroupId=null;last=null;$('loadBtn').disabled=true;$('cancelBtn').hidden=false;$('progressWrap').hidden=false;resetVisual();
+  try{
+    await bootstrap();checkToken(req);
+    const period=Model.range($('periodFilter').value,$('fromInput').value,$('toInput').value);
+    const ds=filters.scope();
+    const full=new Map();let i=0,done=0;
+    updateProgress(0,ds.length);
+    message('Consultando '+ds.length+' veículo(s). A conclusão depende do volume de viagens...');
+    const workers=Array.from({length:Math.min(3,ds.length)},async()=>{
+      while(i<ds.length){
+        checkToken(req);
+        const d=ds[i++];
+        const trips=await tripsInWindow(d,period.from,period.to,req);
+        checkToken(req);
+        const result=Model.summarizeVehicle(d,trips,period);
+        if(result.invalidCount)throw Error('Distâncias inválidas para '+(d.name||d.id)+'. Consulta interrompida para evitar total parcial.');
+        full.set(String(d.id),result);
+        done++;updateProgress(done,ds.length);
+      }
+    });
+    await Promise.all(workers);checkToken(req);
+    if(done!==ds.length)throw Error('Consulta incompleta: nem todos os veículos foram processados.');
+    const summary=Model.summarizeFleet(ds,full,groups,filters.groups());
+    render(summary,period,ds);
+    $('status').textContent='Consulta concluída';
+  }catch(e){
+    if(req!==token)return;
+    resetVisual();
+    message(e.message==='CONSULTA_CANCELADA'?'Consulta cancelada.':'Consulta não concluída: '+String(e.message||e)+'. Nenhum total parcial foi apresentado.','err');
+    $('status').textContent='Sem dados completos';
+  }finally{
+    if(req===token){loading=false;$('loadBtn').disabled=false;$('cancelBtn').hidden=true;$('progressWrap').hidden=true;}
+  }
+}
+function csvValue(v){let s=String(v==null?'':v);if(/^[=+\-@\t\r]/.test(s))s="'"+s;return '"'+s.replace(/"/g,'""')+'"';}
+function exportCsv(which){
+  if(!last)return;
+  const rows=which==='groups'
+    ? [['Grupo','Veículos','Viagens','KM rodado'],...last.summary.groupsRows.map(x=>[x.name,x.vehicles,x.trips,x.km.toFixed(2)])]
+    : [['Veículo','Placa','Viagens','KM rodado','Odômetro inicial estimado km','Odômetro final km','Origem'],...last.summary.vehiclesRows.map(x=>[x.name,x.plate,x.tripCount,x.km.toFixed(2),x.odoStart==null?'N/D':x.odoStart.toFixed(2),x.odoEnd==null?'N/D':x.odoEnd.toFixed(2),x.odoOrigin])];
+  const content='\ufeff'+rows.map(row=>row.map(csvValue).join(';')).join('\r\n');
+  const url=URL.createObjectURL(new Blob([content],{type:'text/csv;charset=utf-8'})),a=document.createElement('a');
+  a.href=url;a.download='quilometragem-'+which+'.csv';a.click();setTimeout(()=>URL.revokeObjectURL(url),1000);
+}
+function downloadPdf(){
+  if(!last||!window.FleetMileagePdf){message('Consulte os dados e tente baixar o PDF novamente.','err');return;}
+  const groupNames=last.groupFocus?[last.groupFocus.name]:filters.groups().map(id=>(groups.find(g=>String(g.id)===id)||{}).name||id);
+  const vehicleNames=filters.vehicles().map(id=>(devices.find(d=>String(d.id)===id)||{}).name||id);
+  try{
+    window.FleetMileagePdf.save({...last,groupNames,vehicleNames,demo:demoMode});
+    message(demoMode?'PDF de simulação baixado. Os dados são fictícios.':'PDF de quilometragem gerado com a consulta completa e os filtros selecionados.','ok');
+  }catch(e){console.error(e);message('Falha ao gerar PDF: '+String(e.message||e),'err');}
+}
+function start(client){
+  api=client||null;
+  filters=window.FleetMileageFilters.create({model:Model,onChange:()=>{invalidate();if(demoMode)renderDemo();}});
+  filters.init();
+  $('loadBtn').addEventListener('click',load);
+  $('cancelBtn').addEventListener('click',()=>{invalidate();message('Consulta cancelada. Nenhum resultado parcial será exportado.');});
+  $('periodFilter').addEventListener('change',()=>{toggleDates();invalidate();});
+  $('fromInput').addEventListener('change',invalidate);
+  $('toInput').addEventListener('change',invalidate);
+  $('groupCsv').addEventListener('click',()=>exportCsv('groups'));
+  $('vehicleCsv').addEventListener('click',()=>exportCsv('vehicles'));
+  $('pdfBtn').addEventListener('click',downloadPdf);
+  $('groupChart').addEventListener('click',selectResultGroup);
+  $('groupRows').addEventListener('click',selectResultGroup);
+  $('clearGroupFocus').addEventListener('click',clearResultGroup);
+  toggleDates();
+  if(api)bootstrap().catch(e=>message('Falha ao carregar frota: '+String(e.message||e),'err'));
+  else if(demoMode)bootDemo();
+  else message('Abra dentro do MyGeotab para carregar dados reais.','err');
+}
+if(new URLSearchParams(window.location.search).get('demo')==='1'){demoMode=true;start(null);renderDemo();}
+window.geotab=window.geotab||{};window.geotab.addin=window.geotab.addin||{};
+window.geotab.addin.fleetTelemetryManager=function(){return {
+  initialize:function(client,state,cb){try{start(client);}catch(e){console.error(e);message('Erro ao iniciar: '+String(e.message||e),'err');}if(cb)cb();},
+  focus:function(){},blur:function(){}
+};};
+})();
+
+</script>
 </head>
 <body>
 <main id="app" class="mileage-shell">
 <header class="head">
-  <div class="title"><div class="ico"><img src="https://fleet-telemetry-manager-geotab.vercel.app/icon.svg" alt=""></div><div><strong>Quilometragem da Frota</strong><div class="sub">Fleet Telemetry Manager · MyGeotab</div></div></div>
+  <div class="title"><div class="ico"><img src="https://ftmbrunog2026.vercel.app/icon.svg" alt=""></div><div><strong>Quilometragem da Frota</strong><div class="sub">Fleet Telemetry Manager · MyGeotab</div></div></div>
   <span class="pill" id="status">Aguardando MyGeotab</span>
 </header>
 <div class="bar mileage-filters">
