@@ -26,5 +26,31 @@
         }
       ]
     }
+  ],
+  "rewrites": [
+    {
+      "source": "/dashboard.html",
+      "destination": "/index.html"
+    },
+    {
+      "source": "/mileage.html",
+      "destination": "/mileage/index.html"
+    },
+    {
+      "source": "/incidents.html",
+      "destination": "/incidents/index.html"
+    },
+    {
+      "source": "/health.html",
+      "destination": "/health/index.html"
+    },
+    {
+      "source": "/exceptions.html",
+      "destination": "/exceptions/index.html"
+    },
+    {
+      "source": "/trips.html",
+      "destination": "/trips/index.html"
+    }
   ]
 }
