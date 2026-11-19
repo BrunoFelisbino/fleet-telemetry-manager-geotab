@@ -5,6 +5,10 @@ const LIMIT_OPTIONS=150;
 const $=id=>document.getElementById(id);
 const safe=v=>String(v==null?'':v).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;').replace(/'/g,'&#39;');
 const normalized=v=>String(v==null?'':v).normalize('NFD').replace(/[\u0300-\u036f]/g,'').toLowerCase().trim();
+function filterOptions(options,query){
+  const needle=normalized(query);
+  return (options||[]).filter(item=>!needle||normalized(item.label+' '+(item.plate||'')).includes(needle));
+}
 function create({model,onChange}){
   let groups=[],vehicles=[],selectedGroups=new Set(),selectedVehicles=new Set(),activeOptions={groups:[],vehicles:[]};
   const selected=type=>type==='groups'?selectedGroups:selectedVehicles;
@@ -30,7 +34,7 @@ function create({model,onChange}){
   function renderOptions(type){
     const name=heading(type),q=normalized($(name+'Search').value);
     const available=list(type);
-    const matching=available.filter(item=>!q||normalized(item.label+' '+(item.plate||'')).includes(q));
+    const matching=filterOptions(available,q);
     const shown=matching.slice(0,LIMIT_OPTIONS),chosen=selected(type);
     $(name+'Options').innerHTML=shown.length?shown.map(item=>
       '<label class="picker-option"><input type="checkbox" value="'+safe(item.id)+'"'+(chosen.has(item.id)?' checked':'')+'><span class="option-label" title="'+safe(item.label)+'">'+safe(item.label)+'</span></label>'
@@ -109,5 +113,5 @@ function create({model,onChange}){
   return {init,setData,refreshVehicles,groups:()=>[...selectedGroups],vehicles:()=>[...selectedVehicles],
     scope:()=>model.devicesInMultiScope(vehicles,groups,[...selectedGroups],[...selectedVehicles])};
 }
-root.FleetMileageFilters={create};
+root.FleetMileageFilters={create,filterOptions};
 })(typeof globalThis!=='undefined'?globalThis:this);
