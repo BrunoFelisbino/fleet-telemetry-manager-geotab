@@ -2,7 +2,7 @@
 (function () {
   'use strict';
   var api = null, allDevices = [], allGroups = [], currentStatus = [], allRules = [], metaReady = false, report = null;
-  var LIMIT_VEHICLES = 50, LIMIT_RECORDS = 5000;
+  var LIMIT_VEHICLES = 50, LIMIT_RECORDS = 5000, incidentRequestId = 0;
   var el = function (id) { return document.getElementById(id); };
   var safe = function (v) { return String(v == null ? '' : v).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;').replace(/'/g,'&#39;'); };
   var rid = function (v) { return v && typeof v === 'object' ? String(v.id || '') : String(v || ''); };
@@ -140,8 +140,43 @@
     if(issues)notes.push('Alguma consulta de metadados falhou; confirme as permissões da conta.');
     el('notes').innerHTML=notes.map(function(n){return '<li>'+safe(n)+'</li>';}).join('');
     el('scope').textContent=devices.length+' veículo(s) elegível(is) · '+el('periodFilter').value+' dias · '+(complete?fmt(m.km,1)+' km em viagens':'Histórico indisponível');
-    report={data:m,complete:complete};
+    report={data:m,complete:complete,incidents:null};
     el('exportCsv').disabled=false;el('exportPdf').disabled=false;
+  }
+  async function updateCaseIndicators(devices) {
+    var requestId=++incidentRequestId,group=el('groupFilter').value;
+    if(!group)return true; // Sem escopo explícito, não consultar registros de tratativas.
+    if(!window.TelemetryCaseStore||!window.TelemetryCaseModel)return false;
+    try{
+      var records=await window.TelemetryCaseStore.read(api,group);
+      if(requestId!==incidentRequestId)return true;
+      var allowed=new Set(devices.map(function(d){return String(d.id);}));
+      var data=window.TelemetryCaseModel.buildCases(records).filter(function(c){
+        return c.groupId===group&&allowed.has(String(c.vehicleId));
+      });
+      var from=new Date(Date.now()-Number(el('periodFilter').value)*86400000),to=new Date();
+      var m=window.TelemetryCaseModel.metrics(data,from.toISOString(),to.toISOString());
+      var treatment=el('treatmentCards').querySelectorAll('.kpi');
+      var safety=el('safetyCards').querySelectorAll('.kpi');
+      function apply(node,value,hint){
+        if(!node)return;
+        node.querySelector('.value').textContent=value;
+        node.querySelector('.context').textContent=hint;
+      }
+      var value=function(n,d,unit){return n==null?'N/D':fmt(n,d)+(unit||'');};
+      apply(treatment[0],value(m.slaPct,1,'%'),'Fonte: ocorrências registradas com prazo vencido ou concluídas no período. '+m.ontime+'/'+m.eligible+' no prazo.');
+      apply(treatment[1],value(m.meanHours,1,' h'),'Apenas alertas não críticos concluídos no período.');
+      apply(safety[1],value(m.recurrencePct,1,'%'),'Mesmo veículo e natureza após correção dentro de 30 dias. '+m.recurrent+'/'+m.closed+' tratados.');
+      if(report)report.incidents=m;
+      var li=document.createElement('li');li.textContent='KPIs de tratativas: somente registros auditáveis do grupo selecionado ('+data.length+' casos visíveis).';
+      el('notes').appendChild(li);
+      return true;
+    }catch(e){
+      if(requestId!==incidentRequestId)return true;
+      var li=document.createElement('li');li.textContent='Tratativas indisponíveis: '+String(e.message||e)+'. Verifique ViewAddInData e grupos.';
+      el('notes').appendChild(li);
+      return false;
+    }
   }
   async function refresh() {
     if(!api){message('Abra no MyGeotab para consultar sua frota; nenhuma informação fictícia será carregada.','err');return;}
@@ -158,7 +193,8 @@
         h=await getHistory(devices,from,to);complete=!h.errors&&!h.truncated;
       }
       render(devices,stat,h,complete,issues);
-      message(issues||h.errors||h.truncated||devices.length>LIMIT_VEHICLES?'Consulta parcial. Verifique as observações.':'Consulta concluída. Indicadores sem fonte adequada aparecem como N/D.','ok');
+      var incidentsOk=await updateCaseIndicators(devices);
+      message(!incidentsOk||issues||h.errors||h.truncated||devices.length>LIMIT_VEHICLES?'Consulta parcial. Verifique as observações.':'Consulta concluída. Indicadores sem fonte adequada aparecem como N/D.','ok');
       el('state').textContent='MyGeotab conectado';
     }catch(e){console.error(e);message('Falha ao consultar API: '+String(e.message||e),'err');}
     finally{el('refreshBtn').disabled=false;}
@@ -166,11 +202,11 @@
   function csvValue(v){var s=String(v==null?'':v);if(/^[=+\-@\t\r]/.test(s))s="'"+s;return '"'+s.replace(/"/g,'""')+'"';}
   function csvExport(){
     if(!report)return;
-    var m=report.data,v=function(n,d){return n==null?'N/D':fmt(n,d);};
+    var m=report.data,t=report.incidents,v=function(n,d){return n==null?'N/D':fmt(n,d);};
     var rows=[['Indicador','Valor','Meta'],['Disponibilidade','N/D','≥ 98%'],
-      ['Veículos monitorados',v(m.coverage,1)+'%','≥ 98%'],['Alertas tratados no prazo','N/D','≥ 95%'],
-      ['Tempo médio de tratamento','N/D','≤ 24 horas'],['Excesso por 1.000 km',report.complete?v(m.speed,2):'N/D','Redução ≥ 10%'],
-      ['Reincidência','N/D','≤ 5%'],['Marcha lenta h/veículo',report.complete?v(m.idle,2):'N/D','Redução ≥ 10%'],
+      ['Veículos monitorados',m.coverage==null?'N/D':v(m.coverage,1)+'%','≥ 98%'],['Alertas tratados no prazo',t&&t.slaPct!=null?v(t.slaPct,1)+'%':'N/D','≥ 95%'],
+      ['Tempo médio de tratamento',t&&t.meanHours!=null?v(t.meanHours,1):'N/D','≤ 24 horas'],['Excesso por 1.000 km',report.complete?v(m.speed,2):'N/D','Redução ≥ 10%'],
+      ['Reincidência',t&&t.recurrencePct!=null?v(t.recurrencePct,1)+'%':'N/D','≤ 5%'],['Marcha lenta h/veículo',report.complete?v(m.idle,2):'N/D','Redução ≥ 10%'],
       ['Consumo L/100 km','N/D','Redução ≥ 5%']];
     var csv=rows.map(function(row){return row.map(csvValue).join(';');}).join('\r\n');
     var url=URL.createObjectURL(new Blob(['\ufeff'+csv],{type:'text/csv;charset=utf-8'})),a=document.createElement('a');
