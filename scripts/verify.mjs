@@ -34,6 +34,9 @@ assert.ok(read('mileage/filters.js').includes('selectedGroups')&&read('mileage/f
 assert.ok(read('mileage/index.html').includes('id="pdfBtn"'));
 assert.ok(read('mileage/index.html').includes('id="trendChart"'));
 assert.ok(read('mileage/index.html').includes('./chart.js?v=0.3.3'));
+assert.ok(read('mileage/index.html').includes('./app.js?v=0.3.4'));
+assert.ok(read('mileage/index.html').includes('./model.js?v=0.3.4'));
+assert.ok(read('mileage/index.html').includes('id="groupFocusStatus"'));
 assert.ok(read('mileage/index.html').includes('./pdf.js?v=0.3.3'));
 assert.ok(read('incidents/app.js').includes('geotab.addin.fleetTelemetryManager'));
 assert.ok(read('incidents/index.html').includes('./app.js?v=0.2.0'));
