@@ -31,6 +31,32 @@ A referência de indicadores recomenda **três meses de linha de base** antes da
 
 **Atenção aos campos:** o valor Trip.distance da API Geotab é em quilômetros, não em metros. Trip.stopDuration inclui veículo parado com motor desligado e não substitui Trip.idlingDuration.
 
+
+## Quilometragem da Frota (v0.3.0)
+
+Nova página \`/mileage/\`, separada para não sobrecarregar o painel geral com consultas de uma frota grande.
+
+- Filtros: frota total permitida pela sessão, grupo e seus subgrupos, veículo, mês atual, mês anterior, últimos 7/30/90 dias e período personalizado.
+- KPIs: KM total do filtro, quantidade de veículos, média de KM por veículo, veículos sem viagens.
+- Visões: ranking dos veículos, grupo operacional sem duplicação e CSV para cada tabela.
+- Odômetro final usa \`Trip.odometer\` em **metros**, convertido em quilômetros; odômetro inicial é **inferido** do odômetro final da primeira viagem menos \`Trip.distance\`. Se faltar informação confiável, o campo fica **N/D**.
+- Quilometragem da viagem: \`Trip.distance\` já é em **quilômetros**. A versão incluída do Fleet Trip 360 também teve essa conversão corrigida.
+- Escala: uma consulta por veículo, com ritmo moderado, três consultas em paralelo e divisão recursiva de intervalos que atinjam o limite de registros. Não existe corte artificial em 50 veículos nesta nova página; o processo demora conforme tamanho da frota e volume de dados.
+- Se alguma consulta falhar ou vier truncada, a página **não publica total parcial** como resultado completo. Há progresso visual e cancelamento.
+- Viagens que cruzam as datas de corte são consideradas integralmente. O sistema alerta sobre este limite; o cálculo exato do trecho da viagem dentro do filtro exige leituras de odômetro/telemetria nos limites do período.
+- A classificação por grupo é exclusiva. Dispositivos associados a vários grupos aparecem sob "Múltiplos grupos" na visão da frota total.
+
+### Testar agora
+
+**Prévia do visual com dados fictícios**: abra \`https://fleet-telemetry-manager-geot-git-6df792-poze1988-4802s-projects.vercel.app/mileage/?demo=1\`. O modo demonstrativo é explicitamente sinalizado e não consulta a Geotab.
+
+**Teste com dados reais somente em base homologada**: instale o conteúdo de \`addin-config.preview.json\` em **MyGeotab → Sistema / Configurações → Add-Ins** (nomenclatura do menu varia conforme versão/permissões). A versão de teste é hospedada em uma URL separada, aponta para a branch de desenvolvimento e utiliza a sessão e as permissões da base escolhida. Abra o menu "Quilometragem da Frota", filtre e clique em "Consultar".
+
+- A URL de prévia **não deve ser tratada como publicação definitiva**, nem aplicada a uma base de produção sem autorização e teste.
+- Não insira credenciais ou dados reais no repositório ou em chamadas públicas. O Add-In só utiliza a API contextual do MyGeotab.
+- A hospedagem da prévia é pública para os arquivos do Add-In; os dados só são consultados dentro da sessão autenticada do MyGeotab.
+- Executar localmente: \`node scripts/verify.mjs\`, \`node scripts/verify-incidents.mjs\` e \`node scripts/verify-mileage.mjs\`.
+
 ## Limitações e cuidados
 
 - Consultas históricas são feitas por veículo com concorrência limitada a quatro; máximo de 50 veículos selecionados e 5000 registros por consulta/veículo. Se atingir o limite ou faltar alguma resposta, os índices históricos ficam como N/D, não são extrapolados.
