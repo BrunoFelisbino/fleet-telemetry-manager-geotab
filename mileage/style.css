@@ -159,3 +159,85 @@
   #app .trend-chart{min-height:242px}
   #app .trend-chart .daily-svg{height:235px}
 }
+
+
+/* Seleção interativa de grupo no resultado, sem interferir nos filtros de consulta. */
+#app .group-focus-actions{display:flex;align-items:center;gap:7px;flex-wrap:wrap;justify-content:flex-end}
+#app .group-focus-actions button[hidden]{display:none!important}
+#app .group-focus-actions #clearGroupFocus{
+  background:#f1f5f9;
+  border:1px solid #cbd5e1;
+  color:#334155;
+  border-radius:8px;
+  font-size:11px;
+  font-weight:700;
+  height:31px;
+  padding:0 11px;
+  cursor:pointer;
+}
+#app .group-focus-actions #clearGroupFocus:hover{background:#e2e8f0}
+#app .group-focus-status{
+  padding:8px 11px;
+  margin:10px 0;
+  font-size:11px;
+  line-height:1.4;
+  color:var(--mut);
+  background:#f8fafc;
+  border:1px solid var(--bd);
+  border-radius:9px;
+}
+#app .bar-chart .group-action{
+  display:grid;
+  width:100%;
+  height:auto;
+  min-height:37px;
+  grid-template-columns:minmax(90px,1fr) minmax(55px,4fr) 86px;
+  align-items:center;
+  gap:10px;
+  padding:7px 9px;
+  text-align:left;
+  background:#fff;
+  color:var(--txt);
+  border:1px solid transparent;
+  border-radius:9px;
+  font:inherit;
+  cursor:pointer;
+  transition:opacity .16s ease,background .16s ease,border-color .16s ease;
+}
+#app .bar-chart .group-action:hover{background:#f1f5f9;border-color:var(--bd)}
+#app .bar-chart .group-action:focus-visible,
+#app .group-table-button:focus-visible{outline:2px solid #0369a1;outline-offset:2px}
+#app .bar-chart .group-action.is-dim{opacity:.28}
+#app .bar-chart .group-action.is-dim:hover,
+#app .bar-chart .group-action.is-dim:focus-visible{opacity:.85}
+#app .bar-chart .group-action.is-focused{
+  background:#eff6ff;
+  border-color:#93c5fd;
+}
+#app .bar-chart .group-action.is-focused .bar-fill{background:#1e293b}
+#app .bar-chart .group-action .bar-rail{display:block}
+#app .group-result-row{cursor:pointer}
+#app .group-result-row.is-dim td{opacity:.32}
+#app .group-result-row.is-dim:hover td{opacity:.90}
+#app .group-result-row.is-focused td{background:#eff6ff;color:#0f172a}
+#app .group-result-row .group-table-button{
+  display:inline-block;
+  height:auto;
+  width:100%;
+  padding:4px;
+  margin:0;
+  text-align:left;
+  background:transparent;
+  border:0;
+  color:inherit;
+  font:inherit;
+  cursor:pointer;
+}
+#app .group-result-row.is-focused .group-table-button{font-weight:800}
+@media(max-width:600px){
+  #app .bar-chart .group-action{grid-template-columns:minmax(80px,1fr) minmax(50px,2fr) 76px;gap:6px}
+  #app .group-focus-actions{justify-content:flex-start}
+}
+@media(prefers-reduced-motion:reduce){
+  #app .bar-chart .group-action{transition:none}
+}
