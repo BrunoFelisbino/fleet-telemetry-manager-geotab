@@ -7,6 +7,7 @@ Projeto novo e independente, baseado na estrutura visual e técnica dos projetos
 ## Páginas
 
 - **Fleet Telemetry Manager (/):** oito indicadores do processo Gerir Telemetria, filtros por grupo, veículo e período, estado de comunicação, exportação CSV e impressão PDF com logo opcional.
+- **Ocorrências e SLA (/incidents/):** abertura e acompanhamento de casos com grupo, veículo, criticidade, prazo, responsável, vínculo opcional a `ExceptionEvent`, histórico de ações e CSV. Os registros são persistidos via `AddInData` na base MyGeotab autorizada.
 - **Fleet Health Score (/health/):** cópia adaptada do painel técnico, com filtros, dados de dispositivos e relatórios.
 - **Fleet Exception 360 (/exceptions/):** cópia adaptada dos relatórios de regras, exceções e auditoria.
 - **Fleet Trip 360 (/trips/):** cópia adaptada do histórico de viagens, condutores, rotas e relatórios.
@@ -19,10 +20,10 @@ Todas as páginas usam o namespace de Add-In geotab.addin.fleetTelemetryManager.
 | --- | --- | --- |
 | Disponibilidade da telemetria | ≥ 98% | N/D: exige período previsto de operação e histórico de comunicação |
 | Veículos monitorados | ≥ 98% | Device e DeviceStatusInfo: instantâneo da comunicação, não é disponibilidade histórica |
-| Alertas tratados no prazo | ≥ 95% | N/D: exige chamados e ações corretivas com data |
-| Tempo médio de tratamento | ≤ 24 h para não críticos | N/D: exige registro de abertura e conclusão |
+| Alertas tratados no prazo | ≥ 95% | AddInData da Central de Ocorrências, apenas no grupo explicitamente selecionado. Sem registros ou permissões: N/D |
+| Tempo médio de tratamento | ≤ 24 h para não críticos | AddInData: diferença entre abertura e conclusão de alertas **não críticos** encerrados no período |
 | Excesso de velocidade por 1.000 km | redução ≥ 10% | ExceptionEvent das regras de velocidade, dividido por km de Trip |
-| Reincidência de ocorrências | ≤ 5% | N/D: exige ações corretivas e janela de recorrência |
+| Reincidência de ocorrências | ≤ 5% | AddInData: novo caso do mesmo tipo e veículo após ação corretiva concluída em janela de até 30 dias; usar como indicador de casos registrados, não de todos os eventos |
 | Marcha lenta por veículo | redução ≥ 10% | Trip.idlingDuration / veículos monitorados na seleção, se disponível |
 | Consumo médio (L/100 km) | redução ≥ 5% | N/D: exige litros confiáveis (FuelAndEnergyUsed, abastecimento ou sensores) |
 
@@ -36,18 +37,33 @@ A referência de indicadores recomenda **três meses de linha de base** antes da
 - Grupo é filtrado por associação direta de Device.groups. A hierarquia deve ser avaliada antes de aplicação contratual.
 - Regra de excesso de velocidade é identificada pelo nome da Rule; a configuração deve ser conferida.
 - O status de comunicação é instantâneo e não mede a disponibilidade mensal.
-- Esta versão **ainda não implementa gestão e armazenamento de ocorrências**. Não confundir ExceptionEvent com ocorrência tratada.
+- A Central de Ocorrências usa a **Storage API `AddInData`** com o identificador próprio `a2UzOGI0NTgtMGNmNC00MTg` e grupos operacionais da própria base. É obrigatório ter permissão `ViewAddInData` para ler e `ManageAddInData` para gravar; validar em usuários e grupos distintos.
+- Cada abertura e transição gera um objeto `AddInData` independente. Isto preserva a sequência de ações **na aplicação**, mas não equivale a um log imutável criptográfico ou substitui controles administrativos e de auditoria corporativa.
+- Prazo de cada ocorrência é **informado pelo operador** conforme SLA do contrato. O KPI de 24 horas do documento é uma meta para *tempo médio de tratamento* não crítico, não deve virar prazo automático para todos os chamados.
+- Evidências nesta fase são **descrição textual e referências**; uploads de fotos/documentos e integração ERP/OS ainda estão pendentes. Não armazenar anexos ou documentos sensíveis em campos JSON.
+- Os KPIs de tratativas só são consolidados ao escolher um grupo específico. `ExceptionEvent` por si só não comprova tratamento, e eventos não importados/manualizados não entram no denominador.
+- A leitura `AddInData` é limitada a 5.000 objetos por grupo. Ao atingir o limite, o módulo recusa métricas potencialmente incompletas. Requer paginação/serviço para escalar.
+- Associação e autorização por grupos seguem a configuração da base, mas *não foi testada* contra todos os perfis de segurança. Não presumir que grupos aninhados estejam incluídos.
 - Nenhuma credencial, placa ou informação real de clientes deve ser adicionada a este repositório público. As consultas são realizadas na sessão autorizada do MyGeotab.
 - O Add-In ainda não foi testado em banco de homologação. Confirmar permissões, volumes, fusos e regras na operação real.
 
 ## Verificação
 
-Na raiz do projeto: node scripts/verify.mjs
+Na raiz do projeto: `node scripts/verify.mjs` e `node scripts/verify-incidents.mjs`.
 
 Depois, validar manualmente no MyGeotab em base de testes: carregamento de todas as páginas, filtros, ausência de dados, CSV, impressão com e sem logo, regras, quilometragem, marcha lenta e bloqueios de acesso.
 
+## Política operacional da Central
+
+1. Selecionar operação/grupo e veículo. Uma ocorrência registrada exige natureza, criticidade, resumo, responsável e prazo manual.
+2. Opcionalmente carregar um `ExceptionEvent` dos últimos sete dias para vincular a abertura a um evento real.
+3. Percorrer estados: aberta → em análise/encaminhada → em tratamento → concluída. Ocorrência sem necessidade de ação pode ser justificada com motivo; casos finalizados podem ser reabertos.
+4. Cada mudança exige justificativa e fica identificada pelo usuário da sessão `api.getSession`. Eventos duplicados podem ocorrer por gravações simultâneas e devem ser auditados.
+5. O SLA é apurado pelas ocorrências **concluídas no período** e pelas **abertas com prazo vencido no período**, excluindo alertas ainda no prazo; não há contagem dupla. O tempo médio considera apenas os alertas não críticos concluídos. Reincidência considera os concluídos no período após correção anterior no mesmo veículo/tipo.
+
 ## Próxima entrega
 
-Fluxo de tratativas com SLA por criticidade, áreas responsáveis, anexos de evidências, ações corretivas, auditoria, reabertura e reincidência. Avaliar backend privado e integração com sistema de manutenção para não armazenar dados de clientes no GitHub público.
+Homologar criação, consulta e transições de `AddInData` por perfil e grupo. Implantar escopo hierárquico de grupos, anexos com armazenamento autorizado, paginação para frotas maiores, reconciliação concorrente, alertas automáticos e integração com sistema de manutenção/ERP. 
+A publicação no GitHub Pages e o registro no MyGeotab **não** são feitos por esta PR.
 
 Autor: Bruno Henrique Felisbino Gonçalves. Não oficial, sem afiliação ou endosso da Geotab.
