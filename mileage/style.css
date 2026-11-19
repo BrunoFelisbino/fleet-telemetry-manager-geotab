@@ -1,0 +1,27 @@
+#app .mileage-filters{align-items:end}
+#app .mileage-filters label{display:grid;gap:5px;flex:1;min-width:145px;font-weight:700;color:var(--mut);font-size:11px}
+#app .mileage-filters .custom-date[hidden]{display:none}
+#app .mileage-filters input,#app .mileage-filters select{width:100%;height:36px;max-width:none;min-width:0;border:1px solid var(--bd);border-radius:8px;padding:0 8px;background:#fff;color:var(--txt);font:12px "Segoe UI",system-ui,sans-serif}
+#app .progress{margin:12px 0;padding:12px 14px;background:#fff;border:1px solid var(--bd);border-radius:12px;display:grid;grid-template-columns:1fr auto;gap:12px;align-items:center;color:var(--mut);font-size:12px}
+#app .progress[hidden]{display:none}#app .progress-track{height:7px;background:#edf2f7;border-radius:99px;overflow:hidden}
+#app .progress-fill{height:100%;background:var(--blue);width:0;transition:width .15s linear}
+#app .mileage-cols{grid-template-columns:1fr 1.45fr}
+#app .panel-heading{display:flex;align-items:center;justify-content:space-between;gap:10px}
+#app .panel-heading .pt{margin-bottom:12px}
+#app .table-scroll{max-height:460px;overflow:auto;border:1px solid var(--bd);border-radius:10px}
+#app .table-scroll table{width:100%}#app .table-scroll th{position:sticky;top:0;z-index:1}
+#app .table-scroll td:nth-child(n+2){font-variant-numeric:tabular-nums}
+#app .bar-chart{display:grid;gap:10px;margin:14px 0;min-height:60px}
+#app .bar-item{display:grid;grid-template-columns:minmax(90px,1fr) minmax(55px,4fr) 86px;gap:10px;align-items:center;font-size:11px}
+#app .bar-name{white-space:nowrap;text-overflow:ellipsis;overflow:hidden;color:var(--mut)}
+#app .bar-rail{height:9px;background:#e9f0f7;border-radius:10px;overflow:hidden}
+#app .bar-fill{height:100%;background:linear-gradient(90deg,#0ea5e9,#0369a1);border-radius:10px}
+#app .bar-value{text-align:right;font:700 11px Consolas,monospace}
+#app .data-note{font-weight:400;color:var(--mut2);font-size:10px;display:block}
+#app .warn-text{color:#a16207}
+#app .table-scroll table{min-width:520px}
+#app .metric-grid .kpi .value{font-size:27px}
+#app .metric-grid .context{display:block;margin-top:9px;font-size:11px;color:var(--mut)}
+@media(max-width:1100px){#app .mileage-cols{grid-template-columns:1fr}}
+@media(max-width:600px){#app .mileage-filters{display:grid;grid-template-columns:1fr 1fr}#app .mileage-filters label{min-width:0}#app .mileage-filters button{width:100%}#app .metric-grid{grid-template-columns:1fr 1fr}#app .metric-grid .kpi .value{font-size:22px}#app .bar-item{grid-template-columns:1fr 2fr 70px}}
+@media print{#app .progress,.mileage-filters,.panel-heading button,#message{display:none!important}#app .mileage-cols{grid-template-columns:1fr}#app .table-scroll{max-height:none;overflow:visible}}
