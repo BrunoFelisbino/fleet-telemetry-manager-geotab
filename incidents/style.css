@@ -1,0 +1,27 @@
+.incidents-cols{grid-template-columns:minmax(0,.9fr) minmax(0,1.4fr)}
+#app .case-form{display:grid;gap:10px}
+#app .case-form[hidden]{display:none}
+#app .case-form label,.filters-inline label{font-size:11px;font-weight:700;color:var(--mut);display:grid;gap:5px}
+#app .case-form input,#app .case-form select,#app .case-form textarea,.filters-inline input,.filters-inline select{width:100%;min-width:0;border:1px solid var(--bd);border-radius:8px;padding:9px 11px;background:#fff;color:var(--txt);font:12px "Segoe UI",system-ui,sans-serif}
+#app .case-form textarea{resize:vertical;min-height:78px}
+#app .case-form button{justify-self:start;min-height:34px}
+#app .case-form .primary{min-width:175px}
+#app button[disabled]{opacity:.55;cursor:not-allowed}
+#app .form-pair{display:grid;grid-template-columns:1fr 1fr;gap:9px}
+#app .filters-inline{display:grid;grid-template-columns:1fr 1.4fr;gap:8px;margin-bottom:14px}
+#app .detail-header{margin-top:18px}
+#app .audit-timeline{margin:12px 0;padding-left:24px;color:var(--mut);font-size:12px;line-height:1.5}
+#app .audit-timeline li{margin:0 0 12px;padding-left:6px}
+#app .audit-timeline strong{color:var(--txt)}
+#app #caseDetail{padding:12px;border:1px solid var(--bd);background:var(--card2);border-radius:10px;line-height:1.7;overflow-wrap:anywhere}
+#app .tablewrap{max-height:380px;overflow:auto;border:1px solid var(--bd);border-radius:10px}
+#app .tablewrap table{min-width:440px}#app .tablewrap td{vertical-align:middle}
+#app .case-row.active td{background:#e0f2fe}
+#app .audit-muted{color:var(--mut2)}
+#app .chip{display:inline-block;border-radius:999px;padding:4px 9px;font-size:10px;background:var(--card2);border:1px solid var(--bd);font-weight:700}
+#app .chip.late{background:#fff1f2;color:#9f1239;border-color:#fecdd3}
+#app .chip.ontime{background:#ecfdf5;color:#166534;border-color:#bbf7d0}
+#app .danger{color:#9f1239}
+#app .tablewrap button{padding:3px 10px}
+@media(max-width:1024px){.incidents-cols{grid-template-columns:1fr}}
+@media(max-width:550px){#app .form-pair,#app .filters-inline{grid-template-columns:1fr}#app .case-form button{width:100%}}

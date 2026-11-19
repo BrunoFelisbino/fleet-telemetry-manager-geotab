@@ -1,0 +1,62 @@
+{
+  "name": "fleetTelemetryManager",
+  "supportEmail": "poze1988@gmail.com",
+  "version": "0.3.0",
+  "items": [
+    {
+      "url": "https://fleet-telemetry-manager-geot-git-6df792-poze1988-4802s-projects.vercel.app/?v=0.3.0",
+      "path": "ActivityLink/",
+      "menuName": {
+        "en": "Fleet Telemetry Manager",
+        "pt-BR": "Fleet Telemetry Manager"
+      },
+      "svgIcon": "https://fleet-telemetry-manager-geot-git-6df792-poze1988-4802s-projects.vercel.app/icon.svg"
+    },
+    {
+      "url": "https://fleet-telemetry-manager-geot-git-6df792-poze1988-4802s-projects.vercel.app/mileage/?v=0.3.0",
+      "path": "ActivityLink/",
+      "menuName": {
+        "en": "Fleet Mileage",
+        "pt-BR": "Quilometragem da Frota"
+      },
+      "svgIcon": "https://fleet-telemetry-manager-geot-git-6df792-poze1988-4802s-projects.vercel.app/icon.svg"
+    },
+    {
+      "url": "https://fleet-telemetry-manager-geot-git-6df792-poze1988-4802s-projects.vercel.app/incidents/?v=0.3.0",
+      "path": "ActivityLink/",
+      "menuName": {
+        "en": "Incidents & SLA",
+        "pt-BR": "Ocorrências e SLA"
+      },
+      "svgIcon": "https://fleet-telemetry-manager-geot-git-6df792-poze1988-4802s-projects.vercel.app/icon.svg"
+    },
+    {
+      "url": "https://fleet-telemetry-manager-geot-git-6df792-poze1988-4802s-projects.vercel.app/health/?v=0.3.0",
+      "path": "ActivityLink/",
+      "menuName": {
+        "en": "Fleet Health Score",
+        "pt-BR": "Fleet Health Score"
+      },
+      "svgIcon": "https://fleet-telemetry-manager-geot-git-6df792-poze1988-4802s-projects.vercel.app/icon.svg"
+    },
+    {
+      "url": "https://fleet-telemetry-manager-geot-git-6df792-poze1988-4802s-projects.vercel.app/exceptions/?v=0.3.0",
+      "path": "ActivityLink/",
+      "menuName": {
+        "en": "Fleet Exception 360",
+        "pt-BR": "Fleet Exception 360"
+      },
+      "svgIcon": "https://fleet-telemetry-manager-geot-git-6df792-poze1988-4802s-projects.vercel.app/icon.svg"
+    },
+    {
+      "url": "https://fleet-telemetry-manager-geot-git-6df792-poze1988-4802s-projects.vercel.app/trips/?v=0.3.0",
+      "path": "ActivityLink/",
+      "menuName": {
+        "en": "Fleet Trip 360",
+        "pt-BR": "Fleet Trip 360"
+      },
+      "svgIcon": "https://fleet-telemetry-manager-geot-git-6df792-poze1988-4802s-projects.vercel.app/icon.svg"
+    }
+  ],
+  "isSigned": false
+}
