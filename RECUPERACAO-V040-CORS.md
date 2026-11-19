@@ -31,3 +31,17 @@ Porque ele referencia arquivos em \`https://brunofelisbino.github.io\` e esses U
 - Não compartilhar no Console tokens, cookies ou parâmetros de sessão.
 
 Referências: https://developers.geotab.com/myGeotab/addIns/developingAddIns/ e https://support.geotab.com/pt-BR/community/sdk-api/sdk-api-add-ins/1103/mygeotab-add-in-broken-links
+
+## Alternativa pronta para testes enquanto a Vercel está limitada
+
+A Vercel retornou HTTP 402 (`api-deployments-free-per-day`) e impediu a publicação. Portanto, **não use** o manifesto hospedado até o domínio apontar para o novo deployment.
+
+O workflow `Package restored v0.4.0 MyGeotab Files` monta o artefato `FleetTelemetryOriginal-v0.4.0-CORS-Recovery` com:
+
+- `configuration.json`, equivalente a `addin-config.v040-local-files.json`, com referências locais
+- `files/`: os seis HTMLs completos, `icon.svg`, `translations/en.json` e `translations/pt-BR.json`
+- `fleet-telemetry-v040-files.zip` e `fleet-telemetry-v040-completo.zip`
+
+Para testar, baixe o artefato do GitHub Actions, extraia e **edite o Add-In existente**. Faça backup do JSON antigo. Na aba **Files**, envie os arquivos extraídos e confira que as seis páginas e traduções constam na listagem; subir apenas o ZIP, sem confirmar a extração, pode manter os arquivos ausentes. Na aba **Configuration**, cole `configuration.json`. Salve, recarregue e teste Quilometragem. Esse modo usa HTMLs locais na base Geotab e não depende de CORS do GitHub Pages.
+
+**Atenção:** os testes passaram e o artefato foi produzido, mas nenhum deles comprova abertura numa sessão autenticada do MyGeotab.
