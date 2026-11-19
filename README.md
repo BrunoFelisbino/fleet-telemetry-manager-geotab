@@ -32,6 +32,22 @@ A referência de indicadores recomenda **três meses de linha de base** antes da
 **Atenção aos campos:** o valor Trip.distance da API Geotab é em quilômetros, não em metros. Trip.stopDuration inclui veículo parado com motor desligado e não substitui Trip.idlingDuration.
 
 
+## Correção de carregamento do MyGeotab · v0.4.1
+
+A versão `v0.4.0` podia ficar em "Carregando..." porque o manifesto principal ainda usava links do GitHub Pages que eram bloqueados por CORS no MyGeotab. O erro aparecia como `Access-Control-Allow-Origin` ausente e `Add-In files couldn't be loaded`.
+
+- **Manifesto principal** `addin-config.json`: agora aponta para `https://fleet-telemetry-manager-geotab.vercel.app/` (hospedagem pública na Vercel), com páginas `index.html` explícitas e ícone no mesmo host.
+- **Manifesto de homologação** `addin-config.preview.json`: usa o mesmo host estável; não instale ambos como Add-Ins distintos, pois possuem o mesmo `name`.
+- Arquivo `vercel.json` adiciona `Access-Control-Allow-Origin: *` para **GET público de HTML/CSS/JS/JSON/SVG**, sem autenticação ou informações privadas no servidor.
+- As seis páginas usam URLs absolutas para seus assets, evitando a resolução relativa no domínio do MyGeotab.
+- Pastas de tradução `translations/en.json` e `translations/pt-BR.json` agora existem nas seis rotas.
+- Fleet Trip 360 agora mostra uma mensagem informativa quando a inicialização não acontece, em vez de ficar indefinidamente em "Carregando".
+- `node scripts/verify-hosting.mjs` confere URLs, tradução, arquivos locais e configuração do host. A integração autenticada ainda exige teste manual no MyGeotab.
+
+**Como atualizar a base MyGeotab:** em uma conta com permissão de administração, abra as configurações de Add-Ins, edite a instalação existente **Fleet Telemetry Manager**, substitua sua configuração pelo JSON de `addin-config.json` da `main`, salve e recarregue o MyGeotab. Não apenas atualize o link para GitHub: o Add-In já instalado preserva o manifesto anterior até você substituí-lo.
+
+**Se ainda falhar:** abra o DevTools → Network, filtre `fleet-telemetry-manager`, confirme que os recursos vêm da Vercel e têm status 200 + cabeçalho `access-control-allow-origin`. Copie os erros do Console sem compartilhar tokens ou dados da frota.
+
 ## Release v0.4.0
 
 Esta versão padroniza os manifestos e os parâmetros de cache de todas as páginas como `0.4.0`.
