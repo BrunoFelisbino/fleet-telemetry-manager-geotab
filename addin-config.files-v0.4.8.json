@@ -1,10 +1,10 @@
 {
   "name": "fleetTelemetryManager",
   "supportEmail": "poze1988@gmail.com",
-  "version": "0.4.8",
+  "version": "0.4.9",
   "items": [
     {
-      "url": "dashboard.html",
+      "url": "dashboard049.html",
       "path": "ActivityLink/",
       "menuName": {
         "en": "Fleet Telemetry Manager",
@@ -13,7 +13,7 @@
       "category": "AddIns"
     },
     {
-      "url": "mileage.html",
+      "url": "mileage049.html",
       "path": "ActivityLink/",
       "menuName": {
         "en": "Fleet Mileage",
@@ -22,7 +22,7 @@
       "category": "AddIns"
     },
     {
-      "url": "incidents.html",
+      "url": "incidents049.html",
       "path": "ActivityLink/",
       "menuName": {
         "en": "Incidents & SLA",
@@ -31,7 +31,7 @@
       "category": "AddIns"
     },
     {
-      "url": "health.html",
+      "url": "health049.html",
       "path": "ActivityLink/",
       "menuName": {
         "en": "Fleet Health Score",
@@ -40,7 +40,7 @@
       "category": "AddIns"
     },
     {
-      "url": "exceptions.html",
+      "url": "exceptions049.html",
       "path": "ActivityLink/",
       "menuName": {
         "en": "Fleet Exception 360",
@@ -49,7 +49,7 @@
       "category": "AddIns"
     },
     {
-      "url": "trips.html",
+      "url": "trips049.html",
       "path": "ActivityLink/",
       "menuName": {
         "en": "Fleet Trip 360",
@@ -58,5 +58,6 @@
       "category": "AddIns"
     }
   ],
-  "files": {}
+  "files": {},
+  "isSigned": false
 }
