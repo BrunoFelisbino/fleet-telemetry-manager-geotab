@@ -4,7 +4,7 @@
 const Model=window.FleetMileageModel;
 const $=id=>document.getElementById(id);
 const LIMIT=4000,MIN_WINDOW=60000;
-let api=null,devices=[],groups=[],loaded=false,loading=false,token=0,last=null,rateSlot=0,initializing=false;
+let api=null,devices=[],groups=[],loaded=false,loading=false,token=0,last=null,rateSlot=0,bootstrapPromise=null;
 const safe=v=>String(v==null?'':v).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;').replace(/'/g,'&#39;');
 const fmt=(n,d=1)=>Number(n).toLocaleString('pt-BR',{minimumFractionDigits:d,maximumFractionDigits:d});
 const dt=iso=>{const d=new Date(iso);return Number.isFinite(d.getTime())?d.toLocaleString('pt-BR'):'N/D';};
@@ -47,9 +47,9 @@ async function tripsInWindow(device,from,to,req,depth=0){
 }
 async function bootstrap(){
   if(loaded)return;
-  if(initializing)return;
-  initializing=true;message('Carregando frota e grupos autorizados...');
-  try{
+  if(bootstrapPromise)return bootstrapPromise;
+  bootstrapPromise=(async()=>{
+    message('Carregando frota e grupos autorizados...');
     const res=await Promise.allSettled([call('Device',{},50000),call('Group',{},10000)]);
     if(res[0].status==='rejected')throw Error('Sem acesso ao cadastro de veículos: '+String(res[0].reason));
     if(res[1].status==='rejected')throw Error('Sem acesso aos grupos: '+String(res[1].reason));
@@ -59,7 +59,9 @@ async function bootstrap(){
     loaded=true;
     $('status').textContent='MyGeotab conectado';
     message('Frota carregada ('+devices.length+' cadastros). Escolha os filtros e clique em Consultar.','ok');
-  }finally{initializing=false;}
+  })();
+  try{return await bootstrapPromise;}
+  finally{bootstrapPromise=null;}
 }
 function fillGroups(){
   const active=devices.filter(d=>Model.isActive(d));
