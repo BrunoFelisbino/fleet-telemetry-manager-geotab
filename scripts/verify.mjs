@@ -5,11 +5,11 @@ import {Script} from 'node:vm';
 const read=p=>readFileSync(p,'utf8');
 const manifest=JSON.parse(read('addin-config.json'));
 assert.equal(manifest.name,'fleetTelemetryManager');
-assert.equal(manifest.version,'0.2.0');
+assert.equal(manifest.version,'0.3.0');
 assert.equal(manifest.isSigned,false);
-assert.equal(manifest.items.length,5);
+assert.equal(manifest.items.length,6);
 for(const item of manifest.items){assert.ok(item.url.startsWith('https://'));assert.ok(item.svgIcon.startsWith('https://'));}
-const paths=['index.html','assets/app.css','assets/app.js','incidents/model.js','incidents/storage.js','incidents/app.js','incidents/style.css','incidents/index.html','print-options.js','health/index.html','health-pdf.js','exceptions/index.html','exceptions/audit.css','exceptions/audit.js','exceptions/pdf.js','trips/index.html','reports/premium.css','icon.svg'];
+const paths=['index.html','assets/app.css','assets/app.js','mileage/index.html','mileage/model.js','mileage/app.js','mileage/style.css','incidents/model.js','incidents/storage.js','incidents/app.js','incidents/style.css','incidents/index.html','print-options.js','health/index.html','health-pdf.js','exceptions/index.html','exceptions/audit.css','exceptions/audit.js','exceptions/pdf.js','trips/index.html','reports/premium.css','icon.svg'];
 for(const p of paths)assert.ok(existsSync(p),'Arquivo ausente: '+p);
 for(const p of paths.filter(x=>x.endsWith('.js')))new Script(read(p),{filename:p});
 for(const p of paths.filter(x=>x.endsWith('.html'))){
@@ -26,6 +26,8 @@ const main=read('assets/app.js');
 assert.ok(main.includes('idlingDuration')&&main.includes('isDeviceCommunicating'));
 assert.ok(!main.includes('localStorage'));
 assert.ok(manifest.items.some(x=>x.url.includes('/incidents/')));
+assert.ok(manifest.items.some(x=>x.url.includes('/mileage/')));
+assert.ok(read('mileage/app.js').includes('geotab.addin.fleetTelemetryManager'));
 assert.ok(read('incidents/app.js').includes('geotab.addin.fleetTelemetryManager'));
 assert.ok(read('incidents/index.html').includes('./app.js?v=0.2.0'));
-console.log('OK: manifesto, 5 módulos, scripts inline, assets relativos e namespace.');
+console.log('OK: manifesto, 6 módulos, scripts inline, assets relativos e namespace.');
