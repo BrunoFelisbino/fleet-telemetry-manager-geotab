@@ -1,0 +1,68 @@
+<!doctype html>
+<html lang="pt-BR">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<meta http-equiv="Cache-Control" content="no-cache,no-store,must-revalidate">
+<title>Quilometragem | Fleet Telemetry Manager</title>
+<link rel="stylesheet" href="../assets/app.css?v=0.3.0">
+<link rel="stylesheet" href="./style.css?v=0.3.0">
+<script src="./model.js?v=0.3.0"></script>
+<script defer src="./app.js?v=0.3.0"></script>
+</head>
+<body>
+<main id="app" class="mileage-shell">
+<header class="head">
+  <div class="title"><div class="ico"><img src="../icon.svg" alt=""></div><div><strong>Quilometragem da Frota</strong><div class="sub">Fleet Telemetry Manager · MyGeotab</div></div></div>
+  <span class="pill" id="status">Aguardando MyGeotab</span>
+</header>
+<div class="bar mileage-filters">
+  <label>Frota / Grupo <select id="groupFilter"><option value="">Frota total acessível</option></select></label>
+  <label>Veículo <select id="vehicleFilter"><option value="">Todos os veículos</option></select></label>
+  <label>Período <select id="periodFilter">
+    <option value="current" selected>Mês atual</option>
+    <option value="previous">Mês anterior</option>
+    <option value="7">Últimos 7 dias</option>
+    <option value="30">Últimos 30 dias</option>
+    <option value="90">Últimos 90 dias</option>
+    <option value="custom">Personalizado</option>
+  </select></label>
+  <label class="custom-date" id="customFromWrap" hidden>De <input type="datetime-local" id="fromInput"></label>
+  <label class="custom-date" id="customToWrap" hidden>Até <input type="datetime-local" id="toInput"></label>
+  <button type="button" class="primary" id="loadBtn">Consultar</button>
+  <button type="button" id="cancelBtn" hidden>Cancelar consulta</button>
+</div>
+<div class="info" id="scope">A consulta usa apenas os veículos autorizados na sessão MyGeotab.</div>
+<div class="alert" id="message" role="status">Aguardando consulta.</div>
+<div class="progress" id="progressWrap" hidden><div class="progress-track"><div class="progress-fill" id="progressFill"></div></div><div id="progressText">0 / 0</div></div>
+<div class="section-head">Resumo do período</div>
+<section class="metric-grid mileage-kpis" id="kpiBox">
+  <article class="kpi"><span>KM total rodado</span><strong class="value">N/D</strong></article>
+  <article class="kpi"><span>Frota selecionada</span><strong class="value">N/D</strong></article>
+  <article class="kpi"><span>Média por veículo</span><strong class="value">N/D</strong></article>
+  <article class="kpi"><span>Veículos sem viagem</span><strong class="value">N/D</strong></article>
+</section>
+<section class="cols mileage-cols">
+  <div class="panel">
+    <div class="panel-heading"><div class="pt">KM por grupo operacional</div><button type="button" id="groupCsv" disabled>CSV de grupos</button></div>
+    <p class="hint">Cada veículo entra uma única vez. Veículos associados a vários grupos são mostrados em “Múltiplos grupos” para não duplicar a quilometragem.</p>
+    <div id="groupChart" class="bar-chart"></div>
+    <div class="table-scroll"><table><thead><tr><th>Grupo</th><th>Veículos</th><th>KM total</th></tr></thead><tbody id="groupRows"><tr><td colspan="3">Aguardando consulta</td></tr></tbody></table></div>
+  </div>
+  <div class="panel">
+    <div class="panel-heading"><div class="pt">Ranking por veículo</div><button type="button" id="vehicleCsv" disabled>CSV de veículos</button></div>
+    <p class="hint">Distância de viagens obtida da API Trip. Odômetro final informado pelo Trip e inicial inferido da distância da primeira viagem, quando os dados permitem.</p>
+    <div class="table-scroll"><table><thead><tr><th>Veículo</th><th>Viagens</th><th>KM rodado</th><th>Odôm. inicial*</th><th>Odôm. final</th></tr></thead><tbody id="vehicleRows"><tr><td colspan="5">Aguardando consulta</td></tr></tbody></table></div>
+  </div>
+</section>
+<section class="panel">
+<div class="pt">Qualidade dos dados e critérios</div>
+<ul class="note-list" id="notes">
+<li>A consulta percorre todos os veículos elegíveis com controle de ritmo e acompanhamento do progresso. Falhas impedem totais parciais de parecerem resultados completos.</li>
+<li>Viagens que cruzam o início ou o fim do período são contabilizadas integralmente, com aviso de divergência potencial.</li>
+</ul>
+</section>
+<footer class="project-credit">Desenvolvido por Bruno Henrique Felisbino Gonçalves · MIT · Não oficial Geotab · *Odômetro inicial inferido.</footer>
+</main>
+</body>
+</html>
