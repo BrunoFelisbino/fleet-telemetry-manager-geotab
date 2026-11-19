@@ -36,9 +36,11 @@ A referência de indicadores recomenda **três meses de linha de base** antes da
 
 Nova página \`/mileage/\`, separada para não sobrecarregar o painel geral com consultas de uma frota grande.
 
-- Filtros: frota total permitida pela sessão, grupo e seus subgrupos, veículo, mês atual, mês anterior, últimos 7/30/90 dias e período personalizado.
+- Filtros: frota total permitida pela sessão, **seleção de vários grupos e vários veículos ao mesmo tempo**, grupos hierárquicos, pesquisa por nome ou placa (sem diferenciar acentos/maiúsculas), chips removíveis, mês atual, mês anterior, últimos 7/30/90 dias e período personalizado.
 - KPIs: KM total do filtro, quantidade de veículos, média de KM por veículo, veículos sem viagens.
-- Visões: ranking dos veículos, grupo operacional sem duplicação e CSV para cada tabela.
+- Visões: cards executivos, **gráfico de evolução diária / por blocos de dias**, **Top 5 veículos**, ranking completo por grupo sem duplicação, ranking individual e CSV para cada tabela.
+- **Baixar PDF:** gera diretamente um documento A4 paginado no navegador, sem bibliotecas externas, com resumo executivo, gráficos de KM, rankings de grupo e veículo, odômetros e filtros utilizados. Somente após a consulta concluída. O PDF da prévia demonstra dados fictícios explicitamente.
+- O PDF é gerado a partir do mesmo conjunto de resultados já consultado e, portanto, não dispara uma nova leitura de API nem altera dados; não inclui logo personalizado neste estágio.
 - Odômetro final usa \`Trip.odometer\` em **metros**, convertido em quilômetros; odômetro inicial é **inferido** do odômetro final da primeira viagem menos \`Trip.distance\`. Se faltar informação confiável, o campo fica **N/D**.
 - Quilometragem da viagem: \`Trip.distance\` já é em **quilômetros**. A versão incluída do Fleet Trip 360 também teve essa conversão corrigida.
 - Escala: uma consulta por veículo, com ritmo moderado, três consultas em paralelo e divisão recursiva de intervalos que atinjam o limite de registros. Não existe corte artificial em 50 veículos nesta nova página; o processo demora conforme tamanho da frota e volume de dados.
@@ -55,7 +57,7 @@ Nova página \`/mileage/\`, separada para não sobrecarregar o painel geral com 
 - A URL de prévia **não deve ser tratada como publicação definitiva**, nem aplicada a uma base de produção sem autorização e teste.
 - Não insira credenciais ou dados reais no repositório ou em chamadas públicas. O Add-In só utiliza a API contextual do MyGeotab.
 - A hospedagem da prévia é pública para os arquivos do Add-In; os dados só são consultados dentro da sessão autenticada do MyGeotab.
-- Executar localmente: \`node scripts/verify.mjs\`, \`node scripts/verify-incidents.mjs\` e \`node scripts/verify-mileage.mjs\`.
+- Executar localmente: \`node scripts/verify.mjs\`, \`node scripts/verify-incidents.mjs\` \`node scripts/verify-mileage.mjs\` e \`node scripts/verify-mileage-pdf.mjs\`.
 
 ## Limitações e cuidados
 
