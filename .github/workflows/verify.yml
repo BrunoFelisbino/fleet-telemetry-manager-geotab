@@ -21,3 +21,4 @@ jobs:
         run: |
           node scripts/verify.mjs
           node scripts/verify-incidents.mjs
+          node scripts/verify-mileage.mjs
