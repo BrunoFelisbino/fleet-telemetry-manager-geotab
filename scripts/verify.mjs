@@ -21,7 +21,7 @@ for(const p of paths.filter(x=>x.endsWith('.html'))){
   const page=read(p);
   const scripts=[...page.matchAll(/<script>([\s\S]*?)<\/script>/g)];
   for(const m of scripts)new Script(m[1],{filename:p});
-  assert.ok(!/(?:src|href)="\\.\\.?\\//.test(page),'Referência relativa inválida para MyGeotab: '+p);
+  assert.ok(!/(?:src|href)="\.\.?\//.test(page),'Referência relativa inválida para MyGeotab: '+p);
   for(const m of page.matchAll(/(?:src|href)="(https:\/\/fleet-telemetry-manager-geotab\.vercel\.app\/[^"]+)"/g)){
     const asset=m[1].split('?')[0].replace('https://fleet-telemetry-manager-geotab.vercel.app/','');
     assert.ok(existsSync(asset),'Recurso absoluto não encontrado: '+p+' -> '+m[1]);
