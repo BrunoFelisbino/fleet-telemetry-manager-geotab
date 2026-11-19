@@ -1,0 +1,69 @@
+{
+  "name": "fleetTelemetryManager",
+  "supportEmail": "poze1988@gmail.com",
+  "version": "0.4.7",
+  "items": [
+    {
+      "url": "dashboard.html",
+      "path": "ActivityLink/",
+      "category": "AddIns",
+      "menuName": {
+        "en": "Fleet Telemetry Manager",
+        "pt-BR": "Fleet Telemetry Manager"
+      }
+    },
+    {
+      "url": "mileage.html",
+      "path": "ActivityLink/",
+      "category": "AddIns",
+      "menuName": {
+        "en": "Quilometragem da Frota",
+        "pt-BR": "Quilometragem da Frota"
+      }
+    },
+    {
+      "url": "incidents.html",
+      "path": "ActivityLink/",
+      "category": "AddIns",
+      "menuName": {
+        "en": "Ocorrências e SLA",
+        "pt-BR": "Ocorrências e SLA"
+      }
+    },
+    {
+      "url": "health.html",
+      "path": "ActivityLink/",
+      "category": "AddIns",
+      "menuName": {
+        "en": "Fleet Health Score",
+        "pt-BR": "Fleet Health Score"
+      }
+    },
+    {
+      "url": "exceptions.html",
+      "path": "ActivityLink/",
+      "category": "AddIns",
+      "menuName": {
+        "en": "Fleet Exception 360",
+        "pt-BR": "Fleet Exception 360"
+      }
+    },
+    {
+      "url": "trips.html",
+      "path": "ActivityLink/",
+      "category": "AddIns",
+      "menuName": {
+        "en": "Fleet Trip 360",
+        "pt-BR": "Fleet Trip 360"
+      }
+    }
+  ],
+  "files": {
+    "dashboard.html": "<!doctype html><html lang=\"pt-BR\"><head><meta charset=\"utf-8\"><title>Fleet Telemetry Manager</title></head><body><main id=\"app\" style=\"font:14px system-ui;padding:24px;color:#222\"><h2>Fleet Telemetry Manager</h2><p>Aguardando inicialização do MyGeotab...</p></main><script>(function(){'use strict';window.geotab=window.geotab||{};window.geotab.addin=window.geotab.addin||{};window.geotab.addin.fleetTelemetryManager=function(){return{initialize:function(api,state,cb){document.getElementById('app').innerHTML='<h2>Fleet Telemetry Manager</h2><p>TESTE OK: Add-In carregado e initialize executado.</p>';console.info('[Fleet TM diagnostico] Painel principal OK');if(typeof cb==='function')cb();},focus:function(){},blur:function(){}};};})();</script></body></html>",
+    "mileage.html": "<!doctype html><html lang=\"pt-BR\"><head><meta charset=\"utf-8\"><title>Quilometragem da Frota</title></head><body><main id=\"app\" style=\"font:14px system-ui;padding:24px;color:#222\"><h2>Quilometragem da Frota</h2><p>Aguardando inicialização do MyGeotab...</p></main><script>(function(){'use strict';window.geotab=window.geotab||{};window.geotab.addin=window.geotab.addin||{};window.geotab.addin.fleetTelemetryManager=function(){return{initialize:function(api,state,cb){document.getElementById('app').innerHTML='<h2>Quilometragem da Frota</h2><p>TESTE OK: Add-In carregado e initialize executado.</p>';console.info('[Fleet TM diagnostico] Quilometragem OK');if(typeof cb==='function')cb();},focus:function(){},blur:function(){}};};})();</script></body></html>",
+    "incidents.html": "<!doctype html><html lang=\"pt-BR\"><head><meta charset=\"utf-8\"><title>Ocorrências e SLA</title></head><body><main id=\"app\" style=\"font:14px system-ui;padding:24px;color:#222\"><h2>Ocorrências e SLA</h2><p>Aguardando inicialização do MyGeotab...</p></main><script>(function(){'use strict';window.geotab=window.geotab||{};window.geotab.addin=window.geotab.addin||{};window.geotab.addin.fleetTelemetryManager=function(){return{initialize:function(api,state,cb){document.getElementById('app').innerHTML='<h2>Ocorrências e SLA</h2><p>TESTE OK: Add-In carregado e initialize executado.</p>';console.info('[Fleet TM diagnostico] Ocorrências OK');if(typeof cb==='function')cb();},focus:function(){},blur:function(){}};};})();</script></body></html>",
+    "health.html": "<!doctype html><html lang=\"pt-BR\"><head><meta charset=\"utf-8\"><title>Fleet Health Score</title></head><body><main id=\"app\" style=\"font:14px system-ui;padding:24px;color:#222\"><h2>Fleet Health Score</h2><p>Aguardando inicialização do MyGeotab...</p></main><script>(function(){'use strict';window.geotab=window.geotab||{};window.geotab.addin=window.geotab.addin||{};window.geotab.addin.fleetTelemetryManager=function(){return{initialize:function(api,state,cb){document.getElementById('app').innerHTML='<h2>Fleet Health Score</h2><p>TESTE OK: Add-In carregado e initialize executado.</p>';console.info('[Fleet TM diagnostico] Health Score OK');if(typeof cb==='function')cb();},focus:function(){},blur:function(){}};};})();</script></body></html>",
+    "exceptions.html": "<!doctype html><html lang=\"pt-BR\"><head><meta charset=\"utf-8\"><title>Fleet Exception 360</title></head><body><main id=\"app\" style=\"font:14px system-ui;padding:24px;color:#222\"><h2>Fleet Exception 360</h2><p>Aguardando inicialização do MyGeotab...</p></main><script>(function(){'use strict';window.geotab=window.geotab||{};window.geotab.addin=window.geotab.addin||{};window.geotab.addin.fleetTelemetryManager=function(){return{initialize:function(api,state,cb){document.getElementById('app').innerHTML='<h2>Fleet Exception 360</h2><p>TESTE OK: Add-In carregado e initialize executado.</p>';console.info('[Fleet TM diagnostico] Exception 360 OK');if(typeof cb==='function')cb();},focus:function(){},blur:function(){}};};})();</script></body></html>",
+    "trips.html": "<!doctype html><html lang=\"pt-BR\"><head><meta charset=\"utf-8\"><title>Fleet Trip 360 - Teste API</title><style>body{margin:0;background:#f8fafc;color:#172033;font:14px system-ui}main{max-width:860px;margin:26px auto;padding:24px;background:#fff;border:1px solid #e5e7eb;border-radius:14px}h2{margin:0 0 6px}p{color:#555}label{display:block;margin:16px 0 6px}select,button{font:inherit;padding:10px;border:1px solid #cbd5e1;border-radius:8px}button{margin:12px 0;background:#111827;color:white;cursor:pointer}button:disabled{opacity:.5}#msg{white-space:pre-wrap;margin-top:12px;padding:10px;background:#f1f5f9;border-radius:8px}</style></head><body><main><h2>Fleet Trip 360</h2><p>Diagnóstico funcional: leitura de veículos e viagens usando sua sessão MyGeotab.</p><label for=\"devices\">Veículo</label><select id=\"devices\"><option value=\"\">Aguardando conexão...</option></select><div><button id=\"run\" disabled>Consultar viagens (últimos 7 dias)</button></div><div id=\"msg\" role=\"status\">Aguardando inicialização...</div></main><script>(function(){'use strict';var apiRef=null;var q=function(id){return document.getElementById(id)};var msg=function(t){q('msg').textContent=t};function loadDevices(){msg('Consultando veículos autorizados...');apiRef.call('Get',{typeName:'Device',resultsLimit:20},function(arr){var select=q('devices');select.textContent='';var start=document.createElement('option');start.value='';start.textContent='Escolha um veículo';select.appendChild(start);(arr||[]).forEach(function(d){if(!d||!d.id)return;var option=document.createElement('option');option.value=d.id;option.textContent=d.name||d.id;select.appendChild(option)});msg('API conectada. '+(arr||[]).length+' veículo(s) recebido(s) nesta consulta limitada.');q('run').disabled=!(arr||[]).length;},function(err){msg('Erro da API Device: '+String(err&&err.message||err))})}function trips(){var id=q('devices').value;if(!id){msg('Selecione um veículo.');return}q('run').disabled=true;msg('Consultando viagens dos últimos 7 dias...');var to=new Date();var from=new Date(to.getTime()-7*86400000);apiRef.call('Get',{typeName:'Trip',search:{deviceSearch:{id:id},fromDate:from.toISOString(),toDate:to.toISOString()},resultsLimit:30},function(rows){var list=rows||[];msg('API Trip OK: '+list.length+' viagem(ns) retornada(s). Esta consulta está limitada a 30 registros.\\n'+list.slice(0,5).map(function(t){return String(t.start||t.stop||t.id||'Viagem')+' | '+Number(t.distance||0).toFixed(1)+' km'}).join('\\n'));q('run').disabled=false},function(err){msg('Erro da API Trip: '+String(err&&err.message||err));q('run').disabled=false})}window.geotab=window.geotab||{};window.geotab.addin=window.geotab.addin||{};window.geotab.addin.fleetTelemetryManager=function(){return{initialize:function(api,state,cb){apiRef=api;q('run').onclick=trips;if(!api){msg('Sem API do MyGeotab.');}else{loadDevices()}if(typeof cb==='function')cb()},focus:function(){},blur:function(){}}}})();</script></body></html>"
+  }
+}
