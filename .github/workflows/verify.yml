@@ -27,4 +27,5 @@ jobs:
           node scripts/verify-mileage-group-focus.mjs
           node scripts/verify-hosting.mjs
           node scripts/verify-geotab-runtime.mjs
+          node scripts/verify-embedded-trip.mjs
           node scripts/verify-live-origin.mjs
