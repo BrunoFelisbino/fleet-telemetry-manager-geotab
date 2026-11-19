@@ -5,11 +5,11 @@ import {Script} from 'node:vm';
 const read=p=>readFileSync(p,'utf8');
 const manifest=JSON.parse(read('addin-config.json'));
 assert.equal(manifest.name,'fleetTelemetryManager');
-assert.equal(manifest.version,'0.4.3');
+assert.equal(manifest.version,'0.4.4');
 const preview=JSON.parse(read('addin-config.preview.json'));
-assert.equal(preview.version,'0.4.3');
+assert.equal(preview.version,'0.4.4');
 assert.equal(preview.items.length,6);
-for(const item of [...manifest.items,...preview.items])assert.ok(item.url.includes('?v=0.4.3'));
+for(const item of [...manifest.items,...preview.items])assert.ok(item.url.includes('?v=0.4.4'));
 for(const item of preview.items)assert.ok(item.url.startsWith('https://ftmbrunog2026.vercel.app/'));
 assert.equal(manifest.isSigned,false);
 assert.equal(manifest.items.length,6);
@@ -46,18 +46,15 @@ assert.ok(manifest.items.some(x=>x.url.includes('/mileage/')));
 assert.ok(read('mileage/app.js').includes('geotab.addin.fleetTelemetryManager'));
 assert.ok(read('mileage/index.html').includes('id="groupSearch"')&&read('mileage/index.html').includes('id="vehicleSearch"'));
 
-for(const path of ['index.html','mileage/index.html','incidents/index.html']){
+
+for(const path of ['index.html','mileage/index.html','incidents/index.html','health/index.html','exceptions/index.html','trips/index.html']){
   const html=read(path);
-  const bundles=[...html.matchAll(/<script data-bundle="([^"]+)">\n([\s\S]*?)\n<\/script>/g)];
-  const expected=path==='index.html'?4:path==='mileage/index.html'?5:3;
-  assert.equal(bundles.length,expected,path+' must inline all its JS dependencies');
-  assert.ok(html.includes('geotab.addin.fleetTelemetryManager'),path+' missing entry point');
-  assert.ok(!/<script defer/.test(html),path+' must not rely on deferred JS');
-  for(const bundle of bundles){
-    assert.ok(existsSync(bundle[1]),'Missing bundle '+bundle[1]);
-    new Script(bundle[2],{filename:path+'::'+bundle[1]});
-  }
+  const inline=[...html.matchAll(/<script(?![^>]*\bsrc=)[^>]*>([\s\S]*?)<\/script>/gi)];
+  assert.equal(inline.length,1,path+' must have exactly one inline boot script');
+  assert.ok(html.includes('geotab.addin.fleetTelemetryManager'),'Missing Geotab add-in API: '+path);
+  assert.ok(!/<script defer/.test(html),'Deferred JavaScript can be skipped during page injection');
+  new Script(inline[0][1],{filename:path});
 }
-assert.ok(read('mileage/index.html').includes('data-bundle="mileage/chart.js"'));
+assert.ok(read('mileage/index.html').includes('FleetMileageDailyChart'));
 assert.ok(read('mileage/index.html').includes('id="groupFocusStatus"'));
-console.log('OK: manifesto v0.4.3, seis módulos, código inline e domínio sem hífens.');
+console.log('OK: v0.4.4, seis páginas com script único, manifesto e namespace.');
