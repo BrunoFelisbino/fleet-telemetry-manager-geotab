@@ -28,7 +28,8 @@ const manifest={
   supportEmail:'poze1988@gmail.com',
   version,
   items:[],
-  files:{}
+  files:{},
+  isSigned:false
 };
 for(const [source,filename,en,pt] of routes){
   assert.ok(existsSync(source),'Missing source '+source);
