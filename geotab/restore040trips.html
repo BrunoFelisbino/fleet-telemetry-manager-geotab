@@ -1,0 +1,479 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate">
+<title>Fleet Trip 360</title>
+<link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css"/>
+<style data-original="reports/premium.css" media="print">
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&family=Montserrat:wght@400;500;600;700;800;900&family=Roboto:wght@400;500;600;700;800;900&display=swap');
+@page { size: A4; margin: 0; }
+@media print {
+  html,body { margin:0 !important; padding:0 !important; background:#fff !important; background-image:none !important; min-height:0 !important; }
+  body,#app { min-height:0 !important; padding:0 !important; background:#fff !important; background-image:none !important; overflow:hidden !important; }
+  #app,.bar,.head,.info,.panel,.grid,.cols,.tablewrap,.alert { display:none !important; visibility:hidden !important; }
+  .pdf-stage,#pdfStage { display:block !important; visibility:visible !important; position:static !important; left:auto !important; top:auto !important; width:auto !important; max-width:none !important; overflow:visible !important; }
+  .pdf-page { width:210mm !important; height:297mm !important; min-height:297mm !important; max-height:297mm !important; padding:56px 54px !important; margin:0 !important; overflow:hidden !important; page-break-after:always !important; break-after:page !important; page-break-inside:avoid !important; position:relative !important; box-shadow:none !important; }
+  .pdf-cover-page { overflow:hidden !important; }
+  .pdf-ranking-page { height:auto !important; max-height:none !important; overflow:visible !important; }
+  .pdf-ranking-page table { page-break-inside:auto !important; }
+  .pdf-page:last-child { page-break-after:auto !important; break-after:auto !important; }
+  .pdf-table {
+    page-break-inside: auto;
+  }
+  .pdf-table thead {
+    display: table-header-group; /* Força a repetição em cada página */
+  }
+  .pdf-table tr {
+    page-break-inside: avoid; /* Evita que uma linha seja cortada ao meio */
+    page-break-after: auto;
+  }
+  .pdf-ranking-page {
+    height: auto !important;
+    min-height: 297mm;
+    overflow: visible !important;
+    display: block !important;
+  }
+  /* Reduz o tamanho da fonte e o padding da tabela para caber mais veículos por página */
+  .pdf-table th, .pdf-table td {
+    font-size: 8.5px !important; /* Fonte menor para aumentar densidade */
+    padding: 3px 2px !important;  /* Espaçamento vertical reduzido */
+  }
+  .pdf-table .pdf-badge {
+    font-size: 7.5px !important; /* Ajuste proporcional para os badges de status */
+  }
+  /* Destaque para veículos com score muito baixo (Risco Alto) */
+  .pdf-row-risk {
+    background-color: rgba(239, 68, 68, 0.07) !important;
+    -webkit-print-color-adjust: exact;
+  }
+  /* Remove a coluna de Status para ganhar espaço horizontal */
+  .c-status {
+    display: none !important;
+  }
+  /* Estilo da Legenda */
+  .pdf-legend {
+    display: flex;
+    align-items: center;
+    gap: 15px;
+  }
+  .pdf-legend-item i {
+    display: inline-block;
+    width: 10px; height: 10px;
+    border-radius: 2px;
+  }
+  .pdf-legend-item i.risk { background: rgba(239, 68, 68, 0.2); border: 1px solid #ef4444; }
+}
+*{box-sizing:border-box}
+:root{--bg:#f5f8fc;--card:#fff;--txt:#172033;--mut:#64748b;--bd:#e5eaf1;--blue:#0ea5e9;--blue2:#0369a1;--green:#10b981;--yellow:#f59e0b;--orange:#f97316;--red:#ef4444;--shadow:0 12px 28px rgba(15,23,42,.06);--mono:Consolas,monospace}
+html,body{margin:0;padding:0}
+body,#app{font-family:var(--fleet-brand-font,system-ui,Arial,sans-serif);background:var(--bg);min-height:100vh;color:var(--txt);padding:16px 20px;background-image:radial-gradient(circle,rgba(15,23,42,.045) 1px,transparent 1px);background-size:24px 24px}
+.head,.bar,.info,.panel,.kpi,.pdf-card,.pdf-kpi,.pdf-action,.pcp-exec-card{background:var(--card);border:1px solid var(--bd);border-radius:16px;box-shadow:var(--shadow)}
+.head{display:flex;align-items:center;justify-content:space-between;padding:14px 16px;margin-bottom:12px}.brand{display:flex;gap:14px;align-items:center}.logo,.pdf-logo,.pcp-logo{object-fit:contain;object-position:left center}.logo{height:46px;width:168px;background:#000;border-radius:10px;padding:4px 8px}.title{font-weight:900;font-size:18px;line-height:1.1}.sub{font-family:var(--mono);font-size:10px;color:var(--mut);font-weight:400;margin-top:4px}.pill{font-family:var(--mono);font-size:10px;color:var(--blue2);background:#fff;border:1px solid var(--bd);border-radius:99px;padding:5px 12px}.bar{display:flex;gap:8px;flex-wrap:wrap;align-items:center;padding:12px;margin-bottom:12px}.info{display:flex;gap:16px;flex-wrap:wrap;padding:9px 14px;margin-bottom:12px;color:var(--mut);font-size:12px}button,select,input{height:32px;border-radius:8px;border:1px solid var(--bd);background:#fff;color:var(--txt);font-size:11px;padding:0 10px}input{min-width:190px}button{font-weight:800;cursor:pointer}.primary{background:linear-gradient(135deg,var(--blue),var(--blue2));color:#fff;border:0}.soft{background:#f0f9ff;color:var(--blue2)}.alert{padding:10px 14px;border-radius:10px;margin-bottom:12px;font-size:12px;background:rgba(14,165,233,.1);border:1px solid rgba(14,165,233,.22);color:var(--blue2)}.alert.ok{background:rgba(16,185,129,.12);border-color:rgba(16,185,129,.22);color:#047857}.alert.err{background:rgba(239,68,68,.1);border-color:rgba(239,68,68,.22);color:#b91c1c}.grid,.cols{display:grid;gap:12px}.grid{grid-template-columns:repeat(5,minmax(0,1fr));margin-bottom:12px}.cols{grid-template-columns:1fr 1fr;margin-bottom:12px}.kpi{padding:14px 16px}.kpi span,.pdf-kpi small,.pdf-section-title,.pdf-brand,.pcp-chip-label,.pcp-tagline{font-size:10px;letter-spacing:.06em;text-transform:uppercase;color:var(--mut)}.kpi b{display:block;font-size:26px;line-height:1.1;margin:10px 0 6px}.kpi small{color:var(--mut);font-size:11px}.pt,.pdf-title,.pcp-title{font-weight:900}.pt,.pdf-section-title{padding:14px 16px;border-bottom:1px solid var(--bd);margin:0}.panel{overflow:hidden}.barrow,.row{display:grid;grid-template-columns:1fr 1fr 40px;gap:8px;align-items:center;padding:10px 16px;border-bottom:1px solid #eef2f7}.track{height:8px;background:#eef2f7;border-radius:999px;overflow:hidden}.fill{height:100%;border-radius:inherit}.exec{padding:14px 16px;font-size:12px;color:var(--mut);line-height:1.5}.exec div+div{margin-top:10px}.tablewrap{overflow:auto}.tablewrap table,.pdf-table{width:100%;border-collapse:collapse}.tablewrap th,.tablewrap td,.pdf-table th,.pdf-table td{padding:10px 8px;border-bottom:1px solid #eef2f7;text-align:left;font-size:11px}.badge,.pdf-badge{display:inline-flex;align-items:center;padding:4px 8px;border-radius:999px;font-size:10px;font-weight:800}.okb,.pdf-ok{background:rgba(16,185,129,.12);color:#047857}.warnb,.pdf-warn{background:rgba(245,158,11,.12);color:#b45309}.orangeb,.pdf-critical{background:rgba(249,115,22,.12);color:#c2410c}.riskb,.pdf-risk{background:rgba(239,68,68,.12);color:#b91c1c}.pdf-stage{position:absolute;left:-10000px;top:0;width:210mm}.pdf-page{width:210mm;min-height:297mm;background:#fff;color:#172033;position:relative;page-break-after:always;padding:56px 54px}.pdf-topbar{height:6px;background:linear-gradient(90deg,var(--blue),var(--blue2));border-radius:999px;margin-bottom:18px}.pdf-brand{display:flex;align-items:flex-end;justify-content:space-between;margin-bottom:18px}.pdf-title{font-size:26px;line-height:1;margin:0;color:var(--txt)}.pdf-subtitle{font-size:11px;color:var(--mut);margin-top:6px}.pdf-logo{height:42px;max-width:150px}.pdf-grid-4{display:grid;grid-template-columns:repeat(4,1fr);gap:12px;margin-bottom:18px}.pdf-kpi{padding:14px 16px}.pdf-kpi b{display:block;font-size:28px;margin:10px 0 4px}.pdf-kpi span,.pdf-summary-box{font-size:11px;color:var(--mut)}.pdf-section{margin-top:10px}.pdf-two-col{display:grid;grid-template-columns:1.1fr .9fr;gap:12px}.pdf-card,.pdf-action{padding:14px 16px}.pdf-bars .row{grid-template-columns:140px 1fr 26px;padding-left:0;padding-right:0}.pdf-summary-box{padding:10px 12px;background:#f8fafc;border:1px solid #e2e8f0;border-radius:12px}.pdf-summary-box+.pdf-summary-box{margin-top:8px}.pdf-action h4{margin:0 0 8px;font-size:13px}.pdf-action p{margin:0;color:var(--mut);font-size:11px;line-height:1.5}.pdf-footer{position:absolute;left:54px;right:54px;bottom:24px;display:flex;justify-content:space-between;font-size:10px;color:var(--mut);border-top:1px solid #e2e8f0;padding-top:10px}.pdf-cover-page{background:linear-gradient(145deg,#050d1f 0%,#0a1535 45%,#071228 100%);color:#fff;overflow:hidden;position:relative}.pcp-dots{position:absolute;inset:0;background-image:radial-gradient(circle,rgba(77,184,255,.18) 1px,transparent 1px);background-size:22px 22px;pointer-events:none}.pdf-cover-page::before{content:'';position:absolute;top:-120px;right:-80px;width:420px;height:420px;border-radius:50%;background:radial-gradient(circle,rgba(3,105,161,.55) 0%,transparent 70%);pointer-events:none}.pcp-header,.pcp-hero,.pcp-chips,.pcp-exec-card{position:relative;z-index:2}.pcp-header{margin-bottom:32px}.pcp-logo{background:#000;border-radius:16px;padding:0;height:70px;width:auto;display:block}.pcp-hero{display:flex;align-items:flex-start;justify-content:space-between;margin-bottom:28px}.pcp-title-block{display:flex;gap:14px;align-items:flex-start}.pcp-bar{width:5px;min-height:130px;background:linear-gradient(#4db8ff,#0369a1);border-radius:4px;flex-shrink:0;margin-top:6px}.pcp-title{font-size:52px;line-height:1;margin:0 0 10px 0;color:#fff;letter-spacing:-.01em}.pcp-tagline{color:#93c5fd}.pcp-truck-silhouette{width:260px;flex-shrink:0;margin-top:8px}.pcp-chips{display:flex;gap:10px;flex-wrap:wrap;margin-bottom:24px}.pcp-chip{background:rgba(255,255,255,.07);border:1px solid rgba(255,255,255,.14);border-radius:14px;padding:10px 14px;display:flex;gap:10px;align-items:center;min-width:155px}.pcp-chip-icon{font-size:18px;opacity:.85}.pcp-chip-label{color:#93c5fd;font-weight:700}.pcp-chip-val{font-size:13px;font-weight:900;color:#fff;margin-top:2px}.pcp-exec-card{background:rgba(255,255,255,.06);border:1px solid rgba(255,255,255,.12);border-radius:22px;padding:22px 24px;display:flex;gap:24px;align-items:center}.pcp-exec-text{flex:1}.pcp-exec-header{display:flex;align-items:center;gap:10px;font-size:15px;font-weight:900;color:#fff;margin-bottom:10px}.pcp-shield{font-size:20px}.pcp-exec-rule{height:2px;background:linear-gradient(90deg,#0ea5e9,transparent);border-radius:2px;margin-bottom:12px}.pcp-exec-text p{margin:0 0 8px 0;font-size:11.5px;color:#bfdbfe;line-height:1.55}.pcp-kpi-row{display:flex;gap:20px;margin-top:16px;padding-top:14px;border-top:1px solid rgba(255,255,255,.1)}.pcp-kpi-item{display:flex;flex-direction:column;align-items:center;gap:2px;text-align:center}.pcp-kpi-item b{font-size:22px;font-weight:900;color:#fff;line-height:1}.pcp-kpi-item small{font-size:9px;color:#93c5fd;line-height:1.35;margin-top:2px}.pcp-kpi-item .pcp-kpi-icon{font-size:16px;margin-bottom:2px}.pcp-kpi-item.warn b{color:#fbbf24}.pcp-kpi-item.red b{color:#f87171}.pcp-kpi-item.green b{color:#34d399}.pcp-index-wrap{flex-shrink:0}.pcp-ring-outer{width:168px;height:168px;border-radius:50%;display:flex;align-items:center;justify-content:center;padding:12px}.pcp-ring-inner{width:144px;height:144px;border-radius:50%;background:#0a1535;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:2px}.pcp-ring-inner b{font-size:52px;font-weight:900;line-height:1}.pcp-ring-inner span{font-size:10px;letter-spacing:.12em;text-transform:uppercase;color:#93c5fd}.pcp-pulse{font-size:16px;color:#38bdf8;margin-top:4px;opacity:.7}.pdf-table .c-num{width:28px}.pdf-table .c-score{width:48px}.pdf-table .c-plate{width:90px}.pdf-table .c-last{width:52px}.pdf-table .c-status{width:80px}.tablewrap table{min-width:1080px;table-layout:fixed}.tablewrap th,.tablewrap td{white-space:nowrap;overflow:hidden;text-overflow:ellipsis}.tablewrap th:nth-child(1),.tablewrap td:nth-child(1){width:44px}.tablewrap th:nth-child(2),.tablewrap td:nth-child(2){width:70px}.tablewrap th:nth-child(3),.tablewrap td:nth-child(3){width:120px}.tablewrap th:nth-child(4),.tablewrap td:nth-child(4){width:280px}.tablewrap th:nth-child(5),.tablewrap td:nth-child(5){width:92px}.tablewrap th:nth-child(6),.tablewrap td:nth-child(6){width:210px}.tablewrap th:nth-child(7),.tablewrap td:nth-child(7){width:220px}.tablewrap th:nth-child(8),.tablewrap td:nth-child(8){width:110px}
+
+/* A marca, os ícones e a fonte são selecionados após conectar ao MyGeotab. */
+@media screen,print {
+  #pdfStage, #pdfStage .pdf-page, #pdfStage .pdf-page * {
+    font-family:var(--fleet-brand-font,system-ui,Arial,sans-serif) !important;
+  }
+  #pdfStage .pcp-title,#pdfStage .pdf-title {font-weight:800 !important;letter-spacing:-.02em;line-height:1.07}
+  #pdfStage .pdf-section-title,#pdfStage .pcp-exec-header {font-weight:700 !important}
+  #pdfStage .pdf-logo,#pdfStage .pcp-logo {background:transparent !important;object-fit:contain !important}
+  #pdfStage .pdf-brand-qr {break-inside:avoid}
+}
+
+/* Índice/capa do PDF e logo opcional de impressão. */
+.pcp-toc{margin:0 0 20px;background:rgba(255,255,255,.05);border:1px solid rgba(255,255,255,.12);border-radius:14px;padding:12px 16px}
+.pcp-toc-head{font-size:10px;letter-spacing:.08em;text-transform:uppercase;color:#93c5fd;font-weight:800;margin-bottom:8px}
+.pcp-toc-grid{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:10px}
+.pcp-toc-item{display:flex;align-items:center;gap:8px;color:#e2e8f0;font-size:11px}
+.pcp-toc-item b{font-family:var(--mono);color:#38bdf8;font-size:11px}
+.pcp-toc-item span{flex:1}
+.pcp-toc-item em{font-style:normal;color:#94a3b8;font-size:10px;white-space:nowrap}
+.pcp-index-wrap{text-align:center}
+.pcp-index-band{margin-top:8px;font-size:10px;font-weight:800;text-transform:uppercase;letter-spacing:.05em}
+.pcp-scale{display:flex;height:6px;border-radius:99px;overflow:hidden;margin-top:6px}
+.pcp-scale i{flex:1}
+.pcp-scale .r{background:#ef4444}.pcp-scale .o{background:#f97316}.pcp-scale .y{background:#f59e0b}.pcp-scale .g{background:#10b981}
+.pcp-scale-labels{display:flex;justify-content:space-between;color:#94a3b8;font-size:8px;font-family:var(--mono);margin-top:3px}
+.pdf-footer-logo{display:inline-block}
+
+</style>
+
+<script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+<style>html,body{margin:0;padding:0;background:#f5f8fc;color:#172033;font-family:'Segoe UI',system-ui,sans-serif} .map{height:420px;border-radius:12px;border:1px solid #e5eaf1}</style>
+</head>
+<body>
+<div id="app"><div style="padding:40px;color:#64748b;font-size:13px">Carregando Fleet Trip 360...</div></div>
+
+<script data-bootstrap="restored-v040">
+console.info('[Fleet TM v0.4.0 restaurado] restore040trips.html: carregador executado');
+/* print-options.js, original v0.4.0 */
+/* Fleet Health Score - opções de impressão do PDF (logo opcional, sem persistência). */
+(function () {
+  'use strict';
+
+  var MAX_BYTES = 512 * 1024;
+
+  function esc(value) {
+    return String(value == null ? '' : value)
+      .replace(/&/g, '&amp;')
+      .replace(/</g, '&lt;')
+      .replace(/>/g, '&gt;')
+      .replace(/"/g, '&quot;');
+  }
+
+  function injectStyle() {
+    if (document.getElementById('printOptionsStyle')) return;
+    var style = document.createElement('style');
+    style.id = 'printOptionsStyle';
+    style.textContent =
+      '.po-overlay{position:fixed;inset:0;z-index:99999;display:flex;align-items:center;justify-content:center;padding:16px;background:rgba(6,12,24,.68);backdrop-filter:blur(4px)}' +
+      '.po-card{width:100%;max-width:520px;max-height:92vh;overflow:auto;background:#fff;color:#0f172a;border-radius:18px;padding:22px;box-shadow:0 24px 80px rgba(2,6,23,.45);font:14px/1.45 "Segoe UI",system-ui,Arial,sans-serif}' +
+      '.po-head{display:flex;align-items:flex-start;justify-content:space-between;gap:12px;margin-bottom:8px}' +
+      '.po-head h2{margin:0;font-size:19px;letter-spacing:-.01em}' +
+      '.po-sub{margin:4px 0 0;color:#64748b;font-size:12px}' +
+      '.po-x{width:32px;height:32px;border:1px solid #e2e8f0;background:#f8fafc;border-radius:9px;font-size:20px;line-height:1;cursor:pointer;color:#475569}' +
+      '.po-check{display:flex;align-items:center;gap:9px;margin:16px 0;padding:11px 12px;border:1px solid #dbe3ec;border-radius:11px;background:#f8fbff;font-weight:800;cursor:pointer}' +
+      '.po-check input{width:17px;height:17px;margin:0;accent-color:#0ea5e9}' +
+      '.po-drop{border:1px dashed #cbd5e1;border-radius:12px;padding:14px;background:#fbfdff}' +
+      '.po-file-label{display:block;font-weight:800;font-size:12px;margin-bottom:7px}' +
+      '.po-drop input[type=file]{width:100%;font-size:12px}' +
+      '.po-hint{color:#64748b;font-size:11px;margin-top:7px;line-height:1.5}' +
+      '.po-preview{display:flex;align-items:center;justify-content:center;min-height:76px;margin-top:11px;padding:8px;border-radius:9px;background:#eef2f7;border:1px solid #dbe3ec;color:#94a3b8;font-size:12px}' +
+      '.po-preview img{max-width:220px;max-height:64px;object-fit:contain}' +
+      '.po-msg{min-height:18px;margin:10px 0 0;font-size:12px;color:#b91c1c}' +
+      '.po-actions{display:flex;gap:10px;justify-content:flex-end;flex-wrap:wrap;margin-top:10px}' +
+      '.po-actions button{height:36px;padding:0 16px;border-radius:9px;border:1px solid #cbd5e1;background:#fff;color:#0f172a;font-weight:800;font-size:12px;cursor:pointer}' +
+      '.po-actions .po-ok{background:linear-gradient(135deg,#0ea5e9,#0369a1);border:0;color:#fff}';
+    document.head.appendChild(style);
+  }
+
+  function safeSvg(text) {
+    var bad = /<script|onload\s*=|onerror\s*=|onclick\s*=|javascript:|<foreignObject|<iframe|<!ENTITY|xlink:href\s*=\s*["']\s*(?:https?:|\/\/)/i;
+    return !bad.test(String(text || ''));
+  }
+
+  function isSvg(file, name) {
+    return /svg/i.test(file.type || '') || /\.svg$/i.test(name);
+  }
+
+  function isRaster(file, name) {
+    return /^image\/(png|jpeg|webp)$/i.test(file.type || '') || /\.(png|jpe?g|webp)$/i.test(name);
+  }
+
+  function fileToDataUrl(file) {
+    return new Promise(function (resolve, reject) {
+      if (!file) return resolve('');
+      var name = file.name || '';
+      if (file.size > MAX_BYTES) return reject(new Error('O logo deve ter no máximo 512 KB.'));
+      if (isSvg(file, name)) {
+        return file.text().then(function (text) {
+          if (!safeSvg(text)) return reject(new Error('O SVG contém conteúdo não permitido. Use um SVG simples, sem scripts.'));
+          resolve('data:image/svg+xml;charset=utf-8,' + encodeURIComponent(text));
+        }).catch(function () {
+          reject(new Error('Não foi possível ler o SVG.'));
+        });
+      }
+      if (!isRaster(file, name)) return reject(new Error('Envie um arquivo SVG, PNG, JPG ou WebP.'));
+      var reader = new FileReader();
+      reader.onerror = function () { reject(new Error('Não foi possível ler o arquivo.')); };
+      reader.onload = function () { resolve(String(reader.result || '')); };
+      reader.readAsDataURL(file);
+    });
+  }
+
+  function ask(options) {
+    options = options || {};
+    if (!document || !document.body) return Promise.resolve({ includeLogo: false, logo: '' });
+    injectStyle();
+    return new Promise(function (resolve) {
+      var overlay = document.createElement('div');
+      overlay.className = 'po-overlay';
+      overlay.innerHTML =
+        '<section class="po-card" role="dialog" aria-modal="true" aria-labelledby="poTitle">' +
+          '<div class="po-head"><div><h2 id="poTitle">' + esc(options.title || 'Imprimir PDF') + '</h2>' +
+            '<p class="po-sub">' + esc(options.subtitle || 'Escolha se o relatório deve levar um logo.') + '</p></div>' +
+            '<button type="button" class="po-x" aria-label="Fechar">&times;</button></div>' +
+          '<label class="po-check"><input type="checkbox" data-po="include"/> Incluir logo no PDF</label>' +
+          '<div class="po-drop">' +
+            '<label class="po-file-label" for="poFile">Logo do relatório (SVG, PNG, JPG ou WebP)</label>' +
+            '<input id="poFile" type="file" accept=".svg,image/svg+xml,image/png,image/jpeg,image/webp"/>' +
+            '<div class="po-hint">O logo é aplicado no cabeçalho, na capa/índice e nos rodapés deste PDF. Ele não é salvo na base.</div>' +
+            '<div class="po-preview" data-po="preview"><span>Nenhum logo selecionado</span></div>' +
+          '</div>' +
+          '<p class="po-msg" data-po="msg" role="status"></p>' +
+          '<div class="po-actions"><button type="button" data-po="cancel">Cancelar</button>' +
+            '<button type="button" class="po-ok" data-po="ok">Gerar PDF</button></div>' +
+        '</section>';
+      document.body.appendChild(overlay);
+
+      var include = overlay.querySelector('[data-po="include"]');
+      var fileInput = overlay.querySelector('#poFile');
+      var preview = overlay.querySelector('[data-po="preview"]');
+      var msg = overlay.querySelector('[data-po="msg"]');
+      var okBtn = overlay.querySelector('[data-po="ok"]');
+      var cancelBtn = overlay.querySelector('[data-po="cancel"]');
+      var closeBtn = overlay.querySelector('.po-x');
+      var dataUrl = '';
+      var busy = false;
+
+      function finish(result) {
+        document.removeEventListener('keydown', onKey);
+        overlay.remove();
+        resolve(result);
+      }
+      function cancel() { finish(null); }
+      function onKey(event) { if (event.key === 'Escape') cancel(); }
+
+      function showPreview(src, label) {
+        if (src) {
+          preview.innerHTML = '';
+          var img = document.createElement('img');
+          img.src = src;
+          img.alt = 'Prévia do logo';
+          preview.appendChild(img);
+        } else {
+          preview.innerHTML = '<span>' + esc(label || 'Nenhum logo selecionado') + '</span>';
+        }
+      }
+
+      fileInput.addEventListener('change', function () {
+        var file = fileInput.files && fileInput.files[0];
+        msg.textContent = '';
+        if (!file) {
+          dataUrl = '';
+          showPreview('');
+          return;
+        }
+        busy = true;
+        okBtn.disabled = true;
+        msg.style.color = '#64748b';
+        msg.textContent = 'Preparando logo...';
+        fileToDataUrl(file).then(function (url) {
+          dataUrl = url;
+          include.checked = true;
+          showPreview(url, file.name);
+          msg.textContent = '';
+        }).catch(function (error) {
+          dataUrl = '';
+          include.checked = false;
+          showPreview('');
+          msg.style.color = '#b91c1c';
+          msg.textContent = error && error.message ? error.message : 'Não foi possível usar este logo.';
+        }).finally(function () {
+          busy = false;
+          okBtn.disabled = false;
+          msg.style.color = msg.textContent ? '#b91c1c' : '';
+        });
+      });
+
+      include.addEventListener('change', function () {
+        if (include.checked && !dataUrl) {
+          msg.style.color = '#64748b';
+          msg.textContent = 'Selecione o arquivo do logo para incluí-lo no PDF.';
+        } else {
+          msg.textContent = '';
+        }
+      });
+
+      okBtn.addEventListener('click', function () {
+        if (busy) return;
+        if (include.checked && !dataUrl) {
+          msg.style.color = '#b91c1c';
+          msg.textContent = 'Selecione o logo ou desmarque a opção para gerar o PDF sem logo.';
+          return;
+        }
+        finish({ includeLogo: !!include.checked, logo: include.checked ? dataUrl : '' });
+      });
+
+      cancelBtn.addEventListener('click', cancel);
+      closeBtn.addEventListener('click', cancel);
+      overlay.addEventListener('click', function (event) { if (event.target === overlay) cancel(); });
+      document.addEventListener('keydown', onKey);
+      setTimeout(function () { include.focus(); }, 30);
+    });
+  }
+
+  function decorate(stage, logo) {
+    if (!stage || !logo) return;
+    function img(className) {
+      var el = document.createElement('img');
+      el.className = className || 'pdf-footer-logo';
+      el.src = logo;
+      el.alt = 'Logo do relatório';
+      el.style.cssText = 'height:18px;max-width:110px;object-fit:contain;vertical-align:middle;opacity:.92';
+      return el;
+    }
+    stage.querySelectorAll('.pdf-footer').forEach(function (footer) {
+      if (footer.querySelector('.pdf-footer-logo')) return;
+      var el = img('pdf-footer-logo');
+      el.style.marginRight = '8px';
+      footer.insertBefore(el, footer.firstChild);
+    });
+    stage.querySelectorAll('.pdf-brand, .pcp-header').forEach(function (head) {
+      if (head.querySelector('img')) return;
+      var el = img('pdf-logo');
+      el.style.height = head.classList.contains('pcp-header') ? '64px' : '42px';
+      el.style.maxWidth = '180px';
+      head.appendChild(el);
+    });
+  }
+
+  window.PrintOptions = { ask: ask, decorate: decorate, fileToDataUrl: fileToDataUrl };
+})();
+
+;
+/* inline from trips/index.html */
+
+'use strict';
+const DAY_MS=86400000;
+let apiRef=null,map=null,layer=null,vehicles=[],trips=[],logs=[],events=[],changes=[],rules=[],drivers=[],selectedDevice=null,loadToken=0,expandedEvents={};
+const $=id=>document.getElementById(id);
+const call=(api,t,s)=>new Promise((ok,err)=>api.call('Get',{typeName:t,search:s||{}},ok,err));
+const esc=v=>String(v??'').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;');
+function parseDurationMs(d){if(d==null||d==="")return 0;const str=String(d);const m=str.match(/^(?:(\d+)\.)?(\d{1,2}):(\d{2}):(\d{2})(?:\.\d+)?$/);if(m){const days=Number(m[1]||0);return(days*86400+Number(m[2]||0)*3600+Number(m[3]||0)*60+Number(m[4]||0))*1000}const n=Number(d);return isNaN(n)?0:n}
+function fmtDate(d){try{return new Date(d).toLocaleString('pt-BR')}catch(e){return String(d||'')}}
+function fmtNum(n){return Number(n||0).toLocaleString('pt-BR')}
+function currentRange(){const fromEl=$('dateFrom'),toEl=$('dateTo');let from=fromEl&&fromEl.value?new Date(fromEl.value):null,to=toEl&&toEl.value?new Date(toEl.value):null;if(!from||isNaN(from.getTime())){const days=Number($('periodFilter').value)||1;to=to&&!isNaN(to.getTime())?to:new Date();from=new Date(to.getTime()-days*DAY_MS)}if(!to||isNaN(to.getTime()))to=new Date();if(from.getTime()>to.getTime()){const tmp=from;from=to;to=tmp}return{from,to}}
+function shell(){
+$('app').innerHTML=`<div class="head"><div class="title"><strong>Fleet Trip 360</strong><div class="sub">Historico real de viagens - MyGeotab</div></div><div class="pill" id="statusBox">Conectando...</div></div>
+<div class="bar">
+<input id="deviceQuery" list="deviceList" placeholder="Placa ou nome do veiculo" style="min-width:260px"/><datalist id="deviceList"></datalist>
+<select id="periodFilter"><option value="1" selected>Hoje</option><option value="7">7 dias</option><option value="custom">Personalizado</option></select>
+<label class="datefield">De <input type="datetime-local" id="dateFrom"/></label>
+<label class="datefield">Ate <input type="datetime-local" id="dateTo"/></label>
+<button class="primary" id="loadBtn">Consultar</button>
+<button id="clearBtn">Limpar</button>
+<button id="pdfBtn">Exportar PDF</button>
+</div>
+<div class="info"><span>Veiculos: <b id="countBox">0</b></span><span>Viagens: <b id="tripCount">0</b></span><span>Distancia: <b id="distanceKm">0</b> km</span></div>
+<div id="alertBox" class="alert" style="display:none"></div>
+<div id="kpisBox" class="grid"></div>
+<div class="cols" style="display:grid;grid-template-columns:1fr 1fr;gap:12px">
+<div class="panel"><div class="pt">Mapa do historico</div><div id="mapBox" class="map"></div></div>
+<div class="panel"><div class="pt">Viagens</div><div id="tripsBox"></div></div>
+</div>
+<div class="panel"><div class="pt">Excecoes agrupadas</div><div id="eventsBox"></div></div>
+<footer class="project-credit">Desenvolvido por Bruno Henrique Felisbino Goncalves</footer>`;
+$('loadBtn').onclick=()=>loadHistory(apiRef);
+$('clearBtn').onclick=clearFilters;
+$('pdfBtn').onclick=()=>exportPdf();
+$('periodFilter').onchange=()=>{setRangeFromPeriod();};
+setRangeFromPeriod();
+}
+function setRangeFromPeriod(){const days=Number($('periodFilter').value)||1;const to=new Date();const from=new Date(to.getTime()-days*DAY_MS);$('dateFrom').value=toLocalInput(from);$('dateTo').value=toLocalInput(to)}
+function toLocalInput(d){const pad=n=>String(n).padStart(2,'0');return d.getFullYear()+'-'+pad(d.getMonth()+1)+'-'+pad(d.getDate())+'T'+pad(d.getHours())+':'+pad(d.getMinutes())}
+async function loadDevices(){try{const devs=await call(apiRef,'Device',{});vehicles=devs||[];$('countBox').textContent=vehicles.length;const dl=$('deviceList');dl.innerHTML=vehicles.map(d=>`<option value="${esc(d.id)}">${esc(d.name||d.id)} ${d.licensePlate?'- '+esc(d.licensePlate):''}</option>`).join('')}catch(e){console.error(e);alertMsg('Erro ao carregar veiculos: '+(e.message||''),false,true)}}
+async function loadHistory(api){if(!api){alertMsg('Abra dentro do MyGeotab.',false,true);return}const q=($('deviceQuery').value||'').toLowerCase().trim();const found=vehicles.find(v=>((v.name||'')+' '+(v.licensePlate||'')).toLowerCase().includes(q)||v.id===q);const id=found?found.id:'';if(!id){alertMsg('Selecione um veiculo valido.',false,true);return}selectedDevice=vehicles.find(v=>v.id===id);const range=currentRange();const token=++loadToken;setStatus('Consultando viagens...');try{const [tr,lr,ee,dc,rl,dv]=await Promise.all([call(api,'Trip',{deviceSearch:{id:id},fromDate:range.from.toISOString(),toDate:range.to.toISOString(),includeOverlappedTrips:true}).catch(()=>[]),call(api,'LogRecord',{deviceSearch:{id:id},fromDate:range.from.toISOString(),toDate:range.to.toISOString()}).catch(()=>[]),call(api,'ExceptionEvent',{deviceSearch:{id:id},fromDate:range.from.toISOString(),toDate:range.to.toISOString(),includeExceptionCount:true}).catch(()=>[]),call(api,'DriverChange',{deviceSearch:{id:id},fromDate:range.from.toISOString(),toDate:range.to.toISOString(),includeOverlappedChanges:true}).catch(()=>[]),call(api,'Rule',{}).catch(()=>[]),call(api,'Driver',{}).catch(()=>[])]);if(token!==loadToken)return;trips=tr||[];changes=dc||[];rules=rl||[];drivers=dv||[];logs=(lr||[]).sort((a,b)=>new Date(a.dateTime)-new Date(b.dateTime));events=ee||[];render();setStatus(trips.length+' viagens carregadas');alertMsg('Consulta concluida.',true)}catch(e){console.error(e);setStatus('Erro');alertMsg('Erro: '+(e.message||''),false,true)}}
+function ruleName(id){const r=rules.find(x=>x.id===id);return r&&r.name?r.name:'Regra'}
+function driverName(id){const d=drivers.find(x=>x.id===id);return d&&d.name?d.name:id}
+function render(){renderKpis();renderTrips();renderEvents();renderMap()}
+function renderKpis(){const official=trips.reduce((s,t)=>s+Number(t.distance||t.Distance||0),0);let dist=official;if(!dist&&logs.length>1){let km=0;for(let i=1;i<logs.length;i++){const a=logs[i-1],b=logs[i];const R=6371,dLat=(Number(b.latitude)-Number(a.latitude))*Math.PI/180,dLng=(Number(b.longitude)-Number(a.longitude))*Math.PI/180;const x=Math.sin(dLat/2)**2+Math.cos(Number(a.latitude)*Math.PI/180)*Math.cos(Number(b.latitude)*Math.PI/180)*Math.sin(dLng/2)**2;km+=R*2*Math.atan2(Math.sqrt(x),Math.sqrt(1-x))}dist=km}const drive=trips.reduce((s,t)=>s+parseDurationMs(t.drivingDuration),0);const stop=trips.reduce((s,t)=>s+parseDurationMs(t.stopDuration),0);$('tripCount').textContent=trips.length;$('distanceKm').textContent=dist.toFixed(1)+(official?'':' (est.)');$('kpisBox').innerHTML=[['Viagens',trips.length,'periodo','var(--blue)'],['Distancia',dist.toFixed(1)+' km',official?'oficial':'estimado GPS','var(--green)'],['Tempo dirigindo',Math.round(drive/60000)+' min','Trip','var(--blue)'],['Tempo parado',Math.round(stop/60000)+' min','Trip','var(--orange)'],['Excecoes',events.length,'periodo','var(--red)']].map(c=>`<div class="kpi"><span>${c[0]}</span><b style="color:${c[3]}">${c[1]}</b><small>${c[2]}</small></div>`).join('')}
+function renderTrips(){$('tripsBox').innerHTML=trips.length?trips.map((t,i)=>`<div style="padding:8px;border-bottom:1px solid #e5eaf1"><b>#${i+1}</b> ${fmtDate(t.start)} -> ${fmtDate(t.stop)}<br><small>Condutor: ${esc((t.driver && driverName(t.driver.id)) || "Nao identificado")} - ${Number(t.distance||t.Distance||0).toFixed(1)} km - media ${Math.round(t.averageSpeed||0)} km/h - max ${Math.round(t.maximumSpeed||0)} km/h - excecoes ${t.exceptionCount||0}</small></div>`).join(''):'<div style="padding:20px;text-align:center;color:#64748b">Sem viagens.</div>'}
+function renderEvents(){if(!events.length){$('eventsBox').innerHTML='<div style="padding:20px;text-align:center;color:#64748b">Sem excecoes.</div>';return}const groups={};events.forEach(e=>{const k=ruleName(e.rule&&e.rule.id);(groups[k]||(groups[k]=[])).push(e)});$('eventsBox').innerHTML=Object.keys(groups).map(k=>{const list=groups[k],total=list.reduce((s,e)=>s+parseDurationMs(e.duration),0),open=!!expandedEvents[k];return `<div style="border-bottom:1px solid #e5eaf1"><div style="padding:8px;cursor:pointer;font-weight:700" onclick="expandedEvents['${k}']=!expandedEvents['${k}'];render()">${esc(k)} - ${list.length} ocorrencia(s) - ${Math.round(total/1000)}s ${open?'[-]':'[+]'}</div>${open?list.map(e=>`<div style="padding:6px 12px;font-size:12px">${fmtDate(e.activeFrom)} - ${Math.round(parseDurationMs(e.duration)/1000)}s${e.maximumSpeed?` - ${Math.round(e.maximumSpeed)} km/h`:''}</div>`).join(''):''}</div>`}).join('')}
+function renderMap(){if(!map){map=L.map('mapBox');L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png',{attribution:'OpenStreetMap contributors'}).addTo(map);layer=L.layerGroup().addTo(map)}layer.clearLayers();const pts=logs.map(r=>[Number(r.latitude),Number(r.longitude)]).filter(p=>Number.isFinite(p[0])&&Number.isFinite(p[1]));if(pts.length){const poly=L.polyline(pts,{color:'#0ea5e9',weight:3}).addTo(layer);map.fitBounds(poly.getBounds(),{padding:[20,20]});if(pts[0])L.marker(pts[0]).addTo(layer).bindPopup('Inicio');if(pts[pts.length-1])L.marker(pts[pts.length-1]).addTo(layer).bindPopup('Termino')}events.forEach(e=>{const lr=nearestLog(e.activeFrom);if(!lr)return;const m=L.circleMarker([Number(lr.latitude),Number(lr.longitude)],{radius:6,color:'#ef4444',fillColor:'#ef4444',fillOpacity:.8}).addTo(layer);m.bindPopup(esc(ruleName(e.rule&&e.rule.id))+'<br>'+fmtDate(e.activeFrom))})}
+function nearestLog(dt){if(!logs.length||!dt)return null;const t=new Date(dt).getTime();let best=null,diff=Infinity;logs.forEach(r=>{const d=Math.abs(new Date(r.dateTime).getTime()-t);if(d<diff){diff=d;best=r}});return diff<=300000?best:null}
+function clearFilters(){$('deviceQuery').value='';$('periodFilter').value='1';setRangeFromPeriod();trips=[];logs=[];events=[];render()}
+function setStatus(t){const e=$('statusBox');if(e)e.textContent=t}
+function alertMsg(t,ok,err){const e=$('alertBox');if(!e)return;e.style.display='block';e.className='alert'+(ok?' ok':err?' err':'');e.textContent=t}
+function exportPdf(){if(!trips.length){alertMsg('Carregue as viagens antes de gerar o PDF.',false,true);return;}var printOptions={includeLogo:false,logo:''};var run=function(po){printOptions=po||printOptions;if(printOptions===null)return;var logo=printOptions&&printOptions.includeLogo?printOptions.logo:'';var tmp=document.createElement('div');tmp.innerHTML=buildTripPdfSafe();if(window.PrintOptions)window.PrintOptions.decorate(tmp,logo);var pts=logs.map(function(r){return [Number(r.latitude),Number(r.longitude)]}).filter(function(p){return Number.isFinite(p[0])&&Number.isFinite(p[1])});var html='<!DOCTYPE html><html><head><meta charset="UTF-8"><title>Fleet Trip 360</title><style data-original="reports/premium.css">
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&family=Montserrat:wght@400;500;600;700;800;900&family=Roboto:wght@400;500;600;700;800;900&display=swap');
+@page { size: A4; margin: 0; }
+@media print {
+  html,body { margin:0 !important; padding:0 !important; background:#fff !important; background-image:none !important; min-height:0 !important; }
+  body,#app { min-height:0 !important; padding:0 !important; background:#fff !important; background-image:none !important; overflow:hidden !important; }
+  #app,.bar,.head,.info,.panel,.grid,.cols,.tablewrap,.alert { display:none !important; visibility:hidden !important; }
+  .pdf-stage,#pdfStage { display:block !important; visibility:visible !important; position:static !important; left:auto !important; top:auto !important; width:auto !important; max-width:none !important; overflow:visible !important; }
+  .pdf-page { width:210mm !important; height:297mm !important; min-height:297mm !important; max-height:297mm !important; padding:56px 54px !important; margin:0 !important; overflow:hidden !important; page-break-after:always !important; break-after:page !important; page-break-inside:avoid !important; position:relative !important; box-shadow:none !important; }
+  .pdf-cover-page { overflow:hidden !important; }
+  .pdf-ranking-page { height:auto !important; max-height:none !important; overflow:visible !important; }
+  .pdf-ranking-page table { page-break-inside:auto !important; }
+  .pdf-page:last-child { page-break-after:auto !important; break-after:auto !important; }
+  .pdf-table {
+    page-break-inside: auto;
+  }
+  .pdf-table thead {
+    display: table-header-group; /* Força a repetição em cada página */
+  }
+  .pdf-table tr {
+    page-break-inside: avoid; /* Evita que uma linha seja cortada ao meio */
+    page-break-after: auto;
+  }
+  .pdf-ranking-page {
+    height: auto !important;
+    min-height: 297mm;
+    overflow: visible !important;
+    display: block !important;
+  }
+  /* Reduz o tamanho da fonte e o padding da tabela para caber mais veículos por página */
+  .pdf-table th, .pdf-table td {
+    font-size: 8.5px !important; /* Fonte menor para aumentar densidade */
+    padding: 3px 2px !important;  /* Espaçamento vertical reduzido */
+  }
+  .pdf-table .pdf-badge {
+    font-size: 7.5px !important; /* Ajuste proporcional para os badges de status */
+  }
+  /* Destaque para veículos com score muito baixo (Risco Alto) */
+  .pdf-row-risk {
+    background-color: rgba(239, 68, 68, 0.07) !important;
+    -webkit-print-color-adjust: exact;
+  }
+  /* Remove a coluna de Status para ganhar espaço horizontal */
+  .c-status {
+    display: none !important;
+  }
+  /* Estilo da Legenda */
+  .pdf-legend {
+    display: flex;
+    align-items: center;
+    gap: 15px;
+  }
+  .pdf-legend-item i {
+    display: inline-block;
+    width: 10px; height: 10px;
+    border-radius: 2px;
+  }
+  .pdf-legend-item i.risk { background: rgba(239, 68, 68, 0.2); border: 1px solid #ef4444; }
+}
+*{box-sizing:border-box}
+:root{--bg:#f5f8fc;--card:#fff;--txt:#172033;--mut:#64748b;--bd:#e5eaf1;--blue:#0ea5e9;--blue2:#0369a1;--green:#10b981;--yellow:#f59e0b;--orange:#f97316;--red:#ef4444;--shadow:0 12px 28px rgba(15,23,42,.06);--mono:Consolas,monospace}
+html,body{margin:0;padding:0}
+body,#app{font-family:var(--fleet-brand-font,system-ui,Arial,sans-serif);background:var(--bg);min-height:100vh;color:var(--txt);padding:16px 20px;background-image:radial-gradient(circle,rgba(15,23,42,.045) 1px,transparent 1px);background-size:24px 24px}
+.head,.bar,.info,.panel,.kpi,.pdf-card,.pdf-kpi,.pdf-action,.pcp-exec-card{background:var(--card);border:1px solid var(--bd);border-radius:16px;box-shadow:var(--shadow)}
+.head{display:flex;align-items:center;justify-content:space-between;padding:14px 16px;margin-bottom:12px}.brand{display:flex;gap:14px;align-items:center}.logo,.pdf-logo,.pcp-logo{object-fit:contain;object-position:left center}.logo{height:46px;width:168px;background:#000;border-radius:10px;padding:4px 8px}.title{font-weight:900;font-size:18px;line-height:1.1}.sub{font-family:var(--mono);font-size:10px;color:var(--mut);font-weight:400;margin-top:4px}.pill{font-family:var(--mono);font-size:10px;color:var(--blue2);background:#fff;border:1px solid var(--bd);border-radius:99px;padding:5px 12px}.bar{display:flex;gap:8px;flex-wrap:wrap;align-items:center;padding:12px;margin-bottom:12px}.info{display:flex;gap:16px;flex-wrap:wrap;padding:9px 14px;margin-bottom:12px;color:var(--mut);font-size:12px}button,select,input{height:32px;border-radius:8px;border:1px solid var(--bd);background:#fff;color:var(--txt);font-size:11px;padding:0 10px}input{min-width:190px}button{font-weight:800;cursor:pointer}.primary{background:linear-gradient(135deg,var(--blue),var(--blue2));color:#fff;border:0}.soft{background:#f0f9ff;color:var(--blue2)}.alert{padding:10px 14px;border-radius:10px;margin-bottom:12px;font-size:12px;background:rgba(14,165,233,.1);border:1px solid rgba(14,165,233,.22);color:var(--blue2)}.alert.ok{background:rgba(16,185,129,.12);border-color:rgba(16,185,129,.22);color:#047857}.alert.err{background:rgba(239,68,68,.1);border-color:rgba(239,68,68,.22);color:#b91c1c}.grid,.cols{display:grid;gap:12px}.grid{grid-template-columns:repeat(5,minmax(0,1fr));margin-bottom:12px}.cols{grid-template-columns:1fr 1fr;margin-bottom:12px}.kpi{padding:14px 16px}.kpi span,.pdf-kpi small,.pdf-section-title,.pdf-brand,.pcp-chip-label,.pcp-tagline{font-size:10px;letter-spacing:.06em;text-transform:uppercase;color:var(--mut)}.kpi b{display:block;font-size:26px;line-height:1.1;margin:10px 0 6px}.kpi small{color:var(--mut);font-size:11px}.pt,.pdf-title,.pcp-title{font-weight:900}.pt,.pdf-section-title{padding:14px 16px;border-bottom:1px solid var(--bd);margin:0}.panel{overflow:hidden}.barrow,.row{display:grid;grid-template-columns:1fr 1fr 40px;gap:8px;align-items:center;padding:10px 16px;border-bottom:1px solid #eef2f7}.track{height:8px;background:#eef2f7;border-radius:999px;overflow:hidden}.fill{height:100%;border-radius:inherit}.exec{padding:14px 16px;font-size:12px;color:var(--mut);line-height:1.5}.exec div+div{margin-top:10px}.tablewrap{overflow:auto}.tablewrap table,.pdf-table{width:100%;border-collapse:collapse}.tablewrap th,.tablewrap td,.pdf-table th,.pdf-table td{padding:10px 8px;border-bottom:1px solid #eef2f7;text-align:left;font-size:11px}.badge,.pdf-badge{display:inline-flex;align-items:center;padding:4px 8px;border-radius:999px;font-size:10px;font-weight:800}.okb,.pdf-ok{background:rgba(16,185,129,.12);color:#047857}.warnb,.pdf-warn{background:rgba(245,158,11,.12);color:#b45309}.orangeb,.pdf-critical{background:rgba(249,115,22,.12);color:#c2410c}.riskb,.pdf-risk{background:rgba(239,68,68,.12);color:#b91c1c}.pdf-stage{position:absolute;left:-10000px;top:0;width:210mm}.pdf-page{width:210mm;min-height:297mm;background:#fff;color:#172033;position:relative;page-break-after:always;padding:56px 54px}.pdf-topbar{height:6px;background:linear-gradient(90deg,var(--blue),var(--blue2));border-radius:999px;margin-bottom:18px}.pdf-brand{display:flex;align-items:flex-end;justify-content:space-between;margin-bottom:18px}.pdf-title{font-size:26px;line-height:1;margin:0;color:var(--txt)}.pdf-subtitle{font-size:11px;color:var(--mut);margin-top:6px}.pdf-logo{height:42px;max-width:150px}.pdf-grid-4{display:grid;grid-template-columns:repeat(4,1fr);gap:12px;margin-bottom:18px}.pdf-kpi{padding:14px 16px}.pdf-kpi b{display:block;font-size:28px;margin:10px 0 4px}.pdf-kpi span,.pdf-summary-box{font-size:11px;color:var(--mut)}.pdf-section{margin-top:10px}.pdf-two-col{display:grid;grid-template-columns:1.1fr .9fr;gap:12px}.pdf-card,.pdf-action{padding:14px 16px}.pdf-bars .row{grid-template-columns:140px 1fr 26px;padding-left:0;padding-right:0}.pdf-summary-box{padding:10px 12px;background:#f8fafc;border:1px solid #e2e8f0;border-radius:12px}.pdf-summary-box+.pdf-summary-box{margin-top:8px}.pdf-action h4{margin:0 0 8px;font-size:13px}.pdf-action p{margin:0;color:var(--mut);font-size:11px;line-height:1.5}.pdf-footer{position:absolute;left:54px;right:54px;bottom:24px;display:flex;justify-content:space-between;font-size:10px;color:var(--mut);border-top:1px solid #e2e8f0;padding-top:10px}.pdf-cover-page{background:linear-gradient(145deg,#050d1f 0%,#0a1535 45%,#071228 100%);color:#fff;overflow:hidden;position:relative}.pcp-dots{position:absolute;inset:0;background-image:radial-gradient(circle,rgba(77,184,255,.18) 1px,transparent 1px);background-size:22px 22px;pointer-events:none}.pdf-cover-page::before{content:'';position:absolute;top:-120px;right:-80px;width:420px;height:420px;border-radius:50%;background:radial-gradient(circle,rgba(3,105,161,.55) 0%,transparent 70%);pointer-events:none}.pcp-header,.pcp-hero,.pcp-chips,.pcp-exec-card{position:relative;z-index:2}.pcp-header{margin-bottom:32px}.pcp-logo{background:#000;border-radius:16px;padding:0;height:70px;width:auto;display:block}.pcp-hero{display:flex;align-items:flex-start;justify-content:space-between;margin-bottom:28px}.pcp-title-block{display:flex;gap:14px;align-items:flex-start}.pcp-bar{width:5px;min-height:130px;background:linear-gradient(#4db8ff,#0369a1);border-radius:4px;flex-shrink:0;margin-top:6px}.pcp-title{font-size:52px;line-height:1;margin:0 0 10px 0;color:#fff;letter-spacing:-.01em}.pcp-tagline{color:#93c5fd}.pcp-truck-silhouette{width:260px;flex-shrink:0;margin-top:8px}.pcp-chips{display:flex;gap:10px;flex-wrap:wrap;margin-bottom:24px}.pcp-chip{background:rgba(255,255,255,.07);border:1px solid rgba(255,255,255,.14);border-radius:14px;padding:10px 14px;display:flex;gap:10px;align-items:center;min-width:155px}.pcp-chip-icon{font-size:18px;opacity:.85}.pcp-chip-label{color:#93c5fd;font-weight:700}.pcp-chip-val{font-size:13px;font-weight:900;color:#fff;margin-top:2px}.pcp-exec-card{background:rgba(255,255,255,.06);border:1px solid rgba(255,255,255,.12);border-radius:22px;padding:22px 24px;display:flex;gap:24px;align-items:center}.pcp-exec-text{flex:1}.pcp-exec-header{display:flex;align-items:center;gap:10px;font-size:15px;font-weight:900;color:#fff;margin-bottom:10px}.pcp-shield{font-size:20px}.pcp-exec-rule{height:2px;background:linear-gradient(90deg,#0ea5e9,transparent);border-radius:2px;margin-bottom:12px}.pcp-exec-text p{margin:0 0 8px 0;font-size:11.5px;color:#bfdbfe;line-height:1.55}.pcp-kpi-row{display:flex;gap:20px;margin-top:16px;padding-top:14px;border-top:1px solid rgba(255,255,255,.1)}.pcp-kpi-item{display:flex;flex-direction:column;align-items:center;gap:2px;text-align:center}.pcp-kpi-item b{font-size:22px;font-weight:900;color:#fff;line-height:1}.pcp-kpi-item small{font-size:9px;color:#93c5fd;line-height:1.35;margin-top:2px}.pcp-kpi-item .pcp-kpi-icon{font-size:16px;margin-bottom:2px}.pcp-kpi-item.warn b{color:#fbbf24}.pcp-kpi-item.red b{color:#f87171}.pcp-kpi-item.green b{color:#34d399}.pcp-index-wrap{flex-shrink:0}.pcp-ring-outer{width:168px;height:168px;border-radius:50%;display:flex;align-items:center;justify-content:center;padding:12px}.pcp-ring-inner{width:144px;height:144px;border-radius:50%;background:#0a1535;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:2px}.pcp-ring-inner b{font-size:52px;font-weight:900;line-height:1}.pcp-ring-inner span{font-size:10px;letter-spacing:.12em;text-transform:uppercase;color:#93c5fd}.pcp-pulse{font-size:16px;color:#38bdf8;margin-top:4px;opacity:.7}.pdf-table .c-num{width:28px}.pdf-table .c-score{width:48px}.pdf-table .c-plate{width:90px}.pdf-table .c-last{width:52px}.pdf-table .c-status{width:80px}.tablewrap table{min-width:1080px;table-layout:fixed}.tablewrap th,.tablewrap td{white-space:nowrap;overflow:hidden;text-overflow:ellipsis}.tablewrap th:nth-child(1),.tablewrap td:nth-child(1){width:44px}.tablewrap th:nth-child(2),.tablewrap td:nth-child(2){width:70px}.tablewrap th:nth-child(3),.tablewrap td:nth-child(3){width:120px}.tablewrap th:nth-child(4),.tablewrap td:nth-child(4){width:280px}.tablewrap th:nth-child(5),.tablewrap td:nth-child(5){width:92px}.tablewrap th:nth-child(6),.tablewrap td:nth-child(6){width:210px}.tablewrap th:nth-child(7),.tablewrap td:nth-child(7){width:220px}.tablewrap th:nth-child(8),.tablewrap td:nth-child(8){width:110px}
+
+/* A marca, os ícones e a fonte são selecionados após conectar ao MyGeotab. */
+@media screen,print {
+  #pdfStage, #pdfStage .pdf-page, #pdfStage .pdf-page * {
+    font-family:var(--fleet-brand-font,system-ui,Arial,sans-serif) !important;
+  }
+  #pdfStage .pcp-title,#pdfStage .pdf-title {font-weight:800 !important;letter-spacing:-.02em;line-height:1.07}
+  #pdfStage .pdf-section-title,#pdfStage .pcp-exec-header {font-weight:700 !important}
+  #pdfStage .pdf-logo,#pdfStage .pcp-logo {background:transparent !important;object-fit:contain !important}
+  #pdfStage .pdf-brand-qr {break-inside:avoid}
+}
+
+/* Índice/capa do PDF e logo opcional de impressão. */
+.pcp-toc{margin:0 0 20px;background:rgba(255,255,255,.05);border:1px solid rgba(255,255,255,.12);border-radius:14px;padding:12px 16px}
+.pcp-toc-head{font-size:10px;letter-spacing:.08em;text-transform:uppercase;color:#93c5fd;font-weight:800;margin-bottom:8px}
+.pcp-toc-grid{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:10px}
+.pcp-toc-item{display:flex;align-items:center;gap:8px;color:#e2e8f0;font-size:11px}
+.pcp-toc-item b{font-family:var(--mono);color:#38bdf8;font-size:11px}
+.pcp-toc-item span{flex:1}
+.pcp-toc-item em{font-style:normal;color:#94a3b8;font-size:10px;white-space:nowrap}
+.pcp-index-wrap{text-align:center}
+.pcp-index-band{margin-top:8px;font-size:10px;font-weight:800;text-transform:uppercase;letter-spacing:.05em}
+.pcp-scale{display:flex;height:6px;border-radius:99px;overflow:hidden;margin-top:6px}
+.pcp-scale i{flex:1}
+.pcp-scale .r{background:#ef4444}.pcp-scale .o{background:#f97316}.pcp-scale .y{background:#f59e0b}.pcp-scale .g{background:#10b981}
+.pcp-scale-labels{display:flex;justify-content:space-between;color:#94a3b8;font-size:8px;font-family:var(--mono);margin-top:3px}
+.pdf-footer-logo{display:inline-block}
+
+</style><link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css"/><script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"><\/script><style>body{background:#fff;padding:0}.pdf-stage{display:block}</style></head><body><div class="pdf-stage">'+tmp.innerHTML+'</div><script>var pdfPts='+JSON.stringify(pts)+';function initPdfMap(){if(!window.L||!document.getElementById("pdfMap"))return;var m=L.map("pdfMap",{zoomControl:false,attributionControl:false});var tl=L.tileLayer("https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png",{attribution:"OpenStreetMap"}).addTo(m);if(pdfPts.length){var poly=L.polyline(pdfPts,{color:"#0ea5e9",weight:3}).addTo(m);m.fitBounds(poly.getBounds(),{padding:[20,20]})}tl.on("load",function(){setTimeout(function(){window.print()},500)});setTimeout(function(){window.print()},4000)}if(document.readyState==="complete")initPdfMap();else window.addEventListener("load",initPdfMap);<\/script></body></html>';var w=window.open('','_blank');if(!w){alertMsg('Permita pop-ups para abrir o PDF.',false,true);return;}w.document.open();w.document.write(html);w.document.close();};if(window.PrintOptions){window.PrintOptions.ask({title:'Imprimir Fleet Trip 360',subtitle:'Inclua um logo no cabecalho e rodapes do PDF.'}).then(run).catch(function(){run({includeLogo:false,logo:''});});}else{run({includeLogo:false,logo:''});}}function buildTripPdfSafe(){var td=tripDistanceSafe();var drive=trips.reduce(function(s,t){return s+parseDurationMs(t.drivingDuration)},0);var stop=trips.reduce(function(s,t){return s+parseDurationMs(t.stopDuration)},0);var vehicle=selectedDevice?(esc(selectedDevice.name||selectedDevice.id)+(selectedDevice.licensePlate?' - '+esc(selectedDevice.licensePlate):'')):'-';var range=currentRange();var generatedAt=new Date().toLocaleString('pt-BR');var tripRows='';for(var i=0;i<trips.length;i++){var t=trips[i];tripRows+='<tr><td>'+(i+1)+'</td><td>'+fmtDate(t.start)+'</td><td>'+fmtDate(t.stop)+'</td><td>'+esc(driverName(t.driver&&t.driver.id))+'</td><td>'+Number(t.distance||t.Distance||0).toFixed(1)+'</td><td>'+Math.round(t.averageSpeed||0)+'</td><td>'+Math.round(t.maximumSpeed||0)+'</td><td>'+(t.exceptionCount||0)+'</td></tr>';}var pointRows='';for(var i=0;i<trips.length;i++){var t=trips[i];var sl=nearestLog(t.start),el=nearestLog(t.stop);var sc=sl?Number(sl.latitude).toFixed(5)+', '+Number(sl.longitude).toFixed(5):'-';var ec=el?Number(el.latitude).toFixed(5)+', '+Number(el.longitude).toFixed(5):'-';pointRows+='<tr><td>'+(i+1)+'</td><td>'+sc+'</td><td>'+ec+'</td></tr>';}var html='';html+='<div class="pdf-page pdf-cover-page"><div class="pdf-topbar"></div><div class="pdf-brand"><h1 class="pdf-title">Fleet Trip 360</h1><div class="pdf-subtitle">Relatorio de viagens</div></div>';html+='<div class="pdf-grid-4"><div class="pdf-kpi"><small>Veiculo</small><b style="font-size:14px">'+vehicle+'</b><span>'+trips.length+' viagens</span></div>';html+='<div class="pdf-kpi"><small>Periodo</small><b style="font-size:14px">'+fmtDate(range.from)+' - '+fmtDate(range.to)+'</b><span>consulta</span></div>';html+='<div class="pdf-kpi"><small>Distancia</small><b>'+td.dist.toFixed(1)+' km</b><span>'+(td.official?'oficial':'estimado GPS')+'</span></div>';html+='<div class="pdf-kpi"><small>Excecoes</small><b>'+events.length+'</b><span>periodo</span></div></div>';html+='<div class="pdf-card" style="margin-top:16px"><div class="pdf-section-title">Resumo</div>';html+='<div class="pdf-summary-box"><b>Tempo dirigindo:</b> '+Math.round(drive/60000)+' min</div>';html+='<div class="pdf-summary-box"><b>Tempo parado:</b> '+Math.round(stop/60000)+' min</div>';html+='<div class="pdf-summary-box"><b>Gerado em:</b> '+generatedAt+'</div></div>';html+='<div class="pdf-footer"><span>Fleet Trip 360 - Viagens</span><span>Pagina 1</span></div></div>';html+='<div class="pdf-page"><div class="pdf-topbar"></div><div class="pdf-brand"><h1 class="pdf-title">Viagens</h1><div class="pdf-subtitle">Historico detalhado</div></div>';html+='<table class="pdf-table"><thead><tr><th>#</th><th>Inicio</th><th>Termino</th><th>Condutor</th><th>km</th><th>Media</th><th>Max</th><th>Exc.</th></tr></thead><tbody>'+(tripRows||'<tr><td colspan="8">Sem viagens.</td></tr>')+'</tbody></table>';html+='<div class="pdf-footer"><span>Fleet Trip 360 - Viagens</span><span>Pagina 2</span></div></div>';html+='<div class="pdf-page"><div class="pdf-topbar"></div><div class="pdf-brand"><h1 class="pdf-title">Inicio e fim do trajeto</h1><div class="pdf-subtitle">Coordenadas dos pontos inicial e final</div></div>';html+='<table class="pdf-table"><thead><tr><th>#</th><th>Inicio (lat, lon)</th><th>Fim (lat, lon)</th></tr></thead><tbody>'+(pointRows||'<tr><td colspan="3">Sem dados.</td></tr>')+'</tbody></table>';html+='<div class="pdf-footer"><span>Fleet Trip 360 - Pontos</span><span>Pagina 3</span></div></div>';return html;}function tripDistanceSafe(){var official=trips.reduce(function(s,t){return s+Number(t.distance||t.Distance||0)},0);var dist=official;if(!dist&&logs.length>1){var km=0;for(var i=1;i<logs.length;i++){var a=logs[i-1],b=logs[i];var R=6371,dLat=(Number(b.latitude)-Number(a.latitude))*Math.PI/180,dLng=(Number(b.longitude)-Number(a.longitude))*Math.PI/180;var x=Math.sin(dLat/2)*Math.sin(dLat/2)+Math.cos(Number(a.latitude)*Math.PI/180)*Math.cos(Number(b.latitude)*Math.PI/180)*Math.sin(dLng/2)*Math.sin(dLng/2);km+=R*2*Math.atan2(Math.sqrt(x),Math.sqrt(1-x));}dist=km;}return {official:official,dist:dist};}function nearestLog(dt){if(!logs.length||!dt)return null;var t=new Date(dt).getTime();var best=null,diff=Infinity;logs.forEach(function(r){var d=Math.abs(new Date(r.dateTime).getTime()-t);if(d<diff){diff=d;best=r}});return diff<=300000?best:null;}window.geotab=window.geotab||{};window.geotab.addin=window.geotab.addin||{};window.geotab.addin.fleetTelemetryManager=function(){return{initialize:function(api,state,cb){try{init(api)}catch(e){console.error(e)}if(cb)cb()},focus:function(){if(map)setTimeout(()=>map.invalidateSize(),200)},blur:function(){}}}
+function init(api){if(!api){setStatus('Nao conectado');alertMsg('Abra este add-in dentro do MyGeotab para carregar dados reais.',false,true);return}apiRef=api;shell();loadDevices()}
+
+</script>
+</body>
+</html>
