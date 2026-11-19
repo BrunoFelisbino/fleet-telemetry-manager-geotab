@@ -149,7 +149,11 @@ button[disabled]{opacity:.78;cursor:wait}.spinner{width:14px;height:14px;display
 </div>
 <footer class="project-credit">Desenvolvido por Bruno Henrique Felisbino Gonçalves · MIT · Dados somente da sessão autorizada do MyGeotab.</footer>
 </div>
-<script data-bundle="incidents/model.js">
+
+
+
+<script>
+console.info('[Fleet TM v0.4.4] incidents: script carregado');
 /* Regras puras de ocorrências: sem API e sem dados de demonstração. */
 (function(root){
 'use strict';
@@ -245,9 +249,7 @@ function metrics(cases,from,to){
 }
 root.TelemetryCaseModel={STATUS,TRANSITIONS,CATEGORIES,SEVERITIES,CLOSED,validateCreated,validateTransition,buildCases,metrics};
 })(typeof globalThis!=='undefined'?globalThis:this);
-
-</script>
-<script data-bundle="incidents/storage.js">
+;
 /* AddInData é a única persistência do módulo. Cada ação cria uma linha imutável. */
 (function(root){
 'use strict';
@@ -292,9 +294,7 @@ async function append(api,groupId,details){
 }
 root.TelemetryCaseStore={ADDIN_ID,read,append,sessionUser,uniqueId};
 })(typeof globalThis!=='undefined'?globalThis:this);
-
-</script>
-<script data-bundle="incidents/app.js">
+;
 /* UI de ocorrências: usa somente a API da sessão MyGeotab. */
 (function(){
 'use strict';
@@ -483,7 +483,6 @@ window.geotab.addin.fleetTelemetryManager=function(){return{
   focus:function(){},blur:function(){}
 };};
 })();
-
 </script>
 </body>
 </html>
