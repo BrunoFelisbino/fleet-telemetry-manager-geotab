@@ -99,19 +99,14 @@ function resetVisual(){
 function card(title,value,note){return '<article class="kpi"><span>'+safe(title)+'</span><strong class="value">'+safe(value)+'</strong><small class="context">'+safe(note)+'</small></article>';}
 function primaryLabel(total){return total.vehicles+' veículo(s) · '+total.trips+' viagens no período · '+total.withOdometer+' com odômetro disponível';}
 function renderVisualDashboard(summary,period){
-  const trend=Model.trendBuckets(summary.dailyRows||[],period,16);
+  const trend=Model.dailySeries(summary.dailyRows||[],period);
   const max=Math.max(0,...trend.map(x=>x.km));
-  const visible=trend.length;
+  const peak=trend.reduce((a,b)=>b.km>a.km?b:a,trend[0]||{label:'-',km:0});
+  const total=trend.reduce((n,x)=>n+x.km,0);
   $('trendPeriod').textContent=period.label;
-  $('trendChart').innerHTML=trend.length?trend.map((bucket,i)=>{
-    const pct=max>0?Math.min(100,100*bucket.km/max):0;
-    const show=visible<=10||i%Math.ceil(visible/9)===0;
-    return '<div class="trend-col" title="'+safe(bucket.label+': '+fmt(bucket.km,1)+' km')+'">'+
-      '<div class="trend-fill-zone"><div class="trend-fill" style="height:'+(bucket.km?Math.max(1.5,pct):0)+'%"></div></div>'+
-      '<span class="trend-label">'+(show?safe(bucket.label.split('–')[0]):'·')+'</span></div>';
-  }).join(''):'<div class="trend-placeholder">Não há dados de viagens neste período.</div>';
-  $('trendChart').setAttribute('aria-label','Quilometragem do período: '+trend.map(x=>x.label+' '+fmt(x.km,1)+' km').join('; '));
-  $('trendInfo').textContent=trend.length+' intervalos · Maior intervalo: '+fmt(max,1)+' km';
+  $('trendChart').innerHTML=window.FleetMileageDailyChart.svg(trend);
+  $('trendChart').setAttribute('aria-label','Evolução diária da quilometragem: '+trend.map(x=>x.label+' '+fmt(x.km,1)+' km').join('; '));
+  $('trendInfo').textContent=trend.length+' dias · Pico: '+peak.label+' ('+fmt(max,1)+' km) · Total diário: '+fmt(total,1)+' km';
   const top=summary.vehiclesRows.slice(0,5),maxTop=Math.max(1,...top.map(x=>x.km));
   $('topVehicles').innerHTML=top.length?top.map((v,i)=>
     '<div class="top-row"><div class="top-label"><span title="'+safe(v.name)+'">'+(i+1)+'. '+safe(v.name)+'</span><strong>'+fmt(v.km,1)+' km</strong></div>'+
@@ -140,11 +135,12 @@ function render(summary,period,selected){
   ).join(''):'<tr><td colspan="5">Sem veículos elegíveis</td></tr>';
   const notes=[
     'O total corresponde às viagens retornadas pela API Trip dentro da janela filtrada. Não é leitura de odômetro da frota.',
+    'A evolução apresenta um ponto por dia; dias sem viagens aparecem com 0 km. Para períodos longos, arraste o gráfico horizontalmente.',
     'Odômetros: Trip.odometer vem em metros. O início é inferido do odômetro da primeira viagem menos sua distância; não é uma medição direta da hora inicial.',
     'Os dados são consultados somente no escopo permitido pela conta MyGeotab e na seleção atual.',
     'Não há contagem duplicada de veículos com vários grupos: eles são exibidos no grupo exclusivo “Múltiplos grupos”.'
   ];
-  if(summary.boundaryTrips)notes.push(summary.boundaryTrips+' viagem(ns) cruzaram o limite do período e foram contadas integralmente; o KM exato apenas dentro do limite exige telemetria de fronteira.');
+  if(summary.boundaryTrips)notes.push(summary.boundaryTrips+' viagem(ns) cruzaram o limite do período e foram contadas integralmente. No gráfico diário, essas viagens são atribuídas ao primeiro/último dia do intervalo se começaram fora dele.');
   if(summary.withOdometer<summary.vehicles)notes.push(summary.vehicles-summary.withOdometer+' veículo(s) sem odômetro confiável na seleção: exibidos como N/D.');
   $('notes').innerHTML=notes.map(n=>'<li>'+safe(n)+'</li>').join('');
   $('scope').textContent=period.label+' · '+dt(period.from)+' até '+dt(period.to)+' · '+primaryLabel(summary);
