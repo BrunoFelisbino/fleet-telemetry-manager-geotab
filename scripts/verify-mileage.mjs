@@ -37,6 +37,14 @@ assert.equal(M.devicesInScope(cars,groups,'parent','').length,2);
 assert.equal(M.devicesInScope(cars,groups,'parent','v1').length,1);
 assert.equal(M.devicesInScope(cars,groups,'','').length,4);
 assert.ok(M.groupMembers('parent',groups).has('child'));
+const multiGroups=M.devicesInMultiScope(cars,groups,['parent','other'],[]);
+assert.equal(multiGroups.length,3,'Union of groups with nested children, without duplicate vehicles');
+assert.deepEqual([...multiGroups].map(v=>v.id).sort(),['v1','v2','v3']);
+assert.equal(M.devicesInMultiScope(cars,groups,['parent','other'],['v1','v3']).length,2,'Several selected vehicles');
+assert.equal(M.devicesInMultiScope(cars,groups,['parent','other'],['v4']).length,0,'Groups AND vehicles must intersect');
+assert.equal(M.devicesInMultiScope(cars,groups,[],[]).length,4,'Empty selections mean accessible full fleet');
+assert.equal(M.devicesInMultiScope(cars,groups,[],['v2','v3']).length,2,'Multiple vehicles with no group');
+assert.equal(M.devicesInMultiScope(cars,groups,['parent','parent'],[]).length,2,'Duplicate group filters do not double count');
 
 const window=M.range('custom','2026-11-01T00:00','2026-11-19T12:00',now);
 const t1={id:'t1',start:'2026-11-05T09:00:00.000Z',stop:'2026-11-05T10:00:00.000Z',distance:11,odometer:111000};
@@ -61,4 +69,12 @@ assert.equal(fleet.stopped,1);
 assert.equal(fleet.average,10.25);
 assert.equal(fleet.groupsRows.reduce((s,g)=>s+g.vehicles,0),4,'Nunca contar o mesmo veículo em dois grupos');
 assert.equal(fleet.groupsRows.find(x=>x.name==='Múltiplos grupos').vehicles,1);
+const multiFleet=M.summarizeFleet(multiGroups,new Map([...data].filter(([key])=>['v1','v2','v3'].includes(key))),groups,['parent','other']);
+assert.equal(multiFleet.km,41,'Multiple group selection preserves unique KM');
+assert.equal(multiFleet.vehicles,3);
+assert.equal(multiFleet.groupsRows.reduce((n,r)=>n+r.vehicles,0),3,'Vehicles are allocated to one ranking bucket');
+assert.equal(multiFleet.groupsRows.find(x=>x.name==='Múltiplos grupos selecionados').vehicles,1);
+const onlyChild=M.summarizeFleet(M.devicesInMultiScope(cars,groups,['parent'],[]),data,groups,['parent']);
+assert.equal(onlyChild.groupsRows[0].name,'Operação A','Single group includes descendant without duplicate grouping');
+
 console.log('OK: mês calendário, filtro hierárquico, viagens desduplicadas, odômetro e agregação sem dupla contagem.');
