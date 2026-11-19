@@ -3,6 +3,7 @@ on:
   push:
     branches:
       - fix/geotab-six-real-pages-files-v0.4.8
+      - main
   pull_request:
     branches:
       - main
