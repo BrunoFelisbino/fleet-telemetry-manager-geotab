@@ -5,14 +5,14 @@ import {Script} from 'node:vm';
 const read=p=>readFileSync(p,'utf8');
 const manifest=JSON.parse(read('addin-config.json'));
 assert.equal(manifest.name,'fleetTelemetryManager');
-assert.equal(manifest.version,'0.4.8');
+assert.equal(manifest.version,'0.4.9');
 const preview=JSON.parse(read('addin-config.preview.json'));
 assert.equal(preview.version,'0.4.4');
 assert.equal(preview.items.length,6);
 for(const item of preview.items)assert.ok(item.url.includes('?v=0.4.4'));
 assert.deepEqual(manifest.files,{});
 assert.ok(read('addin-config.json').length<5000,'Do not embed the six full pages in JSON');
-assert.deepEqual(manifest.items.map(x=>x.url),['dashboard.html','mileage.html','incidents.html','health.html','exceptions.html','trips.html']);
+assert.deepEqual(manifest.items.map(x=>x.url),['dashboard049.html','mileage049.html','incidents049.html','health049.html','exceptions049.html','trips049.html']);
 for(const item of preview.items)assert.ok(item.url.startsWith('https://ftmbrunog2026.vercel.app/'));
 assert.ok(manifest.isSigned===false||manifest.isSigned===undefined,'Unsigned embedded files manifest expected');
 assert.equal(manifest.items.length,6);
@@ -44,8 +44,8 @@ for(const p of ['health/index.html','exceptions/index.html','trips/index.html'])
 const main=read('assets/app.js');
 assert.ok(main.includes('idlingDuration')&&main.includes('isDeviceCommunicating'));
 assert.ok(!main.includes('localStorage'));
-assert.ok(manifest.items.some(x=>x.url==='incidents.html'));
-assert.ok(manifest.items.some(x=>x.url==='mileage.html'));
+assert.ok(manifest.items.some(x=>x.url==='incidents049.html'));
+assert.ok(manifest.items.some(x=>x.url==='mileage049.html'));
 assert.ok(read('mileage/app.js').includes('geotab.addin.fleetTelemetryManager'));
 assert.ok(read('mileage/index.html').includes('id="groupSearch"')&&read('mileage/index.html').includes('id="vehicleSearch"'));
 
@@ -60,4 +60,4 @@ for(const path of ['index.html','mileage/index.html','incidents/index.html','hea
 }
 assert.ok(read('mileage/index.html').includes('FleetMileageDailyChart'));
 assert.ok(read('mileage/index.html').includes('id="groupFocusStatus"'));
-console.log('OK: v0.4.8, seis páginas reais, manifesto Files, script único e namespace.');
+console.log('OK: v0.4.9, seis páginas reais, manifesto Files, script único e namespace.');

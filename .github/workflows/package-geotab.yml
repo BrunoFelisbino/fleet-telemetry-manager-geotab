@@ -2,7 +2,7 @@ name: Package six real Geotab modules
 on:
   push:
     branches:
-      - fix/geotab-six-real-pages-files-v0.4.8
+      - fix/geotab-six-real-pages-files-v0.4.9
       - main
   pull_request:
     branches:
@@ -26,17 +26,21 @@ jobs:
         shell: bash
         run: |
           cd dist-geotab
-          zip -q -j fleet-telemetry-files-v0.4.8.zip pages/*.html pages/icon.svg
-          zip -q -j fleet-telemetry-completo-v0.4.8.zip configuration.json pages/*.html pages/icon.svg
-          unzip -t fleet-telemetry-files-v0.4.8.zip
-          unzip -t fleet-telemetry-completo-v0.4.8.zip
+          cd pages
+          zip -q -r ../fleet-telemetry-files-v0.4.9.zip *.html icon.svg translations
+          cd ..
+          zip -q fleet-telemetry-completo-v0.4.9.zip configuration.json
+          (cd pages && zip -q -r ../fleet-telemetry-completo-v0.4.9.zip *.html icon.svg translations)
+          unzip -t fleet-telemetry-files-v0.4.9.zip
+          unzip -t fleet-telemetry-completo-v0.4.9.zip
       - uses: actions/upload-artifact@v4
         with:
-          name: FleetTelemetryManager-v0.4.8
+          name: FleetTelemetryManager-v0.4.9
           if-no-files-found: error
           retention-days: 30
           path: |
             dist-geotab/configuration.json
             dist-geotab/LEIA-ME.txt
-            dist-geotab/fleet-telemetry-files-v0.4.8.zip
-            dist-geotab/fleet-telemetry-completo-v0.4.8.zip
+            dist-geotab/fleet-telemetry-files-v0.4.9.zip
+            dist-geotab/fleet-telemetry-completo-v0.4.9.zip
+            dist-geotab/pages/
