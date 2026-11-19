@@ -1,0 +1,491 @@
+<!doctype html>
+<html lang="pt-BR">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta http-equiv="Cache-Control" content="no-cache,no-store,must-revalidate">
+<title>Ocorrências e SLA · Fleet Telemetry Manager</title>
+<style data-original="assets/app.css">
+html,body{margin:0;padding:0;background:#f5f8fc;color:#172033;font-family:'Segoe UI',system-ui,sans-serif}
+
+*{box-sizing:border-box}:root{--bg:#f5f8fc;--card:#fff;--card2:#f8fbff;--txt:#172033;--mut:#64748b;--mut2:#94a3b8;--bd:#e5eaf1;--blue:#0ea5e9;--blue2:#0369a1;--green:#10b981;--yellow:#f59e0b;--orange:#f97316;--red:#ef4444;--gray:#64748b;--shadow:0 12px 28px rgba(15,23,42,.06);--mono:Consolas,monospace}body,#app{font-family:'Segoe UI',system-ui,sans-serif;background:var(--bg);min-height:100vh;color:var(--txt);padding:16px 20px;background-image:radial-gradient(circle,rgba(15,23,42,.045) 1px,transparent 1px);background-size:24px 24px}.head,.bar,.info,.panel,.kpi{background:var(--card);border:1px solid var(--bd);border-radius:16px;box-shadow:var(--shadow)}.head{display:flex;align-items:center;justify-content:space-between;padding:14px 16px;margin-bottom:12px}.title{display:flex;gap:10px;align-items:center;font-weight:800;font-size:18px}.ico{width:46px;height:46px;border-radius:10px;background:#000;display:grid;place-items:center;overflow:hidden}.ico img{width:100%;height:100%;object-fit:contain;display:block}.sub{font-family:var(--mono);font-size:10px;color:var(--mut);font-weight:400}.pill{font-family:var(--mono);font-size:10px;color:var(--blue2);background:#fff;border:1px solid var(--bd);border-radius:99px;padding:5px 12px}.bar{display:flex;gap:8px;flex-wrap:wrap;align-items:center;padding:12px;margin-bottom:12px}.info{display:flex;gap:16px;flex-wrap:wrap;padding:9px 14px;margin-bottom:12px;color:var(--mut);font-size:12px}button,select,input{height:32px;border-radius:8px;border:1px solid var(--bd);background:#fff;color:var(--txt);font-size:11px;padding:0 10px}button{font-weight:700;cursor:pointer}.primary{background:linear-gradient(135deg,var(--blue),var(--blue2));color:#fff;border:0}.alert{padding:10px 14px;border-radius:10px;margin-bottom:12px;font-size:12px;background:rgba(14,165,233,.1);border:1px solid rgba(14,165,233,.22);color:var(--blue2)}.alert.ok{background:rgba(16,185,129,.12);border-color:rgba(16,185,129,.22);color:#047857}.alert.err{background:rgba(239,68,68,.11);border-color:rgba(239,68,68,.22);color:#991b1b}.grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(180px,1fr));gap:10px;margin-bottom:12px}.kpi{padding:16px 14px;min-height:116px;position:relative;overflow:hidden}.kpi span{display:block;color:var(--mut2);font-size:9px;font-weight:800;letter-spacing:.08em;text-transform:uppercase;margin-bottom:8px}.kpi b{font-family:var(--mono);font-size:30px;line-height:1}.kpi small{display:block;color:var(--mut);font-size:12px;margin-top:4px}.mini{height:28px;margin-top:8px;display:flex;align-items:end;gap:4px}.mini i{display:block;flex:1;min-width:3px;border-radius:4px 4px 0 0;background:var(--blue);opacity:.85}.cols{display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-bottom:12px}.cols3{display:grid;grid-template-columns:1fr 1fr .75fr;gap:12px;margin-bottom:12px}.panel{padding:16px 18px;margin-bottom:12px}.pt{font-size:12px;font-weight:800;color:var(--blue2);letter-spacing:.06em;text-transform:uppercase;margin-bottom:12px}.pt:before{content:'';display:inline-block;width:3px;height:12px;background:linear-gradient(var(--blue),var(--blue2));border-radius:2px;margin-right:7px;vertical-align:-2px}table{width:100%;border-collapse:collapse;font-size:11px}th{text-align:left;background:#f0f9ff;color:var(--blue2);font-size:9px;text-transform:uppercase;letter-spacing:.06em;padding:8px 10px}td{padding:8px 10px;border-bottom:1px solid #edf2f7;color:var(--mut);vertical-align:middle}tr:hover td{background:#f8fbff}.badge{display:inline-block;border-radius:99px;padding:2px 9px;font-size:10px;font-weight:800;font-family:var(--mono)}.okb{background:rgba(16,185,129,.12);color:#047857}.warnb{background:rgba(245,158,11,.13);color:#92400e}.orangeb{background:rgba(249,115,22,.12);color:#9a3412}.riskb{background:rgba(239,68,68,.11);color:#991b1b}.map{height:380px;border:1px solid var(--bd);border-radius:16px;overflow:hidden}.detail{display:grid;grid-template-columns:1fr 1fr;gap:10px;font-size:12px}.detail label{display:block;color:var(--mut2);font-size:10px;text-transform:uppercase;margin-bottom:2px}.detail span{font-family:var(--mono);color:var(--txt)}.reason{margin-top:12px;display:grid;gap:7px}.reason div{padding:8px 10px;background:var(--card2);border:1px solid var(--bd);border-radius:9px;color:var(--mut);font-size:12px}.reason div.hot{background:rgba(239,68,68,.08);border-color:rgba(239,68,68,.22);color:#991b1b}.problem{cursor:pointer}.problem.active td{background:#e0f2fe!important}.filterpill{display:inline-flex;align-items:center;gap:6px;background:#e0f2fe;border:1px solid #bae6fd;color:var(--blue2);border-radius:999px;padding:4px 10px;font-size:11px;font-weight:700}.clear{color:var(--red);cursor:pointer;font-weight:800;margin-left:8px}.barrow{display:grid;grid-template-columns:130px 1fr 70px;gap:10px;align-items:center;padding:7px 0;border-bottom:1px solid #edf2f7}.barrow:last-child{border-bottom:0}.track{height:11px;background:#eaf4fb;border-radius:20px;overflow:hidden}.fill{height:11px;border-radius:20px;background:var(--blue)}.donutwrap{display:flex;align-items:center;gap:20px;min-height:170px}.donut{width:132px;height:132px;border-radius:50%;display:grid;place-items:center;position:relative}.donut:after{content:'';width:82px;height:82px;background:#fff;border-radius:50%;position:absolute}.donut div{position:relative;z-index:1;text-align:center}.donut b{font-size:28px;font-family:var(--mono)}.legend{display:grid;gap:9px;font-size:12px;color:var(--mut)}.legend i{display:inline-block;width:12px;height:12px;border-radius:3px;margin-right:7px;vertical-align:-2px}.diaglist{display:grid;gap:8px;font-size:12px}.diaglist div{display:flex;justify-content:space-between;border-bottom:1px solid #edf2f7;padding-bottom:6px;color:var(--mut)}.diaglist b{color:var(--txt);font-family:var(--mono)}@media(max-width:900px){.cols,.cols3{grid-template-columns:1fr}.donutwrap{flex-direction:column;align-items:flex-start}}@media(max-width:700px){body,#app{padding:10px}.bar{align-items:stretch;flex-direction:column}.grid{grid-template-columns:1fr}}
+button[disabled]{opacity:.78;cursor:wait}.spinner{width:14px;height:14px;display:inline-block;border:2px solid rgba(255,255,255,.5);border-top-color:#fff;border-radius:50%;vertical-align:-2px;margin-right:7px;animation:spin .7s linear infinite}@keyframes spin{to{transform:rotate(360deg)}}
+
+.project-credit{margin:16px 0 4px;padding:8px 12px;display:flex;justify-content:center;align-items:center;gap:6px;flex-wrap:wrap;font-size:11px;line-height:1.6;color:var(--mut)}
+.project-credit a{color:var(--blue2);text-decoration:none;font-weight:600}
+.project-credit a:hover,.project-credit a:focus-visible{text-decoration:underline}
+.trend-panel{background:linear-gradient(160deg,#0b1220,#111a2e)!important;border-color:#1e293b!important;color:#e2e8f0}
+.trend-panel .pt{color:#7dd3fc}
+.trend-panel .pt:before{background:linear-gradient(#38bdf8,#0ea5e9)}
+.trend-pt{display:flex;justify-content:space-between;align-items:center;gap:8px;flex-wrap:wrap}
+.trend-sub{font-size:9px;color:#64748b;letter-spacing:.08em;text-transform:uppercase;font-weight:800}
+.trend-head{display:flex;justify-content:space-between;align-items:flex-end;gap:14px;flex-wrap:wrap;margin-bottom:4px}
+.trend-total b{font-family:var(--mono);font-size:30px;color:#f8fafc;line-height:1}
+.trend-total span{display:block;font-size:10px;color:#94a3b8;margin-top:2px}
+.trend-legend{display:flex;gap:14px;flex-wrap:wrap}
+.trend-key{display:flex;align-items:center;gap:6px;font-size:11px;color:#cbd5e1}
+.trend-key i{width:9px;height:9px;border-radius:99px;display:inline-block}
+.trend-key b{font-family:var(--mono);color:#f8fafc;font-size:11px}
+.trend-svg{width:100%;height:260px;display:block;margin-top:6px;overflow:visible}
+.trend-axis{font-size:10px;color:#64748b;text-align:right;margin-top:2px}
+.trend-empty{padding:22px;text-align:center;color:#94a3b8;font-size:12px}
+
+
+/* Fleet Telemetry Manager dashboard keeps the same Health Score design tokens. */
+.section-head{font-size:12px;font-weight:800;color:var(--blue2);letter-spacing:.06em;text-transform:uppercase;margin:18px 0 10px}
+.section-head:before{content:"";display:inline-block;background:var(--blue);width:3px;height:12px;margin-right:8px;border-radius:3px;vertical-align:-2px}
+#app .metric-grid{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:10px;margin-bottom:12px}
+#app .metric-grid .kpi{min-height:120px}
+#app .kpi .context{display:block;color:var(--mut);font-size:11px;line-height:1.4;margin-top:10px}
+#app .kpi .value{font:800 27px var(--mono);display:block;margin-top:9px;color:var(--txt)}
+#app .kpi .target{font-size:10px;color:var(--mut)}
+#app .hint{font-size:12px;color:var(--mut);line-height:1.6}
+#app .warning{padding:13px;border:1px dashed var(--bd);background:var(--card2);border-radius:12px}
+#app .scope{font-size:11px;color:var(--mut);margin-bottom:14px}
+#app .tag{border-radius:99px;padding:3px 8px;font-size:10px;display:inline-block;background:#e2e8f0}
+#app .tag.ok{background:#dcfce7;color:#166534}#app .tag.err{background:#ffe4e6;color:#9f1239}
+#app .note-list{padding-left:20px;line-height:1.7;font-size:12px;color:var(--mut)}
+#app select,#app button{height:34px}
+#app label{font-size:11px}
+#app .subnav{font-size:11px;line-height:1.6;color:var(--mut)}
+#printLogo{max-width:180px;max-height:48px;object-fit:contain}
+@media(max-width:1150px){#app .metric-grid{grid-template-columns:repeat(2,1fr)}}
+@media(max-width:650px){#app .metric-grid{grid-template-columns:1fr}#app .bar{align-items:stretch}#app .bar select{width:100%}}
+@media print{@page{size:A4;margin:12mm}body{background:white!important}#app{padding:0!important}.bar,.alert,.subnav,.project-credit{display:none!important}.kpi,.panel,.head{break-inside:avoid;box-shadow:none!important}#app .metric-grid{grid-template-columns:repeat(4,1fr)}#app .kpi .value{font-size:20px}#printLogo:not([hidden]){display:block}}
+
+</style>
+<style data-original="incidents/style.css">
+.incidents-cols{grid-template-columns:minmax(0,.9fr) minmax(0,1.4fr)}
+#app .case-form{display:grid;gap:10px}
+#app .case-form[hidden]{display:none}
+#app .case-form label,.filters-inline label{font-size:11px;font-weight:700;color:var(--mut);display:grid;gap:5px}
+#app .case-form input,#app .case-form select,#app .case-form textarea,.filters-inline input,.filters-inline select{width:100%;min-width:0;border:1px solid var(--bd);border-radius:8px;padding:9px 11px;background:#fff;color:var(--txt);font:12px "Segoe UI",system-ui,sans-serif}
+#app .case-form textarea{resize:vertical;min-height:78px}
+#app .case-form button{justify-self:start;min-height:34px}
+#app .case-form .primary{min-width:175px}
+#app button[disabled]{opacity:.55;cursor:not-allowed}
+#app .form-pair{display:grid;grid-template-columns:1fr 1fr;gap:9px}
+#app .filters-inline{display:grid;grid-template-columns:1fr 1.4fr;gap:8px;margin-bottom:14px}
+#app .detail-header{margin-top:18px}
+#app .audit-timeline{margin:12px 0;padding-left:24px;color:var(--mut);font-size:12px;line-height:1.5}
+#app .audit-timeline li{margin:0 0 12px;padding-left:6px}
+#app .audit-timeline strong{color:var(--txt)}
+#app #caseDetail{padding:12px;border:1px solid var(--bd);background:var(--card2);border-radius:10px;line-height:1.7;overflow-wrap:anywhere}
+#app .tablewrap{max-height:380px;overflow:auto;border:1px solid var(--bd);border-radius:10px}
+#app .tablewrap table{min-width:440px}#app .tablewrap td{vertical-align:middle}
+#app .case-row.active td{background:#e0f2fe}
+#app .audit-muted{color:var(--mut2)}
+#app .chip{display:inline-block;border-radius:999px;padding:4px 9px;font-size:10px;background:var(--card2);border:1px solid var(--bd);font-weight:700}
+#app .chip.late{background:#fff1f2;color:#9f1239;border-color:#fecdd3}
+#app .chip.ontime{background:#ecfdf5;color:#166534;border-color:#bbf7d0}
+#app .danger{color:#9f1239}
+#app .tablewrap button{padding:3px 10px}
+@media(max-width:1024px){.incidents-cols{grid-template-columns:1fr}}
+@media(max-width:550px){#app .form-pair,#app .filters-inline{grid-template-columns:1fr}#app .case-form button{width:100%}}
+
+</style>
+
+
+
+</head>
+<body>
+<div id="app">
+<header class="head">
+  <div class="title"><div class="ico" aria-hidden="true"><img src="https://ftmbrunog2026.vercel.app/icon.svg" alt=""></div><div><strong>Ocorrências e SLA</strong><div class="sub">Fleet Telemetry Manager · Tratativas auditáveis</div></div></div>
+  <span class="pill" id="sessionStatus">Aguardando MyGeotab</span>
+</header>
+<div class="bar">
+  <label>Operação / grupo <select id="groupSelect" required><option value="">Selecione um grupo</option></select></label>
+  <label>Período de análise <select id="periodSelect"><option value="7">7 dias</option><option value="30" selected>30 dias</option><option value="90">90 dias</option></select></label>
+  <button type="button" class="primary" id="reloadBtn" disabled>Atualizar ocorrências</button>
+  <button type="button" id="downloadBtn" disabled>Exportar CSV</button>
+</div>
+<div id="message" class="alert" role="status">Selecione um grupo para consultar as ocorrências.</div>
+<div class="section-head">Indicadores de tratativas</div>
+<div class="metric-grid" id="incidentKpis">
+  <div class="kpi"><span>Ocorrências registradas</span><strong class="value">N/D</strong></div>
+  <div class="kpi"><span>Alertas tratados no prazo</span><strong class="value">N/D</strong></div>
+  <div class="kpi"><span>Tempo médio de tratamento</span><strong class="value">N/D</strong></div>
+  <div class="kpi"><span>Reincidência de ocorrências</span><strong class="value">N/D</strong></div>
+</div>
+<div class="cols incidents-cols">
+  <section class="panel">
+    <div class="pt">Nova ocorrência</div>
+    <p class="hint">Registre uma ocorrência manualmente ou vincule um evento real da Geotab. O prazo deve ser definido pela política/SLA do contrato, não é preenchido automaticamente.</p>
+    <form id="createForm" class="case-form">
+      <label>Veículo <select id="vehicleSelect" required><option value="">Escolha a operação primeiro</option></select></label>
+      <div class="form-pair">
+        <label>Natureza <select id="categorySelect" required>
+          <option value="velocidade">Excesso de velocidade</option><option value="rota">Desvio de rota</option><option value="marcha_lenta">Marcha lenta</option><option value="conducao">Condução de risco</option><option value="comunicacao">Falha de comunicação</option><option value="mecanica">Indício mecânico</option><option value="uso_nao_autorizado">Utilização não autorizada</option><option value="outros">Outra</option>
+        </select></label>
+        <label>Criticidade <select id="severitySelect" required><option value="critica">Crítica</option><option value="alta">Alta</option><option value="media" selected>Média</option><option value="baixa">Baixa</option></select></label>
+      </div>
+      <label>Prazo de tratativa <input id="deadlineInput" type="datetime-local" required></label>
+      <label>Responsável / área <input id="ownerInput" maxlength="120" placeholder="Ex.: Manutenção de Frota" required></label>
+      <label>Descrição e contexto <textarea id="summaryInput" maxlength="900" rows="3" required placeholder="Descreva o alerta, a situação e a avaliação necessária."></textarea></label>
+      <label>Evento da Geotab (opcional) <select id="eventSelect"><option value="">Sem vinculação automática</option></select></label>
+      <button type="button" id="loadEventsBtn" disabled>Buscar eventos dos últimos 7 dias</button>
+      <button type="submit" class="primary" id="createBtn" disabled>Registrar ocorrência</button>
+      <div class="hint">Cada abertura e cada mudança de status é registrada separadamente no AddInData. Não há exclusão ou edição silenciosa nesta versão.</div>
+    </form>
+  </section>
+  <section class="panel">
+    <div class="pt">Central de acompanhamento</div>
+    <div class="filters-inline">
+      <label>Status <select id="statusFilter"><option value="">Todos</option><option value="aberta">Aberta</option><option value="em_analise">Em análise</option><option value="encaminhada">Encaminhada</option><option value="em_tratamento">Em tratamento</option><option value="concluida">Concluída</option><option value="justificada">Justificada</option><option value="reaberta">Reaberta</option></select></label>
+      <label>Pesquisar <input id="searchInput" placeholder="Veículo, descrição, responsável"></label>
+    </div>
+    <div class="tablewrap"><table><thead><tr><th>Veículo / assunto</th><th>Estado</th><th>Prazo</th><th></th></tr></thead><tbody id="casesBody"><tr><td colspan="4">Selecione um grupo</td></tr></tbody></table></div>
+    <div class="pt detail-header">Detalhes e histórico</div>
+    <div class="hint" id="caseDetail">Selecione uma ocorrência da lista.</div>
+    <form id="transitionForm" class="case-form" hidden>
+      <label>Próxima etapa <select id="nextStatusSelect" required></select></label>
+      <label>Responsável atualizado <input id="nextOwnerInput" maxlength="120" placeholder="Opcional: responsável / área"></label>
+      <label>Evidências, justificativa ou providências <textarea id="actionNotes" maxlength="900" rows="3" required placeholder="Informe a providência executada e referência de evidência, quando houver."></textarea></label>
+      <button class="primary" id="transitionBtn" type="submit" disabled>Salvar tratativa</button>
+    </form>
+    <ol class="audit-timeline" id="auditTimeline"></ol>
+  </section>
+</div>
+<footer class="project-credit">Desenvolvido por Bruno Henrique Felisbino Gonçalves · MIT · Dados somente da sessão autorizada do MyGeotab.</footer>
+</div>
+<script data-bootstrap="restored-v040">
+console.info('[Fleet TM v0.4.0 restaurado] restore040incidents.html: carregador executado');
+/* incidents/model.js, original v0.4.0 */
+/* Regras puras de ocorrências: sem API e sem dados de demonstração. */
+(function(root){
+'use strict';
+const STATUS=Object.freeze({open:'aberta',analysis:'em_analise',assigned:'encaminhada',progress:'em_tratamento',closed:'concluida',justified:'justificada',reopened:'reaberta'});
+const TRANSITIONS=Object.freeze({
+  aberta:['em_analise','encaminhada','justificada'],
+  em_analise:['encaminhada','em_tratamento','justificada'],
+  encaminhada:['em_tratamento','concluida'],
+  em_tratamento:['concluida'],
+  concluida:['reaberta'],
+  justificada:['reaberta'],
+  reaberta:['em_analise','encaminhada']
+});
+const SEVERITIES=['critica','alta','media','baixa'];
+const CATEGORIES=['velocidade','rota','marcha_lenta','conducao','comunicacao','mecanica','uso_nao_autorizado','outros'];
+const CLOSED=['concluida','justificada'];
+const MS_DAY=86400000;
+function isValidDate(s){return typeof s==='string'&&s.length>=10&&Number.isFinite(Date.parse(s));}
+function validateCreated(d){
+  if(!d||d.kind!=='created'||d.schema!==1)throw Error('Registro de abertura inválido.');
+  if(!/^[a-zA-Z0-9_-]{10,64}$/.test(d.caseId||''))throw Error('Identificador inválido.');
+  if(!d.groupId||!d.vehicleId||!CATEGORIES.includes(d.category)||!SEVERITIES.includes(d.severity))throw Error('Dados de classificação incompletos.');
+  if(!d.summary||d.summary.length>900||!isValidDate(d.ts)||!isValidDate(d.dueAt)||!d.actor)throw Error('Descrição, prazo e autor obrigatórios.');
+  if(Date.parse(d.dueAt)<=Date.parse(d.ts))throw Error('O prazo deve ser posterior à abertura.');
+  return d;
+}
+function validateTransition(d){
+  if(!d||d.kind!=='transition'||d.schema!==1||!d.caseId||!isValidDate(d.ts)||!d.actor||!d.to||!d.from||!d.notes||d.notes.length>900)throw Error('Tratativa incompleta.');
+  if(!TRANSITIONS[d.from]||!TRANSITIONS[d.from].includes(d.to))throw Error('Transição de status inválida.');
+  return d;
+}
+function sanitizeRecord(row){
+  const d=row&&row.details;
+  if(!d||typeof d!=='object'||d.schema!==1)return null;
+  if(d.kind==='created'){try{validateCreated(d);return {id:String(row.id||''),d};}catch(e){return null;}}
+  if(d.kind==='transition'){try{validateTransition(d);return {id:String(row.id||''),d};}catch(e){return null;}}
+  return null;
+}
+function buildCases(rows){
+  const good=(rows||[]).map(sanitizeRecord).filter(Boolean);
+  const starts=good.filter(x=>x.d.kind==='created').sort((a,b)=>Date.parse(a.d.ts)-Date.parse(b.d.ts)||a.id.localeCompare(b.id));
+  const actions=good.filter(x=>x.d.kind==='transition');
+  const byCase=new Map();
+  for(const row of starts){
+    const d=row.d;
+    if(byCase.has(d.caseId))continue;
+    byCase.set(d.caseId,{...d,status:'aberta',closedAt:null,history:[],owner:d.owner||'',updatedAt:d.ts});
+  }
+  actions.sort((a,b)=>Date.parse(a.d.ts)-Date.parse(b.d.ts)||a.id.localeCompare(b.id));
+  for(const row of actions){
+    const d=row.d,c=byCase.get(d.caseId);
+    if(!c||d.ts<c.ts||d.from!==c.status||!TRANSITIONS[d.from]?.includes(d.to))continue;
+    c.status=d.to;c.updatedAt=d.ts;
+    if(d.owner)c.owner=d.owner;
+    if(CLOSED.includes(d.to))c.closedAt=d.ts;
+    if(d.to==='reaberta')c.closedAt=null;
+    c.history.push({...d,id:row.id});
+  }
+  return [...byCase.values()].sort((a,b)=>Date.parse(b.updatedAt)-Date.parse(a.updatedAt));
+}
+function metrics(cases,from,to){
+  if(!isValidDate(from)||!isValidDate(to)||Date.parse(from)>Date.parse(to))throw Error('Período inválido.');
+  const begin=Date.parse(from),end=Date.parse(to),all=cases||[];
+  const within=ts=>ts&&Date.parse(ts)>=begin&&Date.parse(ts)<=end;
+  const opened=all.filter(c=>within(c.ts));
+  const concluded=all.filter(c=>CLOSED.includes(c.status)&&within(c.closedAt));
+  // Denominador do documento: alertas concluídos NO período ou com prazo vencido NO período.
+  // Alertas ainda dentro do prazo não entram e os concluídos não são contados duas vezes.
+  const overdue=all.filter(c=>!CLOSED.includes(c.status)&&within(c.dueAt)&&Date.parse(c.dueAt)<=end);
+  const eligible=concluded.concat(overdue);
+  const ontime=concluded.filter(c=>Date.parse(c.closedAt)<=Date.parse(c.dueAt)).length;
+  // A meta <= 24 h do documento refere-se explicitamente a alertas não críticos.
+  const durations=concluded.filter(c=>c.severity!=='critica').map(c=>(Date.parse(c.closedAt)-Date.parse(c.ts))/3600000).filter(n=>Number.isFinite(n)&&n>=0);
+  const ordered=[...all].sort((a,b)=>Date.parse(a.ts)-Date.parse(b.ts));
+  let recurrent=0;
+  for(const c of concluded){
+    const t=Date.parse(c.ts);
+    if(ordered.some(prev=>prev.caseId!==c.caseId&&prev.vehicleId===c.vehicleId&&prev.category===c.category&&
+      prev.status==='concluida'&&prev.closedAt&&Date.parse(prev.closedAt)<t&&t-Date.parse(prev.closedAt)<=30*MS_DAY))recurrent++;
+  }
+  return {
+    total:opened.length,
+    open:opened.filter(c=>!CLOSED.includes(c.status)).length,
+    eligible:eligible.length,
+    ontime:ontime,
+    slaPct:eligible.length?100*ontime/eligible.length:null,
+    meanHours:durations.length?durations.reduce((a,b)=>a+b,0)/durations.length:null,
+    closed:concluded.length,
+    recurrent,
+    recurrencePct:concluded.length?100*recurrent/concluded.length:null,
+    start:from,end:to
+  };
+}
+root.TelemetryCaseModel={STATUS,TRANSITIONS,CATEGORIES,SEVERITIES,CLOSED,validateCreated,validateTransition,buildCases,metrics};
+})(typeof globalThis!=='undefined'?globalThis:this);
+
+;
+/* incidents/storage.js, original v0.4.0 */
+/* AddInData é a única persistência do módulo. Cada ação cria uma linha imutável. */
+(function(root){
+'use strict';
+// ID exclusivo desta solução, conforme a codificação recomendada pela Storage API da Geotab.
+const ADDIN_ID='a2UzOGI0NTgtMGNmNC00MTg';
+const MAX_ROWS=5000;
+const MAX_DETAILS=9000;
+function call(api,method,type,object,limit){
+  return new Promise(function(ok,fail){
+    if(!api||typeof api.call!=='function')return fail(Error('Sessão MyGeotab indisponível.'));
+    const params={typeName:type};
+    params[method==='Get'?'search':'entity']=object;
+    if(limit)params.resultsLimit=limit;
+    try{api.call(method,params,ok,fail);}catch(e){fail(e);}
+  });
+}
+function sessionUser(api){
+  return new Promise(function(ok){
+    if(!api||typeof api.getSession!=='function')return ok('');
+    try{api.getSession(function(session){ok(session&&typeof session.userName==='string'?session.userName:'');});}
+    catch(e){ok('');}
+  });
+}
+function uniqueId(){
+  if(!root.crypto||typeof root.crypto.randomUUID!=='function')throw Error('Navegador sem gerador seguro de identificadores.');
+  return 'ftm_'+root.crypto.randomUUID().replace(/-/g,'');
+}
+function checkGroup(groupId){if(!/^[\w-]{2,100}$/.test(String(groupId||'')))throw Error('Selecione um grupo operacional válido.');}
+async function read(api,groupId){
+  checkGroup(groupId);
+  const result=await call(api,'Get','AddInData',{addInId:ADDIN_ID,groups:[{id:groupId}]},MAX_ROWS);
+  if(!Array.isArray(result))throw Error('Resposta de AddInData inválida.');
+  if(result.length>=MAX_ROWS)throw Error('Limite de 5.000 registros alcançado. Não é seguro calcular métricas parciais.');
+  return result.filter(row=>row&&row.details&&row.details.groupId===groupId);
+}
+async function append(api,groupId,details){
+  checkGroup(groupId);
+  if(!details||details.groupId!==groupId)throw Error('Operação sem correspondência de grupo.');
+  const length=JSON.stringify(details).length;
+  if(length>MAX_DETAILS)throw Error('Registro ultrapassa o tamanho permitido.');
+  return call(api,'Add','AddInData',{addInId:ADDIN_ID,groups:[{id:groupId}],details});
+}
+root.TelemetryCaseStore={ADDIN_ID,read,append,sessionUser,uniqueId};
+})(typeof globalThis!=='undefined'?globalThis:this);
+
+;
+/* incidents/app.js, original v0.4.0 */
+/* UI de ocorrências: usa somente a API da sessão MyGeotab. */
+(function(){
+'use strict';
+const Model=window.TelemetryCaseModel,Store=window.TelemetryCaseStore;
+let api=null,actor='',devices=[],groups=[],rules=[],cases=[],selectedCase='',events=[],loading=false,writeReady=false,loaded=false;
+const $=id=>document.getElementById(id);
+const esc=v=>String(v==null?'':v).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;').replace(/'/g,'&#39;');
+const ref=v=>v&&typeof v==='object'?String(v.id||''):String(v||'');
+const moneyNum=(n,d=1)=>Number(n).toLocaleString('pt-BR',{minimumFractionDigits:d,maximumFractionDigits:d});
+const dateString=iso=>{const d=new Date(iso);return Number.isFinite(d.getTime())?d.toLocaleString('pt-BR'):'N/D';};
+const typeNames={velocidade:'Excesso de velocidade',rota:'Desvio de rota',marcha_lenta:'Marcha lenta',conducao:'Condução de risco',comunicacao:'Falha de comunicação',mecanica:'Indício mecânico',uso_nao_autorizado:'Uso não autorizado',outros:'Outra'};
+const stateNames={aberta:'Aberta',em_analise:'Em análise',encaminhada:'Encaminhada',em_tratamento:'Em tratamento',concluida:'Concluída',justificada:'Justificada',reaberta:'Reaberta'};
+function msg(v,err){$('message').textContent=v;$('message').className='alert'+(err?' err':' ok');}
+function call(type,search,limit=5000){return new Promise((ok,fail)=>api.call('Get',{typeName:type,search:search||{},resultsLimit:limit},ok,fail));}
+function groupId(){return $('groupSelect').value;}
+function scopedDevices(){const group=groupId();return devices.filter(d=>!d.activeTo||new Date(d.activeTo)>new Date()).filter(d=>(d.groups||[]).some(g=>ref(g)===group));}
+function visibleSet(){return new Set(scopedDevices().map(d=>String(d.id)));}
+function deviceName(id){const d=devices.find(x=>String(x.id)===String(id));return d?d.name||d.licensePlate||d.id:id;}
+function activeGroupIds(){const ignored=new Set(['GroupCompanyId','GroupVehicleId','GroupTrailerId','GroupDriverId']);
+  const all=new Set(devices.flatMap(d=>(d.groups||[]).map(ref)));
+  return [...all].filter(id=>id&&!ignored.has(id));}
+function setGroupOptions(){
+  const known=new Map(groups.filter(Boolean).map(g=>[String(g.id),g.name||g.id]));
+  $('groupSelect').innerHTML='<option value="">Selecione um grupo operacional</option>'+activeGroupIds().sort((a,b)=>String(known.get(a)||a).localeCompare(String(known.get(b)||b),'pt-BR')).map(id=>'<option value="'+esc(id)+'">'+esc(known.get(id)||id)+'</option>').join('');
+}
+function setVehicleOptions(){
+  $('vehicleSelect').innerHTML='<option value="">Selecione o veículo</option>'+scopedDevices().sort((a,b)=>String(a.name||'').localeCompare(String(b.name||''),'pt-BR')).map(d=>'<option value="'+esc(d.id)+'">'+esc(d.name||d.licensePlate||d.id)+'</option>').join('');
+  $('eventSelect').innerHTML='<option value="">Sem vinculação automática</option>';events=[];
+  $('loadEventsBtn').disabled=!api||!groupId()||!$('vehicleSelect').value;
+}
+function caseStatus(c){
+  if(Model.CLOSED.includes(c.status))return c.closedAt&&Date.parse(c.closedAt)<=Date.parse(c.dueAt)?'No prazo':'Fora do prazo';
+  return Date.now()>Date.parse(c.dueAt)?'Prazo vencido':'Dentro do prazo';
+}
+function recordMetrics(){
+  if(!loaded){$('incidentKpis').innerHTML=[['Ocorrências','N/D'],['Tratadas no prazo','N/D'],['Tempo de tratamento','N/D'],['Reincidência','N/D']].map(x=>'<article class="kpi"><span>'+x[0]+'</span><strong class="value">'+x[1]+'</strong></article>').join('');return;}
+  const days=Number($('periodSelect').value)||30,to=new Date(),from=new Date(Date.now()-days*86400000);
+  const m=Model.metrics(cases,from.toISOString(),to.toISOString());
+  const details=[
+    ['Ocorrências registradas',String(m.total),'Casos abertos no período; '+m.open+' ainda em aberto.'],
+    ['Alertas tratados no prazo',m.slaPct==null?'N/D':moneyNum(m.slaPct)+'%','Meta sugerida ≥ 95% · '+m.ontime+' de '+m.eligible+' com prazo vencido ou encerrados.'],
+    ['Tempo médio de tratamento',m.meanHours==null?'N/D':moneyNum(m.meanHours,1)+' h','Meta sugerida ≤ 24 h (não críticos) · valor descritivo de casos concluídos.'],
+    ['Reincidência registrada',m.recurrencePct==null?'N/D':moneyNum(m.recurrencePct)+'%','Mesmo veículo/natureza após correção em até 30 dias. Meta ≤ 5%.']
+  ];
+  $('incidentKpis').innerHTML=details.map(x=>'<article class="kpi"><span>'+esc(x[0])+'</span><strong class="value">'+esc(x[1])+'</strong><small class="context">'+esc(x[2])+'</small></article>').join('');
+}
+function filteredCases(){
+  const q=$('searchInput').value.toLowerCase().trim(),st=$('statusFilter').value;
+  return cases.filter(c=>!st||c.status===st).filter(c=>!q||[deviceName(c.vehicleId),c.summary,c.owner,c.caseId].join(' ').toLowerCase().includes(q));
+}
+function renderList(){
+  const rows=filteredCases();
+  $('casesBody').innerHTML=rows.length?rows.map(c=>{
+    const situation=caseStatus(c),style=situation==='Prazo vencido'||situation==='Fora do prazo'?'late':situation==='No prazo'?'ontime':'';
+    return '<tr class="case-row '+(selectedCase===c.caseId?'active':'')+'"><td><b>'+esc(deviceName(c.vehicleId))+'</b><div>'+esc(typeNames[c.category]||c.category)+'</div><small>'+esc(c.summary.slice(0,95))+'</small></td><td><span class="chip">'+esc(stateNames[c.status]||c.status)+'</span></td><td><span class="chip '+style+'">'+esc(situation)+'</span><small style="display:block">'+esc(dateString(c.dueAt))+'</small></td><td><button type="button" data-id="'+esc(c.caseId)+'">Ver</button></td></tr>';
+  }).join(''):'<tr><td colspan="4">Nenhuma ocorrência registrada na seleção.</td></tr>';
+  $('casesBody').querySelectorAll('[data-id]').forEach(b=>b.addEventListener('click',()=>selectCase(b.dataset.id)));
+}
+function selectCase(id){
+  selectedCase=id;
+  const c=cases.find(x=>x.caseId===id);
+  if(!c){$('caseDetail').textContent='Selecione uma ocorrência.';$('transitionForm').hidden=true;$('auditTimeline').innerHTML='';return;}
+  $('caseDetail').innerHTML='<strong>'+esc(deviceName(c.vehicleId))+' · '+esc(typeNames[c.category]||c.category)+'</strong><div>'+esc(c.summary)+'</div><div><b>Criticidade:</b> '+esc(c.severity)+' · <b>Responsável:</b> '+esc(c.owner||'Não informado')+'</div><div><b>Abertura:</b> '+esc(dateString(c.ts))+' · <b>Prazo:</b> '+esc(dateString(c.dueAt))+'</div><div><b>Estado atual:</b> '+esc(stateNames[c.status]||c.status)+' · <b>Autor:</b> '+esc(c.actor)+'</div>'+(c.sourceEventId?'<div><b>Evento Geotab:</b> '+esc(c.sourceEventId)+'</div>':'');
+  const allowed=Model.TRANSITIONS[c.status]||[];
+  $('nextStatusSelect').innerHTML=allowed.map(s=>'<option value="'+esc(s)+'">'+esc(stateNames[s])+'</option>').join('');
+  $('nextOwnerInput').value=c.owner||'';$('actionNotes').value='';
+  $('transitionForm').hidden=!allowed.length||!writeReady;$('transitionBtn').disabled=!writeReady;
+  $('auditTimeline').innerHTML='<li><strong>Abertura</strong> · '+esc(dateString(c.ts))+'<div>'+esc(c.actor)+' · '+esc(c.summary)+'</div></li>'+c.history.map(h=>'<li><strong>'+esc(stateNames[h.to]||h.to)+'</strong> · '+esc(dateString(h.ts))+'<div>'+esc(h.actor)+' · '+esc(h.notes)+'</div>'+(h.owner?'<div>Responsável: '+esc(h.owner)+'</div>':'')+'</li>').join('');
+  renderList();
+}
+async function reload(){
+  if(!api||!groupId())return;
+  if(loading)return;loading=true;$('reloadBtn').disabled=true;loaded=false;
+  try{
+    msg('Consultando tratativas no grupo selecionado...');
+    const records=await Store.read(api,groupId()),visible=visibleSet();
+    cases=Model.buildCases(records).filter(c=>c.groupId===groupId()&&visible.has(String(c.vehicleId)));
+    loaded=true;
+    recordMetrics();renderList();
+    if(selectedCase)selectCase(selectedCase);
+    $('downloadBtn').disabled=false;
+    $('createBtn').disabled=!writeReady;
+    msg(cases.length+' ocorrência(s) disponíveis na operação. Os registros são protegidos pelas permissões da base MyGeotab.');
+  }catch(e){
+    cases=[];loaded=false;selectedCase='';recordMetrics();renderList();selectCase('');
+    $('createBtn').disabled=true;$('downloadBtn').disabled=true;
+    msg('Não foi possível consultar AddInData: '+String(e.message||e)+' Verifique permissões ViewAddInData.',true);
+  }finally{loading=false;$('reloadBtn').disabled=!groupId();}
+}
+function linkRecentEvents(){
+  $('eventSelect').innerHTML='<option value="">Sem vinculação automática</option>'+events.map(e=>{
+    const r=rules.find(x=>ref(x)===ref(e.rule)),name=r?r.name:'Regra não identificada';
+    return '<option value="'+esc(e.id)+'">'+esc(name)+' · '+esc(dateString(e.activeFrom))+'</option>';
+  }).join('');
+}
+async function loadEvents(){
+  if(!api||!$('vehicleSelect').value)return;
+  const id=$('vehicleSelect').value,from=new Date(Date.now()-7*86400000),to=new Date();
+  $('loadEventsBtn').disabled=true;
+  try{
+    const result=await call('ExceptionEvent',{deviceSearch:{id},fromDate:from.toISOString(),toDate:to.toISOString()},200);
+    events=(result||[]).filter(x=>x.id);
+    linkRecentEvents();msg('Carregados '+events.length+' evento(s). '+(events.length>=200?'Consulta atingiu 200 registros; a lista pode estar incompleta.':''));
+  }catch(e){events=[];linkRecentEvents();msg('Não foi possível consultar eventos: '+String(e.message||e),true);}
+  finally{$('loadEventsBtn').disabled=false;}
+}
+async function createIncident(ev){
+  ev.preventDefault();
+  if(!writeReady||!loaded||!groupId())return;
+  const vehicleId=$('vehicleSelect').value;
+  if(!visibleSet().has(vehicleId))return msg('Veículo não pertence ao grupo selecionado.',true);
+  const eventId=$('eventSelect').value;
+  if(eventId&&cases.some(c=>c.sourceEventId===eventId))return msg('Este evento já possui uma ocorrência no grupo.',true);
+  if(eventId&&!events.some(e=>e.id===eventId))return msg('Evento selecionado não está disponível na lista atual.',true);
+  const ts=new Date().toISOString(),date=new Date($('deadlineInput').value);
+  if(!Number.isFinite(date.getTime()))return msg('Prazo de tratativa inválido.',true);
+  const detail={schema:1,kind:'created',caseId:Store.uniqueId(),ts,groupId:groupId(),vehicleId,
+    category:$('categorySelect').value,severity:$('severitySelect').value,
+    summary:$('summaryInput').value.trim(),dueAt:date.toISOString(),
+    owner:$('ownerInput').value.trim(),actor,
+    sourceEventId:eventId,sourceAt:eventId?(events.find(e=>e.id===eventId)||{}).activeFrom||'':''};
+  try{Model.validateCreated(detail);}catch(e){return msg(e.message,true);}
+  const btn=$('createBtn');btn.disabled=true;
+  try{
+    await Store.append(api,groupId(),detail);
+    $('summaryInput').value='';$('eventSelect').value='';
+    selectedCase=detail.caseId;
+    await reload();
+  }catch(e){msg('Falha ao salvar ou atualizar: '+String(e.message||e)+'. Confira a lista antes de tentar novamente.',true);}
+  finally{btn.disabled=!writeReady||!loaded;}
+}
+async function saveAction(ev){
+  ev.preventDefault();if(!selectedCase||!writeReady||!loaded)return;
+  const c=cases.find(x=>x.caseId===selectedCase);
+  if(!c)return;
+  const target=$('nextStatusSelect').value,notes=$('actionNotes').value.trim(),owner=$('nextOwnerInput').value.trim();
+  const detail={schema:1,kind:'transition',caseId:c.caseId,groupId:groupId(),ts:new Date().toISOString(),actor,from:c.status,to:target,notes,owner};
+  try{Model.validateTransition(detail);}catch(e){return msg(e.message,true);}
+  $('transitionBtn').disabled=true;
+  try{
+    const latest=Model.buildCases(await Store.read(api,groupId())).find(x=>x.caseId===c.caseId);
+    if(!latest||latest.status!==c.status||latest.updatedAt!==c.updatedAt)throw Error('Esta ocorrência foi modificada. Atualize e revise antes de salvar.');
+    await Store.append(api,groupId(),detail);
+    await reload();
+  }catch(e){msg('Tratativa não confirmada: '+String(e.message||e),true);}
+  finally{$('transitionBtn').disabled=!writeReady;}
+}
+function csvCell(v){let s=String(v==null?'':v);if(/^[=+\-@\t\r]/.test(s))s="'"+s;return '"'+s.replace(/"/g,'""')+'"';}
+function download(){
+  if(!loaded)return;
+  const table=[['ID','Veículo','Natureza','Criticidade','Estado','Abertura','Prazo','Conclusão','Responsável','Descrição','Autor']];
+  for(const c of filteredCases())table.push([c.caseId,deviceName(c.vehicleId),typeNames[c.category]||c.category,c.severity,c.status,c.ts,c.dueAt,c.closedAt||'',c.owner,c.summary,c.actor]);
+  const text='\ufeff'+table.map(row=>row.map(csvCell).join(';')).join('\r\n'),url=URL.createObjectURL(new Blob([text],{type:'text/csv;charset=utf-8'})),a=document.createElement('a');
+  a.href=url;a.download='fleet-telemetry-ocorrencias.csv';a.click();setTimeout(()=>URL.revokeObjectURL(url),1000);
+}
+async function initialize(client){
+  api=client;
+  $('reloadBtn').addEventListener('click',reload);
+  $('groupSelect').addEventListener('change',async()=>{selectedCase='';setVehicleOptions();await reload();});
+  $('vehicleSelect').addEventListener('change',()=>{$('eventSelect').innerHTML='<option value="">Sem vinculação automática</option>';events=[];$('loadEventsBtn').disabled=!$('vehicleSelect').value;});
+  $('loadEventsBtn').addEventListener('click',loadEvents);
+  $('statusFilter').addEventListener('change',renderList);
+  $('searchInput').addEventListener('input',renderList);
+  $('periodSelect').addEventListener('change',recordMetrics);
+  $('createForm').addEventListener('submit',createIncident);
+  $('transitionForm').addEventListener('submit',saveAction);
+  $('downloadBtn').addEventListener('click',download);
+  if(!api){msg('Abra este Add-In dentro do MyGeotab para consultar e registrar dados reais.',true);return;}
+  try{
+    actor=await Store.sessionUser(api);
+    writeReady=!!actor;
+    $('sessionStatus').textContent=actor?'Conectado: '+actor:'Sessão sem identificação';
+    const r=await Promise.allSettled([call('Device',{},5000),call('Group',{},5000),call('Rule',{},5000)]);
+    if(r[0].status!=='fulfilled')throw Error('Sem permissão para consultar veículos.');
+    devices=r[0].value||[];
+    if(devices.length>=5000)throw Error('Limite de veículos atingido; não é seguro consultar grupos parciais.');
+    groups=r[1].status==='fulfilled'?r[1].value||[]:[];
+    rules=r[2].status==='fulfilled'?r[2].value||[]:[];
+    setGroupOptions();recordMetrics();
+    msg(activeGroupIds().length?'Selecione uma operação para abrir ou acompanhar ocorrências.':'Não há grupos operacionais associados aos veículos visíveis; configure os grupos antes de continuar.',!activeGroupIds().length);
+  }catch(e){msg('Falha de inicialização: '+String(e.message||e),true);}
+}
+window.geotab=window.geotab||{};window.geotab.addin=window.geotab.addin||{};
+window.geotab.addin.fleetTelemetryManager=function(){return{
+  initialize:function(api,state,cb){initialize(api).catch(e=>msg(String(e.message||e),true));if(cb)cb();},
+  focus:function(){},blur:function(){}
+};};
+})();
+
+</script>
+</body>
+</html>

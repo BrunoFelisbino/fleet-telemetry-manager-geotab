@@ -1,0 +1,43 @@
+name: Package restored v0.4.0 MyGeotab Files
+on:
+  pull_request:
+    branches: [main]
+  push:
+    branches: [fix/v040-geotab-cors-loader, main]
+  workflow_dispatch:
+permissions:
+  contents: read
+jobs:
+  package:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+      - name: Validate original modules and build Files package
+        run: |
+          node scripts/verify-v040-hosted.mjs
+          node scripts/build-v040-geotab-package.mjs
+      - name: Create ZIP archives with complete pages and configuration
+        run: |
+          set -euo pipefail
+          cd dist-v040-geotab/files
+          zip -q -r ../fleet-telemetry-v040-files.zip *.html icon.svg translations/
+          cd ..
+          zip -q fleet-telemetry-v040-completo.zip configuration.json LEIA-ME.txt
+          (cd files && zip -q -r ../fleet-telemetry-v040-completo.zip *.html icon.svg translations/)
+          unzip -t fleet-telemetry-v040-files.zip
+          unzip -t fleet-telemetry-v040-completo.zip
+      - name: Upload ready-to-install artifacts
+        uses: actions/upload-artifact@v4
+        with:
+          name: FleetTelemetryOriginal-v0.4.0-CORS-Recovery
+          retention-days: 30
+          if-no-files-found: error
+          path: |
+            dist-v040-geotab/configuration.json
+            dist-v040-geotab/LEIA-ME.txt
+            dist-v040-geotab/files/
+            dist-v040-geotab/fleet-telemetry-v040-files.zip
+            dist-v040-geotab/fleet-telemetry-v040-completo.zip

@@ -20,6 +20,7 @@ jobs:
       - name: Static validation
         run: |
           node scripts/verify.mjs
+          node scripts/verify-v040-hosted.mjs
           node scripts/verify-incidents.mjs
           node scripts/verify-mileage.mjs
           node scripts/verify-mileage-pdf.mjs

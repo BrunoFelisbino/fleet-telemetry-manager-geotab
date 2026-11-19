@@ -1,0 +1,715 @@
+<!doctype html>
+<html lang="pt-BR">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta http-equiv="Cache-Control" content="no-cache,no-store,must-revalidate">
+<title>Fleet Telemetry Manager · Geotab</title>
+<style data-original="assets/app.css">
+html,body{margin:0;padding:0;background:#f5f8fc;color:#172033;font-family:'Segoe UI',system-ui,sans-serif}
+
+*{box-sizing:border-box}:root{--bg:#f5f8fc;--card:#fff;--card2:#f8fbff;--txt:#172033;--mut:#64748b;--mut2:#94a3b8;--bd:#e5eaf1;--blue:#0ea5e9;--blue2:#0369a1;--green:#10b981;--yellow:#f59e0b;--orange:#f97316;--red:#ef4444;--gray:#64748b;--shadow:0 12px 28px rgba(15,23,42,.06);--mono:Consolas,monospace}body,#app{font-family:'Segoe UI',system-ui,sans-serif;background:var(--bg);min-height:100vh;color:var(--txt);padding:16px 20px;background-image:radial-gradient(circle,rgba(15,23,42,.045) 1px,transparent 1px);background-size:24px 24px}.head,.bar,.info,.panel,.kpi{background:var(--card);border:1px solid var(--bd);border-radius:16px;box-shadow:var(--shadow)}.head{display:flex;align-items:center;justify-content:space-between;padding:14px 16px;margin-bottom:12px}.title{display:flex;gap:10px;align-items:center;font-weight:800;font-size:18px}.ico{width:46px;height:46px;border-radius:10px;background:#000;display:grid;place-items:center;overflow:hidden}.ico img{width:100%;height:100%;object-fit:contain;display:block}.sub{font-family:var(--mono);font-size:10px;color:var(--mut);font-weight:400}.pill{font-family:var(--mono);font-size:10px;color:var(--blue2);background:#fff;border:1px solid var(--bd);border-radius:99px;padding:5px 12px}.bar{display:flex;gap:8px;flex-wrap:wrap;align-items:center;padding:12px;margin-bottom:12px}.info{display:flex;gap:16px;flex-wrap:wrap;padding:9px 14px;margin-bottom:12px;color:var(--mut);font-size:12px}button,select,input{height:32px;border-radius:8px;border:1px solid var(--bd);background:#fff;color:var(--txt);font-size:11px;padding:0 10px}button{font-weight:700;cursor:pointer}.primary{background:linear-gradient(135deg,var(--blue),var(--blue2));color:#fff;border:0}.alert{padding:10px 14px;border-radius:10px;margin-bottom:12px;font-size:12px;background:rgba(14,165,233,.1);border:1px solid rgba(14,165,233,.22);color:var(--blue2)}.alert.ok{background:rgba(16,185,129,.12);border-color:rgba(16,185,129,.22);color:#047857}.alert.err{background:rgba(239,68,68,.11);border-color:rgba(239,68,68,.22);color:#991b1b}.grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(180px,1fr));gap:10px;margin-bottom:12px}.kpi{padding:16px 14px;min-height:116px;position:relative;overflow:hidden}.kpi span{display:block;color:var(--mut2);font-size:9px;font-weight:800;letter-spacing:.08em;text-transform:uppercase;margin-bottom:8px}.kpi b{font-family:var(--mono);font-size:30px;line-height:1}.kpi small{display:block;color:var(--mut);font-size:12px;margin-top:4px}.mini{height:28px;margin-top:8px;display:flex;align-items:end;gap:4px}.mini i{display:block;flex:1;min-width:3px;border-radius:4px 4px 0 0;background:var(--blue);opacity:.85}.cols{display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-bottom:12px}.cols3{display:grid;grid-template-columns:1fr 1fr .75fr;gap:12px;margin-bottom:12px}.panel{padding:16px 18px;margin-bottom:12px}.pt{font-size:12px;font-weight:800;color:var(--blue2);letter-spacing:.06em;text-transform:uppercase;margin-bottom:12px}.pt:before{content:'';display:inline-block;width:3px;height:12px;background:linear-gradient(var(--blue),var(--blue2));border-radius:2px;margin-right:7px;vertical-align:-2px}table{width:100%;border-collapse:collapse;font-size:11px}th{text-align:left;background:#f0f9ff;color:var(--blue2);font-size:9px;text-transform:uppercase;letter-spacing:.06em;padding:8px 10px}td{padding:8px 10px;border-bottom:1px solid #edf2f7;color:var(--mut);vertical-align:middle}tr:hover td{background:#f8fbff}.badge{display:inline-block;border-radius:99px;padding:2px 9px;font-size:10px;font-weight:800;font-family:var(--mono)}.okb{background:rgba(16,185,129,.12);color:#047857}.warnb{background:rgba(245,158,11,.13);color:#92400e}.orangeb{background:rgba(249,115,22,.12);color:#9a3412}.riskb{background:rgba(239,68,68,.11);color:#991b1b}.map{height:380px;border:1px solid var(--bd);border-radius:16px;overflow:hidden}.detail{display:grid;grid-template-columns:1fr 1fr;gap:10px;font-size:12px}.detail label{display:block;color:var(--mut2);font-size:10px;text-transform:uppercase;margin-bottom:2px}.detail span{font-family:var(--mono);color:var(--txt)}.reason{margin-top:12px;display:grid;gap:7px}.reason div{padding:8px 10px;background:var(--card2);border:1px solid var(--bd);border-radius:9px;color:var(--mut);font-size:12px}.reason div.hot{background:rgba(239,68,68,.08);border-color:rgba(239,68,68,.22);color:#991b1b}.problem{cursor:pointer}.problem.active td{background:#e0f2fe!important}.filterpill{display:inline-flex;align-items:center;gap:6px;background:#e0f2fe;border:1px solid #bae6fd;color:var(--blue2);border-radius:999px;padding:4px 10px;font-size:11px;font-weight:700}.clear{color:var(--red);cursor:pointer;font-weight:800;margin-left:8px}.barrow{display:grid;grid-template-columns:130px 1fr 70px;gap:10px;align-items:center;padding:7px 0;border-bottom:1px solid #edf2f7}.barrow:last-child{border-bottom:0}.track{height:11px;background:#eaf4fb;border-radius:20px;overflow:hidden}.fill{height:11px;border-radius:20px;background:var(--blue)}.donutwrap{display:flex;align-items:center;gap:20px;min-height:170px}.donut{width:132px;height:132px;border-radius:50%;display:grid;place-items:center;position:relative}.donut:after{content:'';width:82px;height:82px;background:#fff;border-radius:50%;position:absolute}.donut div{position:relative;z-index:1;text-align:center}.donut b{font-size:28px;font-family:var(--mono)}.legend{display:grid;gap:9px;font-size:12px;color:var(--mut)}.legend i{display:inline-block;width:12px;height:12px;border-radius:3px;margin-right:7px;vertical-align:-2px}.diaglist{display:grid;gap:8px;font-size:12px}.diaglist div{display:flex;justify-content:space-between;border-bottom:1px solid #edf2f7;padding-bottom:6px;color:var(--mut)}.diaglist b{color:var(--txt);font-family:var(--mono)}@media(max-width:900px){.cols,.cols3{grid-template-columns:1fr}.donutwrap{flex-direction:column;align-items:flex-start}}@media(max-width:700px){body,#app{padding:10px}.bar{align-items:stretch;flex-direction:column}.grid{grid-template-columns:1fr}}
+button[disabled]{opacity:.78;cursor:wait}.spinner{width:14px;height:14px;display:inline-block;border:2px solid rgba(255,255,255,.5);border-top-color:#fff;border-radius:50%;vertical-align:-2px;margin-right:7px;animation:spin .7s linear infinite}@keyframes spin{to{transform:rotate(360deg)}}
+
+.project-credit{margin:16px 0 4px;padding:8px 12px;display:flex;justify-content:center;align-items:center;gap:6px;flex-wrap:wrap;font-size:11px;line-height:1.6;color:var(--mut)}
+.project-credit a{color:var(--blue2);text-decoration:none;font-weight:600}
+.project-credit a:hover,.project-credit a:focus-visible{text-decoration:underline}
+.trend-panel{background:linear-gradient(160deg,#0b1220,#111a2e)!important;border-color:#1e293b!important;color:#e2e8f0}
+.trend-panel .pt{color:#7dd3fc}
+.trend-panel .pt:before{background:linear-gradient(#38bdf8,#0ea5e9)}
+.trend-pt{display:flex;justify-content:space-between;align-items:center;gap:8px;flex-wrap:wrap}
+.trend-sub{font-size:9px;color:#64748b;letter-spacing:.08em;text-transform:uppercase;font-weight:800}
+.trend-head{display:flex;justify-content:space-between;align-items:flex-end;gap:14px;flex-wrap:wrap;margin-bottom:4px}
+.trend-total b{font-family:var(--mono);font-size:30px;color:#f8fafc;line-height:1}
+.trend-total span{display:block;font-size:10px;color:#94a3b8;margin-top:2px}
+.trend-legend{display:flex;gap:14px;flex-wrap:wrap}
+.trend-key{display:flex;align-items:center;gap:6px;font-size:11px;color:#cbd5e1}
+.trend-key i{width:9px;height:9px;border-radius:99px;display:inline-block}
+.trend-key b{font-family:var(--mono);color:#f8fafc;font-size:11px}
+.trend-svg{width:100%;height:260px;display:block;margin-top:6px;overflow:visible}
+.trend-axis{font-size:10px;color:#64748b;text-align:right;margin-top:2px}
+.trend-empty{padding:22px;text-align:center;color:#94a3b8;font-size:12px}
+
+
+/* Fleet Telemetry Manager dashboard keeps the same Health Score design tokens. */
+.section-head{font-size:12px;font-weight:800;color:var(--blue2);letter-spacing:.06em;text-transform:uppercase;margin:18px 0 10px}
+.section-head:before{content:"";display:inline-block;background:var(--blue);width:3px;height:12px;margin-right:8px;border-radius:3px;vertical-align:-2px}
+#app .metric-grid{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:10px;margin-bottom:12px}
+#app .metric-grid .kpi{min-height:120px}
+#app .kpi .context{display:block;color:var(--mut);font-size:11px;line-height:1.4;margin-top:10px}
+#app .kpi .value{font:800 27px var(--mono);display:block;margin-top:9px;color:var(--txt)}
+#app .kpi .target{font-size:10px;color:var(--mut)}
+#app .hint{font-size:12px;color:var(--mut);line-height:1.6}
+#app .warning{padding:13px;border:1px dashed var(--bd);background:var(--card2);border-radius:12px}
+#app .scope{font-size:11px;color:var(--mut);margin-bottom:14px}
+#app .tag{border-radius:99px;padding:3px 8px;font-size:10px;display:inline-block;background:#e2e8f0}
+#app .tag.ok{background:#dcfce7;color:#166534}#app .tag.err{background:#ffe4e6;color:#9f1239}
+#app .note-list{padding-left:20px;line-height:1.7;font-size:12px;color:var(--mut)}
+#app select,#app button{height:34px}
+#app label{font-size:11px}
+#app .subnav{font-size:11px;line-height:1.6;color:var(--mut)}
+#printLogo{max-width:180px;max-height:48px;object-fit:contain}
+@media(max-width:1150px){#app .metric-grid{grid-template-columns:repeat(2,1fr)}}
+@media(max-width:650px){#app .metric-grid{grid-template-columns:1fr}#app .bar{align-items:stretch}#app .bar select{width:100%}}
+@media print{@page{size:A4;margin:12mm}body{background:white!important}#app{padding:0!important}.bar,.alert,.subnav,.project-credit{display:none!important}.kpi,.panel,.head{break-inside:avoid;box-shadow:none!important}#app .metric-grid{grid-template-columns:repeat(4,1fr)}#app .kpi .value{font-size:20px}#printLogo:not([hidden]){display:block}}
+
+</style>
+
+
+
+
+</head>
+<body>
+<main id="app">
+  <header class="head">
+    <div class="title"><div class="ico" aria-hidden="true"><img src="https://ftmbrunog2026.vercel.app/icon.svg" alt=""></div>
+    <div><strong>Fleet Telemetry Manager</strong><div class="sub">Gestão de Telemetria · MyGeotab</div></div></div>
+    <span class="pill" id="state">Aguardando MyGeotab</span>
+  </header>
+  <div class="bar">
+    <label>Grupo / operação <select id="groupFilter"><option value="">Todos os grupos</option></select></label>
+    <label>Veículo <select id="vehicleFilter"><option value="">Todos os veículos</option></select></label>
+    <label>Período <select id="periodFilter"><option value="7">7 dias</option><option value="30" selected>30 dias</option><option value="90">90 dias</option></select></label>
+    <button class="primary" type="button" id="refreshBtn">Atualizar</button>
+    <button type="button" id="exportCsv" disabled>CSV</button>
+    <button type="button" id="exportPdf" disabled>PDF / Imprimir</button>
+  </div>
+  <div class="info" id="scope">Nenhum dado consultado. Use uma sessão MyGeotab autorizada.</div>
+  <div class="alert" id="message" role="status">Aguardando conexão.</div>
+  <img id="printLogo" alt="Logo escolhido para o relatório" hidden>
+  <div class="section-head">Disponibilidade e cobertura</div>
+  <div class="metric-grid" id="availabilityCards"></div>
+  <div class="section-head">Tratamento e eficiência</div>
+  <div class="metric-grid" id="treatmentCards"></div>
+  <div class="section-head">Segurança e comportamento</div>
+  <div class="metric-grid" id="safetyCards"></div>
+  <div class="section-head">Eficiência e custos operacionais</div>
+  <div class="metric-grid" id="efficiencyCards"></div>
+  <section class="cols">
+    <div class="panel">
+      <div class="pt">Qualidade da comunicação</div>
+      <p class="hint" id="qualitySummary">Aguardando consulta.</p>
+      <div style="max-height:390px;overflow:auto"><table>
+        <thead><tr><th>Veículo</th><th>Último dado</th><th>Comunicação</th></tr></thead>
+        <tbody id="statusRows"><tr><td colspan="3">Sem dados</td></tr></tbody>
+      </table></div>
+    </div>
+    <div class="panel">
+      <div class="pt">Ocorrências e SLA</div>
+      <div class="warning">
+        <strong>Central de ocorrências e SLA</strong>
+        <p class="hint">O módulo de Ocorrências e SLA já permite registrar e acompanhar tratativas na base MyGeotab. Selecione um grupo operacional acima para consolidar os indicadores. Acesse a Central de Ocorrências pelo menu do MyGeotab. O resultado fica como N/D quando faltam permissões ou registros confiáveis.</p>
+      </div>
+      <div class="pt" style="margin-top:18px">Qualidade e critérios</div>
+      <ul class="note-list" id="notes"><li>Sem estimativas inventadas.</li></ul>
+    </div>
+  </section>
+  <footer class="project-credit">Desenvolvido por Bruno Henrique Felisbino Gonçalves · MIT · Projeto independente e não oficial Geotab.</footer>
+</main>
+<script data-bootstrap="restored-v040">
+console.info('[Fleet TM v0.4.0 restaurado] restore040dashboard.html: carregador executado');
+/* print-options.js, original v0.4.0 */
+/* Fleet Health Score - opções de impressão do PDF (logo opcional, sem persistência). */
+(function () {
+  'use strict';
+
+  var MAX_BYTES = 512 * 1024;
+
+  function esc(value) {
+    return String(value == null ? '' : value)
+      .replace(/&/g, '&amp;')
+      .replace(/</g, '&lt;')
+      .replace(/>/g, '&gt;')
+      .replace(/"/g, '&quot;');
+  }
+
+  function injectStyle() {
+    if (document.getElementById('printOptionsStyle')) return;
+    var style = document.createElement('style');
+    style.id = 'printOptionsStyle';
+    style.textContent =
+      '.po-overlay{position:fixed;inset:0;z-index:99999;display:flex;align-items:center;justify-content:center;padding:16px;background:rgba(6,12,24,.68);backdrop-filter:blur(4px)}' +
+      '.po-card{width:100%;max-width:520px;max-height:92vh;overflow:auto;background:#fff;color:#0f172a;border-radius:18px;padding:22px;box-shadow:0 24px 80px rgba(2,6,23,.45);font:14px/1.45 "Segoe UI",system-ui,Arial,sans-serif}' +
+      '.po-head{display:flex;align-items:flex-start;justify-content:space-between;gap:12px;margin-bottom:8px}' +
+      '.po-head h2{margin:0;font-size:19px;letter-spacing:-.01em}' +
+      '.po-sub{margin:4px 0 0;color:#64748b;font-size:12px}' +
+      '.po-x{width:32px;height:32px;border:1px solid #e2e8f0;background:#f8fafc;border-radius:9px;font-size:20px;line-height:1;cursor:pointer;color:#475569}' +
+      '.po-check{display:flex;align-items:center;gap:9px;margin:16px 0;padding:11px 12px;border:1px solid #dbe3ec;border-radius:11px;background:#f8fbff;font-weight:800;cursor:pointer}' +
+      '.po-check input{width:17px;height:17px;margin:0;accent-color:#0ea5e9}' +
+      '.po-drop{border:1px dashed #cbd5e1;border-radius:12px;padding:14px;background:#fbfdff}' +
+      '.po-file-label{display:block;font-weight:800;font-size:12px;margin-bottom:7px}' +
+      '.po-drop input[type=file]{width:100%;font-size:12px}' +
+      '.po-hint{color:#64748b;font-size:11px;margin-top:7px;line-height:1.5}' +
+      '.po-preview{display:flex;align-items:center;justify-content:center;min-height:76px;margin-top:11px;padding:8px;border-radius:9px;background:#eef2f7;border:1px solid #dbe3ec;color:#94a3b8;font-size:12px}' +
+      '.po-preview img{max-width:220px;max-height:64px;object-fit:contain}' +
+      '.po-msg{min-height:18px;margin:10px 0 0;font-size:12px;color:#b91c1c}' +
+      '.po-actions{display:flex;gap:10px;justify-content:flex-end;flex-wrap:wrap;margin-top:10px}' +
+      '.po-actions button{height:36px;padding:0 16px;border-radius:9px;border:1px solid #cbd5e1;background:#fff;color:#0f172a;font-weight:800;font-size:12px;cursor:pointer}' +
+      '.po-actions .po-ok{background:linear-gradient(135deg,#0ea5e9,#0369a1);border:0;color:#fff}';
+    document.head.appendChild(style);
+  }
+
+  function safeSvg(text) {
+    var bad = /<script|onload\s*=|onerror\s*=|onclick\s*=|javascript:|<foreignObject|<iframe|<!ENTITY|xlink:href\s*=\s*["']\s*(?:https?:|\/\/)/i;
+    return !bad.test(String(text || ''));
+  }
+
+  function isSvg(file, name) {
+    return /svg/i.test(file.type || '') || /\.svg$/i.test(name);
+  }
+
+  function isRaster(file, name) {
+    return /^image\/(png|jpeg|webp)$/i.test(file.type || '') || /\.(png|jpe?g|webp)$/i.test(name);
+  }
+
+  function fileToDataUrl(file) {
+    return new Promise(function (resolve, reject) {
+      if (!file) return resolve('');
+      var name = file.name || '';
+      if (file.size > MAX_BYTES) return reject(new Error('O logo deve ter no máximo 512 KB.'));
+      if (isSvg(file, name)) {
+        return file.text().then(function (text) {
+          if (!safeSvg(text)) return reject(new Error('O SVG contém conteúdo não permitido. Use um SVG simples, sem scripts.'));
+          resolve('data:image/svg+xml;charset=utf-8,' + encodeURIComponent(text));
+        }).catch(function () {
+          reject(new Error('Não foi possível ler o SVG.'));
+        });
+      }
+      if (!isRaster(file, name)) return reject(new Error('Envie um arquivo SVG, PNG, JPG ou WebP.'));
+      var reader = new FileReader();
+      reader.onerror = function () { reject(new Error('Não foi possível ler o arquivo.')); };
+      reader.onload = function () { resolve(String(reader.result || '')); };
+      reader.readAsDataURL(file);
+    });
+  }
+
+  function ask(options) {
+    options = options || {};
+    if (!document || !document.body) return Promise.resolve({ includeLogo: false, logo: '' });
+    injectStyle();
+    return new Promise(function (resolve) {
+      var overlay = document.createElement('div');
+      overlay.className = 'po-overlay';
+      overlay.innerHTML =
+        '<section class="po-card" role="dialog" aria-modal="true" aria-labelledby="poTitle">' +
+          '<div class="po-head"><div><h2 id="poTitle">' + esc(options.title || 'Imprimir PDF') + '</h2>' +
+            '<p class="po-sub">' + esc(options.subtitle || 'Escolha se o relatório deve levar um logo.') + '</p></div>' +
+            '<button type="button" class="po-x" aria-label="Fechar">&times;</button></div>' +
+          '<label class="po-check"><input type="checkbox" data-po="include"/> Incluir logo no PDF</label>' +
+          '<div class="po-drop">' +
+            '<label class="po-file-label" for="poFile">Logo do relatório (SVG, PNG, JPG ou WebP)</label>' +
+            '<input id="poFile" type="file" accept=".svg,image/svg+xml,image/png,image/jpeg,image/webp"/>' +
+            '<div class="po-hint">O logo é aplicado no cabeçalho, na capa/índice e nos rodapés deste PDF. Ele não é salvo na base.</div>' +
+            '<div class="po-preview" data-po="preview"><span>Nenhum logo selecionado</span></div>' +
+          '</div>' +
+          '<p class="po-msg" data-po="msg" role="status"></p>' +
+          '<div class="po-actions"><button type="button" data-po="cancel">Cancelar</button>' +
+            '<button type="button" class="po-ok" data-po="ok">Gerar PDF</button></div>' +
+        '</section>';
+      document.body.appendChild(overlay);
+
+      var include = overlay.querySelector('[data-po="include"]');
+      var fileInput = overlay.querySelector('#poFile');
+      var preview = overlay.querySelector('[data-po="preview"]');
+      var msg = overlay.querySelector('[data-po="msg"]');
+      var okBtn = overlay.querySelector('[data-po="ok"]');
+      var cancelBtn = overlay.querySelector('[data-po="cancel"]');
+      var closeBtn = overlay.querySelector('.po-x');
+      var dataUrl = '';
+      var busy = false;
+
+      function finish(result) {
+        document.removeEventListener('keydown', onKey);
+        overlay.remove();
+        resolve(result);
+      }
+      function cancel() { finish(null); }
+      function onKey(event) { if (event.key === 'Escape') cancel(); }
+
+      function showPreview(src, label) {
+        if (src) {
+          preview.innerHTML = '';
+          var img = document.createElement('img');
+          img.src = src;
+          img.alt = 'Prévia do logo';
+          preview.appendChild(img);
+        } else {
+          preview.innerHTML = '<span>' + esc(label || 'Nenhum logo selecionado') + '</span>';
+        }
+      }
+
+      fileInput.addEventListener('change', function () {
+        var file = fileInput.files && fileInput.files[0];
+        msg.textContent = '';
+        if (!file) {
+          dataUrl = '';
+          showPreview('');
+          return;
+        }
+        busy = true;
+        okBtn.disabled = true;
+        msg.style.color = '#64748b';
+        msg.textContent = 'Preparando logo...';
+        fileToDataUrl(file).then(function (url) {
+          dataUrl = url;
+          include.checked = true;
+          showPreview(url, file.name);
+          msg.textContent = '';
+        }).catch(function (error) {
+          dataUrl = '';
+          include.checked = false;
+          showPreview('');
+          msg.style.color = '#b91c1c';
+          msg.textContent = error && error.message ? error.message : 'Não foi possível usar este logo.';
+        }).finally(function () {
+          busy = false;
+          okBtn.disabled = false;
+          msg.style.color = msg.textContent ? '#b91c1c' : '';
+        });
+      });
+
+      include.addEventListener('change', function () {
+        if (include.checked && !dataUrl) {
+          msg.style.color = '#64748b';
+          msg.textContent = 'Selecione o arquivo do logo para incluí-lo no PDF.';
+        } else {
+          msg.textContent = '';
+        }
+      });
+
+      okBtn.addEventListener('click', function () {
+        if (busy) return;
+        if (include.checked && !dataUrl) {
+          msg.style.color = '#b91c1c';
+          msg.textContent = 'Selecione o logo ou desmarque a opção para gerar o PDF sem logo.';
+          return;
+        }
+        finish({ includeLogo: !!include.checked, logo: include.checked ? dataUrl : '' });
+      });
+
+      cancelBtn.addEventListener('click', cancel);
+      closeBtn.addEventListener('click', cancel);
+      overlay.addEventListener('click', function (event) { if (event.target === overlay) cancel(); });
+      document.addEventListener('keydown', onKey);
+      setTimeout(function () { include.focus(); }, 30);
+    });
+  }
+
+  function decorate(stage, logo) {
+    if (!stage || !logo) return;
+    function img(className) {
+      var el = document.createElement('img');
+      el.className = className || 'pdf-footer-logo';
+      el.src = logo;
+      el.alt = 'Logo do relatório';
+      el.style.cssText = 'height:18px;max-width:110px;object-fit:contain;vertical-align:middle;opacity:.92';
+      return el;
+    }
+    stage.querySelectorAll('.pdf-footer').forEach(function (footer) {
+      if (footer.querySelector('.pdf-footer-logo')) return;
+      var el = img('pdf-footer-logo');
+      el.style.marginRight = '8px';
+      footer.insertBefore(el, footer.firstChild);
+    });
+    stage.querySelectorAll('.pdf-brand, .pcp-header').forEach(function (head) {
+      if (head.querySelector('img')) return;
+      var el = img('pdf-logo');
+      el.style.height = head.classList.contains('pcp-header') ? '64px' : '42px';
+      el.style.maxWidth = '180px';
+      head.appendChild(el);
+    });
+  }
+
+  window.PrintOptions = { ask: ask, decorate: decorate, fileToDataUrl: fileToDataUrl };
+})();
+
+;
+/* incidents/model.js, original v0.4.0 */
+/* Regras puras de ocorrências: sem API e sem dados de demonstração. */
+(function(root){
+'use strict';
+const STATUS=Object.freeze({open:'aberta',analysis:'em_analise',assigned:'encaminhada',progress:'em_tratamento',closed:'concluida',justified:'justificada',reopened:'reaberta'});
+const TRANSITIONS=Object.freeze({
+  aberta:['em_analise','encaminhada','justificada'],
+  em_analise:['encaminhada','em_tratamento','justificada'],
+  encaminhada:['em_tratamento','concluida'],
+  em_tratamento:['concluida'],
+  concluida:['reaberta'],
+  justificada:['reaberta'],
+  reaberta:['em_analise','encaminhada']
+});
+const SEVERITIES=['critica','alta','media','baixa'];
+const CATEGORIES=['velocidade','rota','marcha_lenta','conducao','comunicacao','mecanica','uso_nao_autorizado','outros'];
+const CLOSED=['concluida','justificada'];
+const MS_DAY=86400000;
+function isValidDate(s){return typeof s==='string'&&s.length>=10&&Number.isFinite(Date.parse(s));}
+function validateCreated(d){
+  if(!d||d.kind!=='created'||d.schema!==1)throw Error('Registro de abertura inválido.');
+  if(!/^[a-zA-Z0-9_-]{10,64}$/.test(d.caseId||''))throw Error('Identificador inválido.');
+  if(!d.groupId||!d.vehicleId||!CATEGORIES.includes(d.category)||!SEVERITIES.includes(d.severity))throw Error('Dados de classificação incompletos.');
+  if(!d.summary||d.summary.length>900||!isValidDate(d.ts)||!isValidDate(d.dueAt)||!d.actor)throw Error('Descrição, prazo e autor obrigatórios.');
+  if(Date.parse(d.dueAt)<=Date.parse(d.ts))throw Error('O prazo deve ser posterior à abertura.');
+  return d;
+}
+function validateTransition(d){
+  if(!d||d.kind!=='transition'||d.schema!==1||!d.caseId||!isValidDate(d.ts)||!d.actor||!d.to||!d.from||!d.notes||d.notes.length>900)throw Error('Tratativa incompleta.');
+  if(!TRANSITIONS[d.from]||!TRANSITIONS[d.from].includes(d.to))throw Error('Transição de status inválida.');
+  return d;
+}
+function sanitizeRecord(row){
+  const d=row&&row.details;
+  if(!d||typeof d!=='object'||d.schema!==1)return null;
+  if(d.kind==='created'){try{validateCreated(d);return {id:String(row.id||''),d};}catch(e){return null;}}
+  if(d.kind==='transition'){try{validateTransition(d);return {id:String(row.id||''),d};}catch(e){return null;}}
+  return null;
+}
+function buildCases(rows){
+  const good=(rows||[]).map(sanitizeRecord).filter(Boolean);
+  const starts=good.filter(x=>x.d.kind==='created').sort((a,b)=>Date.parse(a.d.ts)-Date.parse(b.d.ts)||a.id.localeCompare(b.id));
+  const actions=good.filter(x=>x.d.kind==='transition');
+  const byCase=new Map();
+  for(const row of starts){
+    const d=row.d;
+    if(byCase.has(d.caseId))continue;
+    byCase.set(d.caseId,{...d,status:'aberta',closedAt:null,history:[],owner:d.owner||'',updatedAt:d.ts});
+  }
+  actions.sort((a,b)=>Date.parse(a.d.ts)-Date.parse(b.d.ts)||a.id.localeCompare(b.id));
+  for(const row of actions){
+    const d=row.d,c=byCase.get(d.caseId);
+    if(!c||d.ts<c.ts||d.from!==c.status||!TRANSITIONS[d.from]?.includes(d.to))continue;
+    c.status=d.to;c.updatedAt=d.ts;
+    if(d.owner)c.owner=d.owner;
+    if(CLOSED.includes(d.to))c.closedAt=d.ts;
+    if(d.to==='reaberta')c.closedAt=null;
+    c.history.push({...d,id:row.id});
+  }
+  return [...byCase.values()].sort((a,b)=>Date.parse(b.updatedAt)-Date.parse(a.updatedAt));
+}
+function metrics(cases,from,to){
+  if(!isValidDate(from)||!isValidDate(to)||Date.parse(from)>Date.parse(to))throw Error('Período inválido.');
+  const begin=Date.parse(from),end=Date.parse(to),all=cases||[];
+  const within=ts=>ts&&Date.parse(ts)>=begin&&Date.parse(ts)<=end;
+  const opened=all.filter(c=>within(c.ts));
+  const concluded=all.filter(c=>CLOSED.includes(c.status)&&within(c.closedAt));
+  // Denominador do documento: alertas concluídos NO período ou com prazo vencido NO período.
+  // Alertas ainda dentro do prazo não entram e os concluídos não são contados duas vezes.
+  const overdue=all.filter(c=>!CLOSED.includes(c.status)&&within(c.dueAt)&&Date.parse(c.dueAt)<=end);
+  const eligible=concluded.concat(overdue);
+  const ontime=concluded.filter(c=>Date.parse(c.closedAt)<=Date.parse(c.dueAt)).length;
+  // A meta <= 24 h do documento refere-se explicitamente a alertas não críticos.
+  const durations=concluded.filter(c=>c.severity!=='critica').map(c=>(Date.parse(c.closedAt)-Date.parse(c.ts))/3600000).filter(n=>Number.isFinite(n)&&n>=0);
+  const ordered=[...all].sort((a,b)=>Date.parse(a.ts)-Date.parse(b.ts));
+  let recurrent=0;
+  for(const c of concluded){
+    const t=Date.parse(c.ts);
+    if(ordered.some(prev=>prev.caseId!==c.caseId&&prev.vehicleId===c.vehicleId&&prev.category===c.category&&
+      prev.status==='concluida'&&prev.closedAt&&Date.parse(prev.closedAt)<t&&t-Date.parse(prev.closedAt)<=30*MS_DAY))recurrent++;
+  }
+  return {
+    total:opened.length,
+    open:opened.filter(c=>!CLOSED.includes(c.status)).length,
+    eligible:eligible.length,
+    ontime:ontime,
+    slaPct:eligible.length?100*ontime/eligible.length:null,
+    meanHours:durations.length?durations.reduce((a,b)=>a+b,0)/durations.length:null,
+    closed:concluded.length,
+    recurrent,
+    recurrencePct:concluded.length?100*recurrent/concluded.length:null,
+    start:from,end:to
+  };
+}
+root.TelemetryCaseModel={STATUS,TRANSITIONS,CATEGORIES,SEVERITIES,CLOSED,validateCreated,validateTransition,buildCases,metrics};
+})(typeof globalThis!=='undefined'?globalThis:this);
+
+;
+/* incidents/storage.js, original v0.4.0 */
+/* AddInData é a única persistência do módulo. Cada ação cria uma linha imutável. */
+(function(root){
+'use strict';
+// ID exclusivo desta solução, conforme a codificação recomendada pela Storage API da Geotab.
+const ADDIN_ID='a2UzOGI0NTgtMGNmNC00MTg';
+const MAX_ROWS=5000;
+const MAX_DETAILS=9000;
+function call(api,method,type,object,limit){
+  return new Promise(function(ok,fail){
+    if(!api||typeof api.call!=='function')return fail(Error('Sessão MyGeotab indisponível.'));
+    const params={typeName:type};
+    params[method==='Get'?'search':'entity']=object;
+    if(limit)params.resultsLimit=limit;
+    try{api.call(method,params,ok,fail);}catch(e){fail(e);}
+  });
+}
+function sessionUser(api){
+  return new Promise(function(ok){
+    if(!api||typeof api.getSession!=='function')return ok('');
+    try{api.getSession(function(session){ok(session&&typeof session.userName==='string'?session.userName:'');});}
+    catch(e){ok('');}
+  });
+}
+function uniqueId(){
+  if(!root.crypto||typeof root.crypto.randomUUID!=='function')throw Error('Navegador sem gerador seguro de identificadores.');
+  return 'ftm_'+root.crypto.randomUUID().replace(/-/g,'');
+}
+function checkGroup(groupId){if(!/^[\w-]{2,100}$/.test(String(groupId||'')))throw Error('Selecione um grupo operacional válido.');}
+async function read(api,groupId){
+  checkGroup(groupId);
+  const result=await call(api,'Get','AddInData',{addInId:ADDIN_ID,groups:[{id:groupId}]},MAX_ROWS);
+  if(!Array.isArray(result))throw Error('Resposta de AddInData inválida.');
+  if(result.length>=MAX_ROWS)throw Error('Limite de 5.000 registros alcançado. Não é seguro calcular métricas parciais.');
+  return result.filter(row=>row&&row.details&&row.details.groupId===groupId);
+}
+async function append(api,groupId,details){
+  checkGroup(groupId);
+  if(!details||details.groupId!==groupId)throw Error('Operação sem correspondência de grupo.');
+  const length=JSON.stringify(details).length;
+  if(length>MAX_DETAILS)throw Error('Registro ultrapassa o tamanho permitido.');
+  return call(api,'Add','AddInData',{addInId:ADDIN_ID,groups:[{id:groupId}],details});
+}
+root.TelemetryCaseStore={ADDIN_ID,read,append,sessionUser,uniqueId};
+})(typeof globalThis!=='undefined'?globalThis:this);
+
+;
+/* assets/app.js, original v0.4.0 */
+/* Fleet Telemetry Manager - indicadores do processo "Gerir Telemetria". */
+(function () {
+  'use strict';
+  var api = null, allDevices = [], allGroups = [], currentStatus = [], allRules = [], metaReady = false, report = null;
+  var LIMIT_VEHICLES = 50, LIMIT_RECORDS = 5000, incidentRequestId = 0;
+  var el = function (id) { return document.getElementById(id); };
+  var safe = function (v) { return String(v == null ? '' : v).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;').replace(/'/g,'&#39;'); };
+  var rid = function (v) { return v && typeof v === 'object' ? String(v.id || '') : String(v || ''); };
+  var fmt = function (n,d) { return Number(n).toLocaleString('pt-BR',{maximumFractionDigits:d||0,minimumFractionDigits:d||0}); };
+  function get(type, search, limit) {
+    return new Promise(function (ok, fail) {
+      if (!api) return fail(new Error('Sem sessão MyGeotab'));
+      var args={typeName:type,search:search||{}};
+      if(limit)args.resultsLimit=limit;
+      api.call('Get',args,ok,fail);
+    });
+  }
+  function active(d) { return !d.activeTo || new Date(d.activeTo).getTime() > Date.now(); }
+  function message(t,kind){el('message').textContent=t;el('message').className='alert'+(kind?' '+kind:'');}
+  function durationSeconds(v) {
+    if(v == null) return null;
+    if(typeof v === 'number') return v;
+    var m=String(v).match(/^(?:(\d+)\.)?(\d{1,2}):(\d{2}):(\d{2})(?:\.\d+)?$/);
+    return m ? Number(m[1]||0)*86400+Number(m[2])*3600+Number(m[3])*60+Number(m[4]) : null;
+  }
+  function currentDevices(onlyGroup) {
+    var group=el('groupFilter').value,vehicle=el('vehicleFilter').value;
+    return allDevices.filter(active).filter(function(d){
+      var groups=d.groups||[];
+      var matches=!group||groups.some(function(x){return rid(x)===group;});
+      return matches&&(onlyGroup||!vehicle||String(d.id)===vehicle);
+    });
+  }
+  function populateVehicles() {
+    var box=el('vehicleFilter'),previous=box.value;
+    box.innerHTML='<option value="">Todos os veículos</option>'+currentDevices(true).sort(function(a,b){return String(a.name||'').localeCompare(String(b.name||''),'pt-BR');}).map(function(d){
+      return '<option value="'+safe(d.id)+'">'+safe(d.name||d.licensePlate||d.id)+'</option>';
+    }).join('');
+    if(Array.from(box.options).some(function(o){return o.value===previous;}))box.value=previous;
+  }
+  function populateGroups() {
+    el('groupFilter').innerHTML='<option value="">Todos os grupos</option>'+allGroups.filter(function(x){return x&&x.id&&x.name;}).sort(function(a,b){
+      return String(a.name).localeCompare(String(b.name),'pt-BR');
+    }).map(function(g){return '<option value="'+safe(g.id)+'">'+safe(g.name)+'</option>';}).join('');
+    populateVehicles();
+  }
+  function card(label,value,goal,detail) {
+    return '<article class="kpi"><span>'+safe(label)+'</span><strong class="value">'+safe(value)+'</strong><small class="target">Meta: '+safe(goal)+'</small><span class="context">'+safe(detail)+'</span></article>';
+  }
+  function initial() {
+    var sections=[
+      ['availabilityCards',['Disponibilidade da telemetria','Veículos monitorados']],
+      ['treatmentCards',['Alertas tratados no prazo','Tempo médio de tratamento']],
+      ['safetyCards',['Excesso de velocidade / 1.000 km','Reincidência de ocorrências']],
+      ['efficiencyCards',['Marcha lenta por veículo','Consumo médio de combustível']]
+    ];
+    sections.forEach(function(s){el(s[0]).innerHTML=s[1].map(function(t){return card(t,'N/D','A definir','Aguardando dados ou fonte adequada.');}).join('');});
+  }
+  function nowStatus(devices) {
+    var map=new Map(currentStatus.map(function(s){return [rid(s.device),s];})),rows=[],known=0,communicating=0;
+    devices.forEach(function(d){
+      var s=map.get(String(d.id)),ok=!!s&&typeof s.isDeviceCommunicating==='boolean';
+      if(ok){known++;if(s.isDeviceCommunicating)communicating++;}
+      rows.push({name:d.name||d.licensePlate||d.id,last:s&&s.dateTime,status:ok?s.isDeviceCommunicating:null});
+    });
+    return {rows:rows,pct:devices.length&&known===devices.length?100*communicating/devices.length:null,known:known,communicating:communicating};
+  }
+  function renderStatus(s) {
+    el('qualitySummary').textContent=s.known+' de '+s.rows.length+' veículos com status disponível; '+s.communicating+' comunicando agora. Este dado não representa disponibilidade mensal.';
+    var rows=s.rows.slice().sort(function(a,b){return Number(a.status===true)-Number(b.status===true);});
+    el('statusRows').innerHTML=rows.length?rows.map(function(v){
+      var d=v.last?new Date(v.last):null,date=d&&!isNaN(d.getTime())?d.toLocaleString('pt-BR'):'N/D';
+      return '<tr><td>'+safe(v.name)+'</td><td>'+safe(date)+'</td><td><span class="tag '+(v.status===true?'ok':v.status===false?'err':'')+'">'+(v.status===null?'N/D':v.status?'Comunicando':'Sem comunicação')+'</span></td></tr>';
+    }).join(''):'<tr><td colspan="3">Nenhum veículo nesta seleção.</td></tr>';
+  }
+  async function loadMeta() {
+    message('Consultando cadastros, grupos, comunicação e regras...');
+    var r=await Promise.allSettled([get('Device',{},50000),get('Group',{},5000),get('DeviceStatusInfo',{},50000),get('Rule',{},5000)]);
+    if(r[0].status!=='fulfilled')throw new Error('Falha ao consultar Device: '+String(r[0].reason||''));
+    allDevices=r[0].value||[];allGroups=r[1].status==='fulfilled'?r[1].value||[]:[];
+    currentStatus=r[2].status==='fulfilled'?r[2].value||[]:[];
+    allRules=r[3].status==='fulfilled'?r[3].value||[]:[];
+    metaReady=true;populateGroups();
+    return r.filter(function(x){return x.status!=='fulfilled';}).length;
+  }
+  async function getHistory(devices,from,to) {
+    var result={trips:[],events:[],errors:0,truncated:false},i=0;
+    async function worker(){
+      while(i<devices.length){
+        var d=devices[i++],filter={deviceSearch:{id:d.id},fromDate:from.toISOString(),toDate:to.toISOString()};
+        var r=await Promise.allSettled([
+          get('Trip',Object.assign({},filter,{includeOverlappedTrips:true}),LIMIT_RECORDS),
+          get('ExceptionEvent',Object.assign({},filter,{includeExceptionCount:true}),LIMIT_RECORDS)
+        ]);
+        if(r[0].status==='fulfilled'){
+          if(r[0].value.length>=LIMIT_RECORDS)result.truncated=true;
+          (r[0].value||[]).forEach(function(x){result.trips.push(x);});
+        }else result.errors++;
+        if(r[1].status==='fulfilled'){
+          if(r[1].value.length>=LIMIT_RECORDS)result.truncated=true;
+          (r[1].value||[]).forEach(function(x){result.events.push(x);});
+        }else result.errors++;
+      }
+    }
+    await Promise.all(Array.from({length:Math.min(4,devices.length)},worker));
+    return result;
+  }
+  function calculate(devices,status,history) {
+    var speedRules=new Set(allRules.filter(function(r){return /velocidade|speeding|speed limit/i.test(r.name||'');}).map(function(r){return String(r.id);}));
+    var km=0,idle=0,idleRecords=0;
+    history.trips.forEach(function(t){
+      if(Number.isFinite(Number(t.distance))&&Number(t.distance)>=0)km+=Number(t.distance);
+      var n=durationSeconds(t.idlingDuration);
+      if(n!==null){idleRecords++;idle+=Math.max(0,n);}
+    });
+    var speedEvents=history.events.filter(function(e){return speedRules.has(rid(e.rule));}).reduce(function(total,e){
+      return total+(e.exceptionCount==null?1:Math.max(0,Number(e.exceptionCount)||0));
+    },0);
+    return {coverage:status.pct,speed:km>0&&speedRules.size?speedEvents/km*1000:null,idle:idleRecords&&devices.length?idle/3600/devices.length:null,km:km,hasSpeedRules:!!speedRules.size};
+  }
+  function render(devices,stat,h,complete,issues) {
+    var m=calculate(devices,stat,h),val=function(x,d,unit){return x==null?'N/D':fmt(x,d)+unit;};
+    el('availabilityCards').innerHTML=
+      card('Disponibilidade da telemetria','N/D','≥ 98%','Precisa de histórico de comunicação e tempo previsto.')+
+      card('Veículos monitorados',val(m.coverage,1,'%'),'≥ 98%','Situação de comunicação atual; não é disponibilidade mensal.');
+    el('treatmentCards').innerHTML=
+      card('Alertas tratados no prazo','N/D','≥ 95%','Depende de registros e prazos de tratativas.')+
+      card('Tempo médio de tratamento','N/D','≤ 24 h','Depende das datas de abertura e conclusão.');
+    el('safetyCards').innerHTML=
+      card('Excesso de velocidade / 1.000 km',complete?val(m.speed,2,' eventos'):'N/D','Redução ≥ 10%','ExceptionEvent de velocidade ÷ km de Trip × 1.000.')+
+      card('Reincidência de ocorrências','N/D','≤ 5%','Depende de ações corretivas e janela de recorrência.');
+    el('efficiencyCards').innerHTML=
+      card('Marcha lenta / veículo',complete?val(m.idle,2,' h'):'N/D','Redução ≥ 10%','Trip.idlingDuration / quantidade de veículos.')+
+      card('Consumo médio (L/100 km)','N/D','Redução ≥ 5%','Exige combustível medido por fonte confiável.');
+    var notes=['Disponibilidade histórica e indicadores de tratativas não podem ser inferidos apenas de dados instantâneos.'];
+    if(devices.length>LIMIT_VEHICLES)notes.push('Mais de 50 veículos selecionados: histórico não agregado para evitar números parciais.');
+    if(h.truncated)notes.push('Limite de registros atingido: índices históricos marcados como N/D.');
+    if(h.errors)notes.push(h.errors+' consulta(s) de viagens/eventos falharam.');
+    if(!m.hasSpeedRules)notes.push('Não foi encontrada regra de velocidade pelo nome; configure e valide as regras.');
+    if(issues)notes.push('Alguma consulta de metadados falhou; confirme as permissões da conta.');
+    el('notes').innerHTML=notes.map(function(n){return '<li>'+safe(n)+'</li>';}).join('');
+    el('scope').textContent=devices.length+' veículo(s) elegível(is) · '+el('periodFilter').value+' dias · '+(complete?fmt(m.km,1)+' km em viagens':'Histórico indisponível');
+    report={data:m,complete:complete,incidents:null};
+    el('exportCsv').disabled=false;el('exportPdf').disabled=false;
+  }
+  async function updateCaseIndicators(devices) {
+    var requestId=++incidentRequestId,group=el('groupFilter').value;
+    if(!group)return true; // Sem escopo explícito, não consultar registros de tratativas.
+    if(!window.TelemetryCaseStore||!window.TelemetryCaseModel)return false;
+    try{
+      var records=await window.TelemetryCaseStore.read(api,group);
+      if(requestId!==incidentRequestId)return true;
+      var allowed=new Set(devices.map(function(d){return String(d.id);}));
+      var data=window.TelemetryCaseModel.buildCases(records).filter(function(c){
+        return c.groupId===group&&allowed.has(String(c.vehicleId));
+      });
+      var from=new Date(Date.now()-Number(el('periodFilter').value)*86400000),to=new Date();
+      var m=window.TelemetryCaseModel.metrics(data,from.toISOString(),to.toISOString());
+      var treatment=el('treatmentCards').querySelectorAll('.kpi');
+      var safety=el('safetyCards').querySelectorAll('.kpi');
+      function apply(node,value,hint){
+        if(!node)return;
+        node.querySelector('.value').textContent=value;
+        node.querySelector('.context').textContent=hint;
+      }
+      var value=function(n,d,unit){return n==null?'N/D':fmt(n,d)+(unit||'');};
+      apply(treatment[0],value(m.slaPct,1,'%'),'Fonte: ocorrências registradas com prazo vencido ou concluídas no período. '+m.ontime+'/'+m.eligible+' no prazo.');
+      apply(treatment[1],value(m.meanHours,1,' h'),'Apenas alertas não críticos concluídos no período.');
+      apply(safety[1],value(m.recurrencePct,1,'%'),'Mesmo veículo e natureza após correção dentro de 30 dias. '+m.recurrent+'/'+m.closed+' tratados.');
+      if(report)report.incidents=m;
+      var li=document.createElement('li');li.textContent='KPIs de tratativas: somente registros auditáveis do grupo selecionado ('+data.length+' casos visíveis).';
+      el('notes').appendChild(li);
+      return true;
+    }catch(e){
+      if(requestId!==incidentRequestId)return true;
+      var li=document.createElement('li');li.textContent='Tratativas indisponíveis: '+String(e.message||e)+'. Verifique ViewAddInData e grupos.';
+      el('notes').appendChild(li);
+      return false;
+    }
+  }
+  async function refresh() {
+    if(!api){message('Abra no MyGeotab para consultar sua frota; nenhuma informação fictícia será carregada.','err');return;}
+    el('refreshBtn').disabled=true;
+    try{
+      var issues=0;
+      if(!metaReady)issues=await loadMeta();
+      else currentStatus=await get('DeviceStatusInfo',{},50000).catch(function(){issues++;return [];});
+      var devices=currentDevices(false),stat=nowStatus(devices);renderStatus(stat);
+      var h={trips:[],events:[],errors:0,truncated:false},complete=false;
+      if(devices.length&&devices.length<=LIMIT_VEHICLES){
+        message('Consultando histórico de '+devices.length+' veículos...');
+        var to=new Date(),from=new Date(Date.now()-Number(el('periodFilter').value)*86400000);
+        h=await getHistory(devices,from,to);complete=!h.errors&&!h.truncated;
+      }
+      render(devices,stat,h,complete,issues);
+      var incidentsOk=await updateCaseIndicators(devices);
+      message(!incidentsOk||issues||h.errors||h.truncated||devices.length>LIMIT_VEHICLES?'Consulta parcial. Verifique as observações.':'Consulta concluída. Indicadores sem fonte adequada aparecem como N/D.','ok');
+      el('state').textContent='MyGeotab conectado';
+    }catch(e){console.error(e);message('Falha ao consultar API: '+String(e.message||e),'err');}
+    finally{el('refreshBtn').disabled=false;}
+  }
+  function csvValue(v){var s=String(v==null?'':v);if(/^[=+\-@\t\r]/.test(s))s="'"+s;return '"'+s.replace(/"/g,'""')+'"';}
+  function csvExport(){
+    if(!report)return;
+    var m=report.data,t=report.incidents,v=function(n,d){return n==null?'N/D':fmt(n,d);};
+    var rows=[['Indicador','Valor','Meta'],['Disponibilidade','N/D','≥ 98%'],
+      ['Veículos monitorados',m.coverage==null?'N/D':v(m.coverage,1)+'%','≥ 98%'],['Alertas tratados no prazo',t&&t.slaPct!=null?v(t.slaPct,1)+'%':'N/D','≥ 95%'],
+      ['Tempo médio de tratamento',t&&t.meanHours!=null?v(t.meanHours,1):'N/D','≤ 24 horas'],['Excesso por 1.000 km',report.complete?v(m.speed,2):'N/D','Redução ≥ 10%'],
+      ['Reincidência',t&&t.recurrencePct!=null?v(t.recurrencePct,1)+'%':'N/D','≤ 5%'],['Marcha lenta h/veículo',report.complete?v(m.idle,2):'N/D','Redução ≥ 10%'],
+      ['Consumo L/100 km','N/D','Redução ≥ 5%']];
+    var csv=rows.map(function(row){return row.map(csvValue).join(';');}).join('\r\n');
+    var url=URL.createObjectURL(new Blob(['\ufeff'+csv],{type:'text/csv;charset=utf-8'})),a=document.createElement('a');
+    a.href=url;a.download='fleet-telemetry-manager.csv';a.click();setTimeout(function(){URL.revokeObjectURL(url);},1000);
+  }
+  async function pdfExport(){
+    if(!report)return;
+    var logo=el('printLogo');
+    if(window.PrintOptions){
+      var opt=await window.PrintOptions.ask({title:'Imprimir indicadores',subtitle:'Escolha se deseja colocar um logo no PDF.'});
+      if(!opt)return;
+      if(opt.includeLogo&&opt.logo){logo.src=opt.logo;logo.hidden=false;}else{logo.hidden=true;logo.removeAttribute('src');}
+    }
+    window.print();
+  }
+  function initialize(client){
+    api=client||null;initial();
+    el('groupFilter').addEventListener('change',function(){populateVehicles();refresh();});
+    el('vehicleFilter').addEventListener('change',refresh);
+    el('periodFilter').addEventListener('change',refresh);
+    el('refreshBtn').addEventListener('click',refresh);
+    el('exportCsv').addEventListener('click',csvExport);
+    el('exportPdf').addEventListener('click',pdfExport);
+    if(api)refresh();else message('Prévia estática. O acesso aos dados depende da sessão MyGeotab.','err');
+  }
+  window.geotab=window.geotab||{};window.geotab.addin=window.geotab.addin||{};
+  window.geotab.addin.fleetTelemetryManager=function(){return {
+    initialize:function(client,state,ready){try{initialize(client);}catch(e){console.error(e);message('Erro ao iniciar: '+String(e.message||e),'err');}if(ready)ready();},
+    focus:function(){},blur:function(){}
+  };};
+}());
+</script>
+</body>
+</html>
