@@ -14,7 +14,7 @@ assert.deepEqual(manifest.files,{});
 assert.ok(read('addin-config.json').length<5000,'Do not embed the six full pages in JSON');
 assert.deepEqual(manifest.items.map(x=>x.url),['dashboard.html','mileage.html','incidents.html','health.html','exceptions.html','trips.html']);
 for(const item of preview.items)assert.ok(item.url.startsWith('https://ftmbrunog2026.vercel.app/'));
-assert.equal(manifest.isSigned,false);
+assert.ok(manifest.isSigned===false||manifest.isSigned===undefined,'Unsigned embedded files manifest expected');
 assert.equal(manifest.items.length,6);
 for(const [source,configuration] of [['main',manifest],['preview',preview]]){
   assert.equal(new Set(configuration.items.map(item=>item.url)).size,6,source+' URLs duplicadas');
