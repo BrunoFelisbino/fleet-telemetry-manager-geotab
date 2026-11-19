@@ -4,7 +4,7 @@
 const Model=window.FleetMileageModel;
 const $=id=>document.getElementById(id);
 const LIMIT=4000,MIN_WINDOW=60000;
-let api=null,devices=[],groups=[],loaded=false,loading=false,token=0,last=null,rateSlot=0,bootstrapPromise=null;
+let api=null,devices=[],groups=[],loaded=false,loading=false,token=0,last=null,rateSlot=0,bootstrapPromise=null,demoMode=false;
 const safe=v=>String(v==null?'':v).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;').replace(/'/g,'&#39;');
 const fmt=(n,d=1)=>Number(n).toLocaleString('pt-BR',{minimumFractionDigits:d,maximumFractionDigits:d});
 const dt=iso=>{const d=new Date(iso);return Number.isFinite(d.getTime())?d.toLocaleString('pt-BR'):'N/D';};
@@ -138,7 +138,58 @@ function render(summary,period,selected){
   $('groupCsv').disabled=false;$('vehicleCsv').disabled=false;
   message('Consulta completa. '+primaryLabel(summary)+'.','ok');
 }
+function bootDemo(){
+  demoMode=true;loaded=true;
+  groups=[
+    {id:'grupo-norte',name:'Operação Norte',children:[{id:'base-norte'}]},
+    {id:'base-norte',name:'Base Norte',children:[]},
+    {id:'grupo-sul',name:'Operação Sul',children:[]},
+    {id:'grupo-central',name:'Operação Central',children:[]}
+  ];
+  devices=Array.from({length:12},(_,i)=>({
+    id:'teste-'+(i+1),name:'TESTE-'+String(i+1).padStart(3,'0'),licensePlate:'AAA'+String(1000+i),
+    groups:i===8?[{id:'base-norte'},{id:'grupo-central'}]:
+      [{id:i%3===0?'base-norte':i%3===1?'grupo-sul':'grupo-central'}]
+  }));
+  fillGroups();fillVehicles();
+  $('status').textContent='PRÉVIA FICTÍCIA';
+  $('scope').textContent='Dados demonstrativos inventados, sem conexão com uma base Geotab.';
+  message('PRÉVIA VISUAL: todos os dados deste modo são fictícios. Para dados reais, instale o Add-In no MyGeotab.','err');
+}
+function fakeTrips(device){
+  const i=Number(device.id.split('-').pop()),result=[];
+  if(i===12||i===11)return result; // Duas unidades sem viagem para conferir o KPI.
+  const now=new Date(),base=new Date(now.getFullYear(),now.getMonth()-2,1);
+  let odometer=115000000+i*6500000,n=0;
+  for(let month=0;month<3;month++){
+    for(let day=2;day<=27;day+=4){
+      const start=new Date(base.getFullYear(),base.getMonth()+month,day,8+(i%4),0);
+      const end=new Date(start.getTime()+75*60000);
+      if(start.getTime()>now.getTime())continue;
+      const km=12+i*3+(day%7);odometer+=km*1000;
+      result.push({id:'demo-'+device.id+'-'+(++n),start:start.toISOString(),stop:end.toISOString(),distance:km,odometer});
+    }
+  }
+  return result;
+}
+function renderDemo(){
+  try{
+    const period=Model.range($('periodFilter').value,$('fromInput').value,$('toInput').value);
+    const ds=Model.devicesInScope(devices,groups,$('groupFilter').value,$('vehicleFilter').value);
+    const map=new Map();
+    for(const d of ds){
+      const selected=fakeTrips(d).filter(t=>new Date(t.start)<=period.to&&new Date(t.stop)>=period.from);
+      map.set(String(d.id),Model.summarizeVehicle(d,selected,period));
+    }
+    render(Model.summarizeFleet(ds,map,groups,$('groupFilter').value),period,ds);
+    $('status').textContent='PRÉVIA FICTÍCIA';
+    message('PRÉVIA VISUAL COM DADOS FICTÍCIOS: filtros, totais e ranking calculados sobre veículos de exemplo.','err');
+    $('scope').textContent='SIMULAÇÃO · '+period.label+' · '+ds.length+' veículos fictícios. Não representa cliente ou base Geotab.';
+    $('notes').insertAdjacentHTML('afterbegin','<li><strong>SIMULAÇÃO:</strong> esta visualização foi gerada apenas para conferir a interface e filtros. Nenhuma informação real foi consultada.</li>');
+  }catch(e){message('Filtro da prévia inválido: '+String(e.message||e),'err');}
+}
 async function load(){
+  if(demoMode){renderDemo();return;}
   if(!api){message('Abra este Add-In dentro do MyGeotab para buscar dados reais.','err');return;}
   if(loading){invalidate();}
   const req=++token;
@@ -199,8 +250,10 @@ function start(client){
   $('vehicleCsv').addEventListener('click',()=>exportCsv('vehicles'));
   toggleDates();
   if(api)bootstrap().catch(e=>message('Falha ao carregar frota: '+String(e.message||e),'err'));
-  else message('Abra dentro do MyGeotab. Esta página não contém dados de clientes nem demonstrações fictícias.','err');
+  else if(demoMode)bootDemo();
+  else message('Abra dentro do MyGeotab para carregar dados reais.','err');
 }
+if(new URLSearchParams(window.location.search).get('demo')==='1'){demoMode=true;start(null);renderDemo();}
 window.geotab=window.geotab||{};window.geotab.addin=window.geotab.addin||{};
 window.geotab.addin.fleetTelemetryManager=function(){return {
   initialize:function(client,state,cb){try{start(client);}catch(e){console.error(e);message('Erro ao iniciar: '+String(e.message||e),'err');}if(cb)cb();},
