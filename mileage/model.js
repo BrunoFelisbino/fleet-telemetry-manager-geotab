@@ -126,5 +126,28 @@ function summarizeFleet(devices,data,groups,selectedGroup){
     vehiclesRows:rows.slice().sort((a,b)=>b.km-a.km),
     groupsRows:[...buckets.values()].sort((a,b)=>b.km-a.km)};
 }
-root.FleetMileageModel={MS_DAY,id,isActive,groupMembers,devicesInScope,devicesInMultiScope,range,tripIdentity,boundaryTrip,summarizeVehicle,summarizeFleet};
+
+function trendBuckets(rows,period,maxBars=18){
+  if(!period||!period.from||!period.to)return [];
+  const utcDay=d=>Date.UTC(d.getFullYear(),d.getMonth(),d.getDate());
+  const first=utcDay(new Date(period.from)),last=utcDay(new Date(period.to));
+  const days=Math.max(1,Math.floor((last-first)/MS_DAY)+1);
+  const size=Math.max(1,Math.ceil(days/Math.max(1,maxBars)));
+  const bars=[];
+  for(let i=0;i<days;i+=size){
+    const a=new Date(first+i*MS_DAY),b=new Date(first+Math.min(days-1,i+size-1)*MS_DAY);
+    const short=d=>String(d.getUTCDate()).padStart(2,'0')+'/'+String(d.getUTCMonth()+1).padStart(2,'0');
+    bars.push({label:short(a)+(i+size<days?'–'+short(b):''),km:0});
+  }
+  for(const row of rows||[]){
+    const p=String(row.day||'').split('-').map(Number);
+    if(p.length!==3||p.some(x=>!Number.isFinite(x)))continue;
+    const day=Date.UTC(p[0],p[1]-1,p[2]);
+    const index=Math.max(0,Math.min(days-1,Math.floor((day-first)/MS_DAY)));
+    bars[Math.floor(index/size)].km+=Math.max(0,Number(row.km)||0);
+  }
+  return bars;
+}
+
+root.FleetMileageModel={MS_DAY,id,isActive,groupMembers,devicesInScope,devicesInMultiScope,range,tripIdentity,boundaryTrip,summarizeVehicle,summarizeFleet,trendBuckets};
 })(typeof globalThis!=='undefined'?globalThis:this);
