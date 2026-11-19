@@ -1,10 +1,10 @@
 {
   "name": "fleetTelemetryManager",
   "supportEmail": "poze1988@gmail.com",
-  "version": "0.1.0",
+  "version": "0.2.0",
   "items": [
     {
-      "url": "https://brunofelisbino.github.io/fleet-telemetry-manager-geotab/?v=0.1.0",
+      "url": "https://brunofelisbino.github.io/fleet-telemetry-manager-geotab/?v=0.2.0",
       "path": "ActivityLink/",
       "menuName": {
         "en": "Fleet Telemetry Manager",
@@ -13,7 +13,16 @@
       "svgIcon": "https://brunofelisbino.github.io/fleet-telemetry-manager-geotab/icon.svg"
     },
     {
-      "url": "https://brunofelisbino.github.io/fleet-telemetry-manager-geotab/health/?v=0.1.0",
+      "url": "https://brunofelisbino.github.io/fleet-telemetry-manager-geotab/incidents/?v=0.2.0",
+      "path": "ActivityLink/",
+      "menuName": {
+        "en": "Incidents & SLA",
+        "pt-BR": "Ocorrências e SLA"
+      },
+      "svgIcon": "https://brunofelisbino.github.io/fleet-telemetry-manager-geotab/icon.svg"
+    },
+    {
+      "url": "https://brunofelisbino.github.io/fleet-telemetry-manager-geotab/health/?v=0.2.0",
       "path": "ActivityLink/",
       "menuName": {
         "en": "Fleet Health Score",
@@ -22,7 +31,7 @@
       "svgIcon": "https://brunofelisbino.github.io/fleet-telemetry-manager-geotab/icon.svg"
     },
     {
-      "url": "https://brunofelisbino.github.io/fleet-telemetry-manager-geotab/exceptions/?v=0.1.0",
+      "url": "https://brunofelisbino.github.io/fleet-telemetry-manager-geotab/exceptions/?v=0.2.0",
       "path": "ActivityLink/",
       "menuName": {
         "en": "Fleet Exception 360",
@@ -31,7 +40,7 @@
       "svgIcon": "https://brunofelisbino.github.io/fleet-telemetry-manager-geotab/icon.svg"
     },
     {
-      "url": "https://brunofelisbino.github.io/fleet-telemetry-manager-geotab/trips/?v=0.1.0",
+      "url": "https://brunofelisbino.github.io/fleet-telemetry-manager-geotab/trips/?v=0.2.0",
       "path": "ActivityLink/",
       "menuName": {
         "en": "Fleet Trip 360",
