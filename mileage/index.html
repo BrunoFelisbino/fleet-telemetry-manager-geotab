@@ -17,8 +17,26 @@
   <span class="pill" id="status">Aguardando MyGeotab</span>
 </header>
 <div class="bar mileage-filters">
-  <label>Frota / Grupo <select id="groupFilter"><option value="">Frota total acessível</option></select></label>
-  <label>Veículo <select id="vehicleFilter"><option value="">Todos os veículos</option></select></label>
+  <div class="filter-multi" id="groupPicker">
+    <span class="filter-label" id="groupLabel">Grupos / operações</span>
+    <button type="button" id="groupToggle" class="picker-toggle" aria-expanded="false" aria-controls="groupPopover" aria-labelledby="groupLabel groupToggle"><span id="groupCaption">Frota total acessível</span><span aria-hidden="true">⌄</span></button>
+    <div id="groupPopover" class="picker-popover" hidden>
+      <input type="search" id="groupSearch" placeholder="Buscar grupo pelo nome..." autocomplete="off" aria-label="Buscar grupo">
+      <div id="groupOptions" class="picker-options" role="group" aria-label="Selecione grupos"></div>
+      <div class="picker-footer"><span id="groupOptionCount">Escolha um ou vários</span><button type="button" id="groupClear">Limpar seleção</button></div>
+    </div>
+    <div id="groupChips" class="filter-chips" aria-label="Grupos selecionados"></div>
+  </div>
+  <div class="filter-multi" id="vehiclePicker">
+    <span class="filter-label" id="vehicleLabel">Veículos</span>
+    <button type="button" id="vehicleToggle" class="picker-toggle" aria-expanded="false" aria-controls="vehiclePopover" aria-labelledby="vehicleLabel vehicleToggle"><span id="vehicleCaption">Todos os veículos</span><span aria-hidden="true">⌄</span></button>
+    <div id="vehiclePopover" class="picker-popover" hidden>
+      <input type="search" id="vehicleSearch" placeholder="Digite nome, placa ou identificação..." autocomplete="off" aria-label="Buscar veículo por nome ou placa">
+      <div id="vehicleOptions" class="picker-options" role="group" aria-label="Selecione veículos"></div>
+      <div class="picker-footer"><span id="vehicleOptionCount">Escolha um ou vários</span><button type="button" id="vehicleClear">Limpar seleção</button></div>
+    </div>
+    <div id="vehicleChips" class="filter-chips" aria-label="Veículos selecionados"></div>
+  </div>
   <label>Período <select id="periodFilter">
     <option value="current" selected>Mês atual</option>
     <option value="previous">Mês anterior</option>
@@ -31,6 +49,7 @@
   <label class="custom-date" id="customToWrap" hidden>Até <input type="datetime-local" id="toInput"></label>
   <button type="button" class="primary" id="loadBtn">Consultar</button>
   <button type="button" id="cancelBtn" hidden>Cancelar consulta</button>
+  <div class="filter-hint" id="activeFilters" role="status">Sem grupos ou veículos específicos selecionados: consulta da frota total acessível.</div>
 </div>
 <div class="info" id="scope">A consulta usa apenas os veículos autorizados na sessão MyGeotab.</div>
 <div class="alert" id="message" role="status">Aguardando consulta.</div>
