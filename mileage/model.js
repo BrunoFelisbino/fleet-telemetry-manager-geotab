@@ -71,10 +71,14 @@ function summarizeVehicle(device,trips,period){
   for(const trip of trips||[])unique.set(tripIdentity(trip),trip);
   const list=[...unique.values()].filter(t=>Number.isFinite(dateOf(t,'start'))).sort((a,b)=>dateOf(a,'start')-dateOf(b,'start'));
   let totalKm=0,validCount=0,invalid=0,overlap=0;
+  const dailyKm={};
   for(const t of list){
     const km=Number(t.distance);
     if(!Number.isFinite(km)||km<0){invalid++;continue;}
     validCount++;totalKm+=km;
+    const start=new Date(dateOf(t,'start'));
+    const key=start.getFullYear()+'-'+String(start.getMonth()+1).padStart(2,'0')+'-'+String(start.getDate()).padStart(2,'0');
+    dailyKm[key]=(dailyKm[key]||0)+km;
     if(boundaryTrip(t,period))overlap++;
   }
   const odometerTrips=list.filter(t=>t.odometer!==null&&t.odometer!==undefined&&t.odometer!==''&&Number.isFinite(Number(t.odometer))&&Number(t.odometer)>=0);
@@ -90,7 +94,7 @@ function summarizeVehicle(device,trips,period){
   }
   return {deviceId:String(device.id),name:String(device.name||device.licensePlate||device.id),plate:String(device.licensePlate||''),
     groups:(device.groups||[]).map(id),km:totalKm,tripCount:validCount,invalidCount:invalid,
-    boundaryTrips:overlap,odoStart:odometerStart,odoEnd:odometerEnd,odoOrigin:odometerOrigin};
+    boundaryTrips:overlap,dailyKm,odoStart:odometerStart,odoEnd:odometerEnd,odoOrigin:odometerOrigin};
 }
 function primaryGroup(vehicle,groups,selectedGroup){
   if(Array.isArray(selectedGroup)){const matched=selectedGroupForVehicle(vehicle,groups,selectedGroup);if(matched)return matched;}
@@ -106,17 +110,20 @@ function summarizeFleet(devices,data,groups,selectedGroup){
   const rows=(devices||[]).map(d=>data.get(String(d.id))||summarizeVehicle(d,[],{from:new Date(0),to:new Date()}));
   const withKm=rows.filter(r=>r.invalidCount===0);
   let km=0,trips=0,stopped=0,odometerAvailable=0,boundary=0;
-  const buckets=new Map();
+  const buckets=new Map(),dailyTotals=new Map();
   for(const r of withKm){
     km+=r.km;trips+=r.tripCount;if(!r.tripCount)stopped++;
     if(r.odoStart!=null&&r.odoEnd!=null)odometerAvailable++;
     boundary+=r.boundaryTrips;
+    for(const [day,dist] of Object.entries(r.dailyKm||{}))dailyTotals.set(day,(dailyTotals.get(day)||0)+dist);
     const group=primaryGroup(r,groups,selectedGroup),key=group.id;
     if(!buckets.has(key))buckets.set(key,{groupId:key,name:group.name,km:0,vehicles:0,trips:0});
     const groupRow=buckets.get(key);groupRow.km+=r.km;groupRow.trips+=r.tripCount;groupRow.vehicles++;
   }
   return {km,trips,vehicles:rows.length,stopped,average:rows.length?km/rows.length:null,
-    withOdometer:odometerAvailable,boundaryTrips:boundary,vehiclesRows:rows.slice().sort((a,b)=>b.km-a.km),
+    withOdometer:odometerAvailable,boundaryTrips:boundary,
+    dailyRows:[...dailyTotals].sort((a,b)=>a[0].localeCompare(b[0])).map(([day,km])=>({day,km})),
+    vehiclesRows:rows.slice().sort((a,b)=>b.km-a.km),
     groupsRows:[...buckets.values()].sort((a,b)=>b.km-a.km)};
 }
 root.FleetMileageModel={MS_DAY,id,isActive,groupMembers,devicesInScope,devicesInMultiScope,range,tripIdentity,boundaryTrip,summarizeVehicle,summarizeFleet};
