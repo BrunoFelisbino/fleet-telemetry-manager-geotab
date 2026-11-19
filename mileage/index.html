@@ -6,11 +6,12 @@
 <meta http-equiv="Cache-Control" content="no-cache,no-store,must-revalidate">
 <title>Quilometragem | Fleet Telemetry Manager</title>
 <link rel="stylesheet" href="../assets/app.css?v=0.3.0">
-<link rel="stylesheet" href="./style.css?v=0.3.2">
-<script src="./model.js?v=0.3.1"></script>
+<link rel="stylesheet" href="./style.css?v=0.3.3">
+<script src="./model.js?v=0.3.3"></script>
 <script src="./filters.js?v=0.3.1"></script>
-<script src="./pdf.js?v=0.3.2"></script>
-<script defer src="./app.js?v=0.3.2"></script>
+<script src="./pdf.js?v=0.3.3"></script>
+<script src="./chart.js?v=0.3.3"></script>
+<script defer src="./app.js?v=0.3.3"></script>
 </head>
 <body>
 <main id="app" class="mileage-shell">
@@ -66,9 +67,9 @@
 </section>
 <section class="cols mileage-dashboard">
   <div class="panel trend-panel">
-    <div class="panel-heading"><div class="pt">Evolução da quilometragem</div><span class="dashboard-meta" id="trendPeriod">Sem período consultado</span></div>
-    <p class="hint">KM rodado por dia ou intervalo de dias, conforme o período filtrado.</p>
-    <div class="trend-chart" id="trendChart" role="img" aria-label="Gráfico de quilômetros rodados no período">
+    <div class="panel-heading"><div class="pt">Evolução diária da quilometragem</div><span class="dashboard-meta" id="trendPeriod">Sem período consultado</span></div>
+    <p class="hint">KM por dia do período selecionado. Passe o mouse para conferir o valor; em períodos longos, arraste o gráfico para os lados.</p>
+    <div class="trend-chart" id="trendChart" role="img" aria-label="Gráfico diário de quilômetros rodados no período">
       <div class="trend-placeholder">Consulte a frota para visualizar a evolução.</div>
     </div>
     <div class="trend-footer" id="trendInfo">Aguardando dados de viagens.</div>

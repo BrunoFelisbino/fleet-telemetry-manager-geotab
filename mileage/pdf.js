@@ -102,15 +102,15 @@ function make(report){
     C.text(p,x+10,172,card[0],8,true,0.42);
     C.text(p,x+10,197,shorten(card[1],16),15,true,0.10);
   });
-  C.heading(p,267,'Evolução da quilometragem');
+  C.heading(p,267,'Evolução diária da quilometragem');
   const maxTrend=Math.max(1,...trend.map(d=>d.km)),space=CW/Math.max(1,trend.length);
   C.stroke(p,L,457,R,457,0.72);
   trend.forEach((d,i)=>{
-    const x=L+i*space+space*0.2,bw=Math.max(3,space*0.60),height=(Math.max(0,d.km)/maxTrend)*132;
+    const x=L+i*space+space*0.17,bw=Math.max(.7,Math.min(13,space*0.66)),height=(Math.max(0,d.km)/maxTrend)*132;
     C.rect(p,x,456-height,bw,Math.max(.6,height),0.22);
     if(trend.length<=12||i%Math.ceil(trend.length/10)===0)C.text(p,x-1,466,shorten(d.label,10),6,false,0.42);
   });
-  C.text(p,L,292,'Maior intervalo: '+fmt(maxTrend,1)+' km',8,false,0.38);
+  C.text(p,L,292,'Maior dia: '+fmt(maxTrend,1)+' km | '+trend.length+' dias no gráfico',8,false,0.38);
   C.heading(p,500,'Grupos com maior quilometragem');
   const maxGroup=Math.max(1,...summary.groupsRows.map(x=>x.km));
   summary.groupsRows.slice(0,5).forEach((row,i)=>{

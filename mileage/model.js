@@ -127,6 +127,35 @@ function summarizeFleet(devices,data,groups,selectedGroup){
     groupsRows:[...buckets.values()].sort((a,b)=>b.km-a.km)};
 }
 
+function dailySeries(rows,period){
+  if(!period||!period.from||!period.to)return [];
+  const begin=new Date(period.from),end=new Date(period.to);
+  if(!Number.isFinite(begin.getTime())||!Number.isFinite(end.getTime())||begin>end)return [];
+  const dateOnly=d=>d.getFullYear()+'-'+String(d.getMonth()+1).padStart(2,'0')+'-'+String(d.getDate()).padStart(2,'0');
+  const start=new Date(begin.getFullYear(),begin.getMonth(),begin.getDate());
+  const finish=new Date(end.getFullYear(),end.getMonth(),end.getDate());
+  const series=[],lookup=new Map();
+  for(let d=new Date(start);d<=finish;d.setDate(d.getDate()+1)){
+    const day=dateOnly(d);
+    const row={day,label:String(d.getDate()).padStart(2,'0')+'/'+String(d.getMonth()+1).padStart(2,'0'),km:0};
+    series.push(row);lookup.set(day,row);
+    if(series.length>367)throw Error('Limite de 367 dias no gráfico diário.');
+  }
+  if(!series.length)return [];
+  const first=series[0].day,last=series[series.length-1].day;
+  for(const row of rows||[]){
+    const day=String(row.day||'');
+    if(!/^\d{4}-\d{2}-\d{2}$/.test(day))continue;
+    const km=Number(row.km);
+    if(!Number.isFinite(km)||km<0)continue;
+    // Viagem sobreposta ao limite: a distância total é atribuída ao 1º ou último dia exibido.
+    const target=day<first?first:day>last?last:day;
+    const entry=lookup.get(target);
+    if(entry)entry.km+=km;
+  }
+  return series;
+}
+
 function trendBuckets(rows,period,maxBars=18){
   if(!period||!period.from||!period.to)return [];
   const utcDay=d=>Date.UTC(d.getFullYear(),d.getMonth(),d.getDate());
@@ -149,5 +178,5 @@ function trendBuckets(rows,period,maxBars=18){
   return bars;
 }
 
-root.FleetMileageModel={MS_DAY,id,isActive,groupMembers,devicesInScope,devicesInMultiScope,range,tripIdentity,boundaryTrip,summarizeVehicle,summarizeFleet,trendBuckets};
+root.FleetMileageModel={MS_DAY,id,isActive,groupMembers,devicesInScope,devicesInMultiScope,range,tripIdentity,boundaryTrip,summarizeVehicle,summarizeFleet,trendBuckets,dailySeries};
 })(typeof globalThis!=='undefined'?globalThis:this);
