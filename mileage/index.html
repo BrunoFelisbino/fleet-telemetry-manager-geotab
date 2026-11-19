@@ -398,7 +398,13 @@ button[disabled]{opacity:.78;cursor:wait}.spinner{width:14px;height:14px;display
 </section>
 <footer class="project-credit">Desenvolvido por Bruno Henrique Felisbino Gonçalves · MIT · Não oficial Geotab · *Odômetro inicial inferido.</footer>
 </main>
-<script data-bundle="mileage/model.js">
+
+
+
+
+
+<script>
+console.info('[Fleet TM v0.4.4] mileage: script carregado');
 /* Motor de quilometragem independente de DOM/API. Distância Trip.distance em km, Trip.odometer em metros. */
 (function(root){
 'use strict';
@@ -608,9 +614,7 @@ function trendBuckets(rows,period,maxBars=18){
 
 root.FleetMileageModel={MS_DAY,id,isActive,groupMembers,devicesInScope,devicesInMultiScope,range,tripIdentity,boundaryTrip,summarizeVehicle,summarizeFleet,focusSummary,trendBuckets,dailySeries};
 })(typeof globalThis!=='undefined'?globalThis:this);
-
-</script>
-<script data-bundle="mileage/filters.js">
+;
 /* Buscador multisseleção reutilizável para filtros de quilometragem. */
 (function(root){
 'use strict';
@@ -728,9 +732,7 @@ function create({model,onChange}){
 }
 root.FleetMileageFilters={create,filterOptions};
 })(typeof globalThis!=='undefined'?globalThis:this);
-
-</script>
-<script data-bundle="mileage/pdf.js">
+;
 /* PDF nativo, sem bibliotecas externas: gera download direto com resumo, gráficos e tabelas. */
 (function(root){
 'use strict';
@@ -887,9 +889,7 @@ function save(report){
 }
 root.FleetMileagePdf={make,save};
 })(typeof globalThis!=='undefined'?globalThis:this);
-
-</script>
-<script data-bundle="mileage/chart.js">
+;
 /* Gráfico SVG diário, independente de bibliotecas e com contraste acessível. */
 (function(root){
 'use strict';
@@ -939,9 +939,7 @@ function svg(daily){
 }
 root.FleetMileageDailyChart={svg,tickLabel};
 })(typeof globalThis!=='undefined'?globalThis:this);
-
-</script>
-<script data-bundle="mileage/app.js">
+;
 /* Consulta Geotab: lote por veículo, limite adaptativo, sem truncar o total da frota. */
 (function(){
 'use strict';
@@ -1263,7 +1261,6 @@ window.geotab.addin.fleetTelemetryManager=function(){return {
   focus:function(){},blur:function(){}
 };};
 })();
-
 </script>
 </body>
 </html>
