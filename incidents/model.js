@@ -60,29 +60,34 @@ function buildCases(rows){
 }
 function metrics(cases,from,to){
   if(!isValidDate(from)||!isValidDate(to)||Date.parse(from)>Date.parse(to))throw Error('Período inválido.');
-  const begin=Date.parse(from),end=Date.parse(to);
-  const period=(cases||[]).filter(c=>{const ts=Date.parse(c.ts);return ts>=begin&&ts<=end;});
-  const eligible=period.filter(c=>c.dueAt&&(CLOSED.includes(c.status)||Date.parse(c.dueAt)<=end));
-  const ontime=eligible.filter(c=>CLOSED.includes(c.status)&&c.closedAt&&Date.parse(c.closedAt)<=Date.parse(c.dueAt)).length;
-  const closed=period.filter(c=>CLOSED.includes(c.status)&&c.closedAt);
-  const durations=closed.map(c=>(Date.parse(c.closedAt)-Date.parse(c.ts))/3600000).filter(n=>Number.isFinite(n)&&n>=0);
-  const ordered=[...cases].sort((a,b)=>Date.parse(a.ts)-Date.parse(b.ts));
+  const begin=Date.parse(from),end=Date.parse(to),all=cases||[];
+  const within=ts=>ts&&Date.parse(ts)>=begin&&Date.parse(ts)<=end;
+  const opened=all.filter(c=>within(c.ts));
+  const concluded=all.filter(c=>CLOSED.includes(c.status)&&within(c.closedAt));
+  // Denominador do documento: alertas concluídos NO período ou com prazo vencido NO período.
+  // Alertas ainda dentro do prazo não entram e os concluídos não são contados duas vezes.
+  const overdue=all.filter(c=>!CLOSED.includes(c.status)&&within(c.dueAt)&&Date.parse(c.dueAt)<=end);
+  const eligible=concluded.concat(overdue);
+  const ontime=concluded.filter(c=>Date.parse(c.closedAt)<=Date.parse(c.dueAt)).length;
+  // A meta <= 24 h do documento refere-se explicitamente a alertas não críticos.
+  const durations=concluded.filter(c=>c.severity!=='critica').map(c=>(Date.parse(c.closedAt)-Date.parse(c.ts))/3600000).filter(n=>Number.isFinite(n)&&n>=0);
+  const ordered=[...all].sort((a,b)=>Date.parse(a.ts)-Date.parse(b.ts));
   let recurrent=0;
-  for(const c of period){
+  for(const c of concluded){
     const t=Date.parse(c.ts);
     if(ordered.some(prev=>prev.caseId!==c.caseId&&prev.vehicleId===c.vehicleId&&prev.category===c.category&&
       prev.status==='concluida'&&prev.closedAt&&Date.parse(prev.closedAt)<t&&t-Date.parse(prev.closedAt)<=30*MS_DAY))recurrent++;
   }
   return {
-    total:period.length,
-    open:period.filter(c=>!CLOSED.includes(c.status)).length,
+    total:opened.length,
+    open:opened.filter(c=>!CLOSED.includes(c.status)).length,
     eligible:eligible.length,
     ontime:ontime,
     slaPct:eligible.length?100*ontime/eligible.length:null,
     meanHours:durations.length?durations.reduce((a,b)=>a+b,0)/durations.length:null,
-    closed:closed.length,
+    closed:concluded.length,
     recurrent,
-    recurrencePct:period.length?100*recurrent/period.length:null,
+    recurrencePct:concluded.length?100*recurrent/concluded.length:null,
     start:from,end:to
   };
 }
