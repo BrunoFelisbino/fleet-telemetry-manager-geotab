@@ -8,6 +8,7 @@ const json=readFileSync(join(dir,'configuration.json'),'utf8');
 const manifest=JSON.parse(json);
 const filenames=['dashboard.html','mileage.html','incidents.html','health.html','exceptions.html','trips.html'];
 assert.equal(manifest.version,'0.4.8');
+assert.deepEqual(manifest,JSON.parse(readFileSync('addin-config.files-v0.4.8.json','utf8')),'GitHub manifest must match zipped manifest exactly');
 assert.equal(manifest.name,'fleetTelemetryManager');
 assert.equal(manifest.items.length,6);
 assert.deepEqual(manifest.items.map(x=>x.url),filenames);
