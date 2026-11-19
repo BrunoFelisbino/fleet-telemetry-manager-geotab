@@ -93,3 +93,69 @@
  #app .trend-footer{flex-wrap:wrap}
 }
 @media print{#app .mileage-dashboard{grid-template-columns:1fr 1fr}#app .trend-chart .trend-fill,#app .top-vehicles-chart .top-fill{print-color-adjust:exact;-webkit-print-color-adjust:exact}}
+
+
+/* Mileage daily chart: override the inherited dark Health Score panel. */
+#app .mileage-dashboard .trend-panel{
+  background:#ffffff!important;
+  background-image:none!important;
+  border-color:var(--bd)!important;
+  color:var(--txt)!important;
+}
+#app .mileage-dashboard .trend-panel .pt{color:var(--blue2)!important}
+#app .mileage-dashboard .trend-panel .pt:before{background:var(--blue)!important}
+#app .mileage-dashboard .trend-panel .hint,
+#app .mileage-dashboard .trend-panel .dashboard-meta,
+#app .mileage-dashboard .trend-panel .trend-footer{color:var(--mut)!important}
+#app .trend-chart{
+  display:block;
+  width:100%;
+  height:auto;
+  min-height:252px;
+  max-width:100%;
+  padding:0 0 2px;
+  border:0;
+  background:#fff;
+  overflow-x:auto;
+  overflow-y:hidden;
+  scrollbar-color:#cbd5e1 #f8fafc;
+  scrollbar-width:thin;
+}
+#app .trend-chart .daily-svg{
+  display:block;
+  width:100%;
+  height:244px;
+  max-width:none;
+  background:#fff;
+}
+#app .daily-svg .daily-gridline{
+  stroke:#e3e9f0;
+  stroke-width:1;
+  stroke-dasharray:3 4;
+}
+#app .daily-svg .daily-axis-text,
+#app .daily-svg .daily-date-label{
+  fill:#65758b;
+  font:11px Consolas,monospace;
+}
+#app .daily-svg .daily-date-label{font-size:10px}
+#app .daily-svg .daily-unit{
+  font:700 9px "Segoe UI",system-ui,sans-serif;
+  letter-spacing:.08em;
+  fill:#64748b;
+}
+#app .daily-svg .daily-bar-rect{
+  fill:#273445;
+  transition:fill .14s ease;
+}
+#app .daily-svg .daily-bar-rect:hover{fill:#0369a1}
+#app .daily-svg .daily-zero-dot{fill:#94a3b8}
+#app .mileage-dashboard .trend-footer{
+  border-top:1px solid var(--bd);
+  padding-top:10px;
+  line-height:1.4;
+}
+@media(max-width:650px){
+  #app .trend-chart{min-height:242px}
+  #app .trend-chart .daily-svg{height:235px}
+}
