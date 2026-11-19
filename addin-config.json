@@ -1,68 +1,62 @@
 {
   "name": "fleetTelemetryManager",
   "supportEmail": "poze1988@gmail.com",
-  "version": "0.4.4",
+  "version": "0.4.8",
   "items": [
     {
-      "url": "https://ftmbrunog2026.vercel.app/index.html?v=0.4.4",
+      "url": "dashboard.html",
       "path": "ActivityLink/",
       "menuName": {
         "en": "Fleet Telemetry Manager",
         "pt-BR": "Fleet Telemetry Manager"
       },
-      "svgIcon": "https://ftmbrunog2026.vercel.app/icon.svg",
       "category": "AddIns"
     },
     {
-      "url": "https://ftmbrunog2026.vercel.app/mileage/index.html?v=0.4.4",
+      "url": "mileage.html",
       "path": "ActivityLink/",
       "menuName": {
         "en": "Fleet Mileage",
         "pt-BR": "Quilometragem da Frota"
       },
-      "svgIcon": "https://ftmbrunog2026.vercel.app/icon.svg",
       "category": "AddIns"
     },
     {
-      "url": "https://ftmbrunog2026.vercel.app/incidents/index.html?v=0.4.4",
+      "url": "incidents.html",
       "path": "ActivityLink/",
       "menuName": {
         "en": "Incidents & SLA",
         "pt-BR": "Ocorrências e SLA"
       },
-      "svgIcon": "https://ftmbrunog2026.vercel.app/icon.svg",
       "category": "AddIns"
     },
     {
-      "url": "https://ftmbrunog2026.vercel.app/health/index.html?v=0.4.4",
+      "url": "health.html",
       "path": "ActivityLink/",
       "menuName": {
         "en": "Fleet Health Score",
         "pt-BR": "Fleet Health Score"
       },
-      "svgIcon": "https://ftmbrunog2026.vercel.app/icon.svg",
       "category": "AddIns"
     },
     {
-      "url": "https://ftmbrunog2026.vercel.app/exceptions/index.html?v=0.4.4",
+      "url": "exceptions.html",
       "path": "ActivityLink/",
       "menuName": {
         "en": "Fleet Exception 360",
         "pt-BR": "Fleet Exception 360"
       },
-      "svgIcon": "https://ftmbrunog2026.vercel.app/icon.svg",
       "category": "AddIns"
     },
     {
-      "url": "https://ftmbrunog2026.vercel.app/trips/index.html?v=0.4.4",
+      "url": "trips.html",
       "path": "ActivityLink/",
       "menuName": {
         "en": "Fleet Trip 360",
         "pt-BR": "Fleet Trip 360"
       },
-      "svgIcon": "https://ftmbrunog2026.vercel.app/icon.svg",
       "category": "AddIns"
     }
   ],
-  "isSigned": false
+  "files": {}
 }
