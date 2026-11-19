@@ -76,7 +76,7 @@ function invalidate(){
   token++;
   last=null;loading=false;
   $('cancelBtn').hidden=true;$('loadBtn').disabled=false;
-  $('groupCsv').disabled=true;$('vehicleCsv').disabled=true;
+  $('groupCsv').disabled=true;$('vehicleCsv').disabled=true;$('pdfBtn').disabled=true;
   $('progressWrap').hidden=true;
   $('status').textContent=api?'Filtros alterados':'Aguardando MyGeotab';
   message('Filtros alterados. Clique em Consultar para atualizar os resultados.');
@@ -87,6 +87,10 @@ function updateProgress(done,total){
 }
 function resetVisual(){
   $('kpiBox').querySelectorAll('.value').forEach(e=>e.textContent='N/D');
+  $('trendChart').innerHTML='<div class="trend-placeholder">Consulte a frota para visualizar a evolução.</div>';
+  $('topVehicles').innerHTML='<div class="trend-placeholder">Consulte a frota para visualizar o ranking.</div>';
+  $('trendInfo').textContent='Aguardando dados de viagens.';
+  $('trendPeriod').textContent='Sem período consultado';
   $('groupChart').innerHTML='';
   $('groupRows').innerHTML='<tr><td colspan="3">Sem resultados consolidados</td></tr>';
   $('vehicleRows').innerHTML='<tr><td colspan="5">Sem resultados consolidados</td></tr>';
@@ -94,8 +98,30 @@ function resetVisual(){
 }
 function card(title,value,note){return '<article class="kpi"><span>'+safe(title)+'</span><strong class="value">'+safe(value)+'</strong><small class="context">'+safe(note)+'</small></article>';}
 function primaryLabel(total){return total.vehicles+' veículo(s) · '+total.trips+' viagens no período · '+total.withOdometer+' com odômetro disponível';}
+function renderVisualDashboard(summary,period){
+  const trend=Model.trendBuckets(summary.dailyRows||[],period,16);
+  const max=Math.max(0,...trend.map(x=>x.km));
+  const visible=trend.length;
+  $('trendPeriod').textContent=period.label;
+  $('trendChart').innerHTML=trend.length?trend.map((bucket,i)=>{
+    const pct=max>0?Math.min(100,100*bucket.km/max):0;
+    const show=visible<=10||i%Math.ceil(visible/9)===0;
+    return '<div class="trend-col" title="'+safe(bucket.label+': '+fmt(bucket.km,1)+' km')+'">'+
+      '<div class="trend-fill-zone"><div class="trend-fill" style="height:'+(bucket.km?Math.max(1.5,pct):0)+'%"></div></div>'+
+      '<span class="trend-label">'+(show?safe(bucket.label.split('–')[0]):'·')+'</span></div>';
+  }).join(''):'<div class="trend-placeholder">Não há dados de viagens neste período.</div>';
+  $('trendChart').setAttribute('aria-label','Quilometragem do período: '+trend.map(x=>x.label+' '+fmt(x.km,1)+' km').join('; '));
+  $('trendInfo').textContent=trend.length+' intervalos · Maior intervalo: '+fmt(max,1)+' km';
+  const top=summary.vehiclesRows.slice(0,5),maxTop=Math.max(1,...top.map(x=>x.km));
+  $('topVehicles').innerHTML=top.length?top.map((v,i)=>
+    '<div class="top-row"><div class="top-label"><span title="'+safe(v.name)+'">'+(i+1)+'. '+safe(v.name)+'</span><strong>'+fmt(v.km,1)+' km</strong></div>'+
+    '<div class="top-track"><div class="top-fill" style="width:'+Math.min(100,100*v.km/maxTop)+'%"></div></div></div>'
+  ).join(''):'<div class="trend-placeholder">Nenhum veículo elegível.</div>';
+  return trend;
+}
 function render(summary,period,selected){
-  last={summary,period,selected};
+  const trend=renderVisualDashboard(summary,period);
+  last={summary,period,selected,trend};
   $('kpiBox').innerHTML=[
     card('KM total rodado',fmt(summary.km,1)+' km','Soma das viagens de todos os veículos elegíveis'),
     card('Frota selecionada',String(summary.vehicles),'Todos os veículos do filtro, com e sem viagem'),
@@ -122,7 +148,7 @@ function render(summary,period,selected){
   if(summary.withOdometer<summary.vehicles)notes.push(summary.vehicles-summary.withOdometer+' veículo(s) sem odômetro confiável na seleção: exibidos como N/D.');
   $('notes').innerHTML=notes.map(n=>'<li>'+safe(n)+'</li>').join('');
   $('scope').textContent=period.label+' · '+dt(period.from)+' até '+dt(period.to)+' · '+primaryLabel(summary);
-  $('groupCsv').disabled=false;$('vehicleCsv').disabled=false;
+  $('groupCsv').disabled=false;$('vehicleCsv').disabled=false;$('pdfBtn').disabled=false;
   message('Consulta completa. '+primaryLabel(summary)+'.','ok');
 }
 function bootDemo(){
@@ -224,6 +250,15 @@ function exportCsv(which){
   const url=URL.createObjectURL(new Blob([content],{type:'text/csv;charset=utf-8'})),a=document.createElement('a');
   a.href=url;a.download='quilometragem-'+which+'.csv';a.click();setTimeout(()=>URL.revokeObjectURL(url),1000);
 }
+function downloadPdf(){
+  if(!last||!window.FleetMileagePdf){message('Consulte os dados e tente baixar o PDF novamente.','err');return;}
+  const groupNames=filters.groups().map(id=>(groups.find(g=>String(g.id)===id)||{}).name||id);
+  const vehicleNames=filters.vehicles().map(id=>(devices.find(d=>String(d.id)===id)||{}).name||id);
+  try{
+    window.FleetMileagePdf.save({...last,groupNames,vehicleNames,demo:demoMode});
+    message(demoMode?'PDF de simulação baixado. Os dados são fictícios.':'PDF de quilometragem gerado com a consulta completa e os filtros selecionados.','ok');
+  }catch(e){console.error(e);message('Falha ao gerar PDF: '+String(e.message||e),'err');}
+}
 function start(client){
   api=client||null;
   filters=window.FleetMileageFilters.create({model:Model,onChange:()=>{invalidate();if(demoMode)renderDemo();}});
@@ -235,6 +270,7 @@ function start(client){
   $('toInput').addEventListener('change',invalidate);
   $('groupCsv').addEventListener('click',()=>exportCsv('groups'));
   $('vehicleCsv').addEventListener('click',()=>exportCsv('vehicles'));
+  $('pdfBtn').addEventListener('click',downloadPdf);
   toggleDates();
   if(api)bootstrap().catch(e=>message('Falha ao carregar frota: '+String(e.message||e),'err'));
   else if(demoMode)bootDemo();
