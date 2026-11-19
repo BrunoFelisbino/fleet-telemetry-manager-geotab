@@ -1,0 +1,63 @@
+{
+  "name": "fleetTelemetryManager",
+  "supportEmail": "poze1988@gmail.com",
+  "version": "0.4.9",
+  "items": [
+    {
+      "url": "dashboard049.html",
+      "path": "ActivityLink/",
+      "menuName": {
+        "en": "Fleet Telemetry Manager",
+        "pt-BR": "Fleet Telemetry Manager"
+      },
+      "category": "AddIns"
+    },
+    {
+      "url": "mileage049.html",
+      "path": "ActivityLink/",
+      "menuName": {
+        "en": "Fleet Mileage",
+        "pt-BR": "Quilometragem da Frota"
+      },
+      "category": "AddIns"
+    },
+    {
+      "url": "incidents049.html",
+      "path": "ActivityLink/",
+      "menuName": {
+        "en": "Incidents & SLA",
+        "pt-BR": "Ocorrências e SLA"
+      },
+      "category": "AddIns"
+    },
+    {
+      "url": "health049.html",
+      "path": "ActivityLink/",
+      "menuName": {
+        "en": "Fleet Health Score",
+        "pt-BR": "Fleet Health Score"
+      },
+      "category": "AddIns"
+    },
+    {
+      "url": "exceptions049.html",
+      "path": "ActivityLink/",
+      "menuName": {
+        "en": "Fleet Exception 360",
+        "pt-BR": "Fleet Exception 360"
+      },
+      "category": "AddIns"
+    },
+    {
+      "url": "trips049.html",
+      "path": "ActivityLink/",
+      "menuName": {
+        "en": "Fleet Trip 360",
+        "pt-BR": "Fleet Trip 360"
+      },
+      "category": "AddIns"
+    }
+  ],
+  "files": {},
+  "isSigned": false
+}
