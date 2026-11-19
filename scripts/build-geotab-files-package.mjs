@@ -10,14 +10,14 @@ import {join} from 'node:path';
 import {Script} from 'node:vm';
 
 const output='dist-geotab';
-const version='0.4.8';
+const version='0.4.9';
 const routes=[
-  ['index.html','dashboard.html','Fleet Telemetry Manager','Fleet Telemetry Manager'],
-  ['mileage/index.html','mileage.html','Fleet Mileage','Quilometragem da Frota'],
-  ['incidents/index.html','incidents.html','Incidents & SLA','Ocorrências e SLA'],
-  ['health/index.html','health.html','Fleet Health Score','Fleet Health Score'],
-  ['exceptions/index.html','exceptions.html','Fleet Exception 360','Fleet Exception 360'],
-  ['trips/index.html','trips.html','Fleet Trip 360','Fleet Trip 360']
+  ['index.html','dashboard049.html','Fleet Telemetry Manager','Fleet Telemetry Manager'],
+  ['mileage/index.html','mileage049.html','Fleet Mileage','Quilometragem da Frota'],
+  ['incidents/index.html','incidents049.html','Incidents & SLA','Ocorrências e SLA'],
+  ['health/index.html','health049.html','Fleet Health Score','Fleet Health Score'],
+  ['exceptions/index.html','exceptions049.html','Fleet Exception 360','Fleet Exception 360'],
+  ['trips/index.html','trips049.html','Fleet Trip 360','Fleet Trip 360']
 ];
 
 rmSync(output,{recursive:true,force:true});
@@ -41,6 +41,7 @@ for(const [source,filename,en,pt] of routes){
   // Apenas a identificação de versão e o texto antigo de suporte mudam.
   html=html.replace(/\[Fleet TM v0\.4\.4\]/g,'[Fleet TM v'+version+']');
   html=html.replace('Verifique o manifesto v0.4.1, a rede e as permissões do Add-In.','Verifique os arquivos carregados na aba Files do Add-In.');
+  html=html.replaceAll('https://ftmbrunog2026.vercel.app/icon.svg','icon.svg');
   writeFileSync(join(output,'pages',filename),html);
   manifest.items.push({
     url:filename,
@@ -51,6 +52,11 @@ for(const [source,filename,en,pt] of routes){
 }
 
 cpSync('icon.svg',join(output,'pages','icon.svg'));
+mkdirSync(join(output,'pages','translations'),{recursive:true});
+const langPt=Object.fromEntries(routes.map(r=>[r[3],r[3]]));
+const langEn=Object.fromEntries(routes.map(r=>[r[2],r[2]]));
+writeFileSync(join(output,'pages','translations','pt-BR.json'),JSON.stringify(langPt,null,2)+'\n');
+writeFileSync(join(output,'pages','translations','en.json'),JSON.stringify(langEn,null,2)+'\n');
 writeFileSync(join(output,'configuration.json'),JSON.stringify(manifest,null,2)+'\n');
 writeFileSync(join(output,'LEIA-ME.txt'),[
   'FLEET TELEMETRY MANAGER v'+version,
@@ -58,9 +64,9 @@ writeFileSync(join(output,'LEIA-ME.txt'),[
   '',
   '1. Abra MyGeotab > Configuracoes do Sistema > Add-Ins.',
   '2. Edite o Fleet Telemetry Manager ja instalado (nao crie duplicado).',
-  '3. Na aba Files, envie fleet-telemetry-files-v'+version+'.zip com os 6 HTMLs e icon.svg.',
+  '3. Na aba Files, envie os arquivos DESCOMPACTADOS da pasta pages (nao anexe apenas o ZIP): '+version+'.zip com os 6 HTMLs e icon.svg.',
   '4. Na aba Configuration, substitua pelo conteudo de configuration.json.',
-  '5. Salve, recarregue o MyGeotab (Ctrl+Shift+R) e abra os 6 modulos.',
+  '5. Confirme que dashboard049.html, mileage049.html, incidents049.html, health049.html, exceptions049.html e trips049.html aparecem na aba Files.\n  Salve e recarregue Ctrl+Shift+R.',
   '',
   'A instalacao nao depende da Vercel para servir os HTMLs.',
   'Os mapas usam Leaflet CDN (unpkg.com), que precisa ser acessivel.',
