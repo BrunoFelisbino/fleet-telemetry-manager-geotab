@@ -100,7 +100,15 @@ body,#app{font-family:var(--fleet-brand-font,system-ui,Arial,sans-serif);backgro
 .pdf-footer-logo{display:inline-block}
 
 </style>
-<script data-bundle="print-options.js">
+
+<script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+<style>html,body{margin:0;padding:0;background:#f5f8fc;color:#172033;font-family:'Segoe UI',system-ui,sans-serif} .map{height:420px;border-radius:12px;border:1px solid #e5eaf1}</style>
+</head>
+<body>
+<div id="app"><div style="padding:40px;color:#64748b;font-size:13px">Carregando Fleet Trip 360...</div></div>
+
+<script>
+console.info('[Fleet TM v0.4.4] trips: script carregado');
 /* Fleet Health Score - opções de impressão do PDF (logo opcional, sem persistência). */
 (function () {
   'use strict';
@@ -314,14 +322,7 @@ body,#app{font-family:var(--fleet-brand-font,system-ui,Arial,sans-serif);backgro
 
   window.PrintOptions = { ask: ask, decorate: decorate, fileToDataUrl: fileToDataUrl };
 })();
-
-</script>
-<script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
-<style>html,body{margin:0;padding:0;background:#f5f8fc;color:#172033;font-family:'Segoe UI',system-ui,sans-serif} .map{height:420px;border-radius:12px;border:1px solid #e5eaf1}</style>
-</head>
-<body>
-<div id="app"><div style="padding:40px;color:#64748b;font-size:13px">Carregando Fleet Trip 360...</div></div>
-<script>
+;
 (function(){
 
 'use strict';

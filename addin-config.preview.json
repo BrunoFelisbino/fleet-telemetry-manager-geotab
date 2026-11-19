@@ -1,10 +1,10 @@
 {
   "name": "fleetTelemetryManager",
   "supportEmail": "poze1988@gmail.com",
-  "version": "0.4.3",
+  "version": "0.4.4",
   "items": [
     {
-      "url": "https://ftmbrunog2026.vercel.app/index.html?v=0.4.3",
+      "url": "https://ftmbrunog2026.vercel.app/index.html?v=0.4.4",
       "path": "ActivityLink/",
       "menuName": {
         "en": "Fleet Telemetry Manager",
@@ -14,7 +14,7 @@
       "category": "AddIns"
     },
     {
-      "url": "https://ftmbrunog2026.vercel.app/mileage/index.html?v=0.4.3",
+      "url": "https://ftmbrunog2026.vercel.app/mileage/index.html?v=0.4.4",
       "path": "ActivityLink/",
       "menuName": {
         "en": "Fleet Mileage",
@@ -24,7 +24,7 @@
       "category": "AddIns"
     },
     {
-      "url": "https://ftmbrunog2026.vercel.app/incidents/index.html?v=0.4.3",
+      "url": "https://ftmbrunog2026.vercel.app/incidents/index.html?v=0.4.4",
       "path": "ActivityLink/",
       "menuName": {
         "en": "Incidents & SLA",
@@ -34,7 +34,7 @@
       "category": "AddIns"
     },
     {
-      "url": "https://ftmbrunog2026.vercel.app/health/index.html?v=0.4.3",
+      "url": "https://ftmbrunog2026.vercel.app/health/index.html?v=0.4.4",
       "path": "ActivityLink/",
       "menuName": {
         "en": "Fleet Health Score",
@@ -44,7 +44,7 @@
       "category": "AddIns"
     },
     {
-      "url": "https://ftmbrunog2026.vercel.app/exceptions/index.html?v=0.4.3",
+      "url": "https://ftmbrunog2026.vercel.app/exceptions/index.html?v=0.4.4",
       "path": "ActivityLink/",
       "menuName": {
         "en": "Fleet Exception 360",
@@ -54,7 +54,7 @@
       "category": "AddIns"
     },
     {
-      "url": "https://ftmbrunog2026.vercel.app/trips/index.html?v=0.4.3",
+      "url": "https://ftmbrunog2026.vercel.app/trips/index.html?v=0.4.4",
       "path": "ActivityLink/",
       "menuName": {
         "en": "Fleet Trip 360",

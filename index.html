@@ -106,7 +106,12 @@ button[disabled]{opacity:.78;cursor:wait}.spinner{width:14px;height:14px;display
   </section>
   <footer class="project-credit">Desenvolvido por Bruno Henrique Felisbino Gonçalves · MIT · Projeto independente e não oficial Geotab.</footer>
 </main>
-<script data-bundle="print-options.js">
+
+
+
+
+<script>
+console.info('[Fleet TM v0.4.4] Dashboard: script carregado');
 /* Fleet Health Score - opções de impressão do PDF (logo opcional, sem persistência). */
 (function () {
   'use strict';
@@ -320,9 +325,7 @@ button[disabled]{opacity:.78;cursor:wait}.spinner{width:14px;height:14px;display
 
   window.PrintOptions = { ask: ask, decorate: decorate, fileToDataUrl: fileToDataUrl };
 })();
-
-</script>
-<script data-bundle="incidents/model.js">
+;
 /* Regras puras de ocorrências: sem API e sem dados de demonstração. */
 (function(root){
 'use strict';
@@ -418,9 +421,7 @@ function metrics(cases,from,to){
 }
 root.TelemetryCaseModel={STATUS,TRANSITIONS,CATEGORIES,SEVERITIES,CLOSED,validateCreated,validateTransition,buildCases,metrics};
 })(typeof globalThis!=='undefined'?globalThis:this);
-
-</script>
-<script data-bundle="incidents/storage.js">
+;
 /* AddInData é a única persistência do módulo. Cada ação cria uma linha imutável. */
 (function(root){
 'use strict';
@@ -465,9 +466,7 @@ async function append(api,groupId,details){
 }
 root.TelemetryCaseStore={ADDIN_ID,read,append,sessionUser,uniqueId};
 })(typeof globalThis!=='undefined'?globalThis:this);
-
-</script>
-<script data-bundle="assets/app.js">
+;
 /* Fleet Telemetry Manager - indicadores do processo "Gerir Telemetria". */
 (function () {
   'use strict';
