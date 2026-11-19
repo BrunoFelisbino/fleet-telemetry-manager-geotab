@@ -64,7 +64,7 @@ writeFileSync(join(output,'LEIA-ME.txt'),[
   '',
   '1. Abra MyGeotab > Configuracoes do Sistema > Add-Ins.',
   '2. Edite o Fleet Telemetry Manager ja instalado (nao crie duplicado).',
-  '3. Na aba Files, envie os arquivos DESCOMPACTADOS da pasta pages (nao anexe apenas o ZIP): '+version+'.zip com os 6 HTMLs e icon.svg.',
+  '3. Na aba Files, envie OS ARQUIVOS EXTRAIDOS da pasta pages (6 HTMLs, icon.svg e translations/). NAO envie apenas o ZIP.',
   '4. Na aba Configuration, substitua pelo conteudo de configuration.json.',
   '5. Confirme que dashboard049.html, mileage049.html, incidents049.html, health049.html, exceptions049.html e trips049.html aparecem na aba Files.\n  Salve e recarregue Ctrl+Shift+R.',
   '',
@@ -78,5 +78,6 @@ assert.equal(check.items.length,6);
 assert.deepEqual(check.items.map(x=>x.url),routes.map(r=>r[1]));
 assert.equal(new Set(check.items.map(x=>x.url)).size,6);
 assert.deepEqual(check.files,{});
+for(const lang of ['pt-BR','en']) assert.ok(existsSync(join(output,'pages','translations',lang+'.json')));
 for(const item of check.items)assert.ok(existsSync(join(output,'pages',item.url)));
 console.log('OK: manifest '+version+', six REAL HTML pages, CSS, JS, icons and portable local files.');
