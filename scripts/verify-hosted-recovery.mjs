@@ -27,9 +27,9 @@ for (let i = 0; i < pages.length; i++) {
   const html = readFileSync(page, 'utf8');
   assert.ok(html.length > 25000, 'Full page is missing: ' + page);
   assert.ok(!html.includes('TESTE OK: Add-In carregado e initialize executado'), 'Stale diagnostic page: ' + page);
-  const scripts = [...html.matchAll(/<script(?![^>]*\\bsrc=)[^>]*>([\\s\\S]*?)<\\/script>/gi)];
+  const scripts = [...html.matchAll(/<script(?![^>]*\bsrc=)[^>]*>([\s\S]*?)<\/script>/gi)];
   assert.equal(scripts.length, 1, 'MyGeotab expects one inline bootstrap in ' + page);
-  assert.match(scripts[0][1], /geotab\\.addin\\.fleetTelemetryManager/);
+  assert.match(scripts[0][1], /geotab\.addin\.fleetTelemetryManager/);
   new Script(scripts[0][1], { filename: page });
 }
 console.log('OK: six hosted complete MyGeotab pages with HTTPS, distinct URLs and working JavaScript syntax.');
