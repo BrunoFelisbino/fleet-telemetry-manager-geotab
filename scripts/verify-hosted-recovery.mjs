@@ -33,3 +33,22 @@ for (let i = 0; i < pages.length; i++) {
   new Script(scripts[0][1], { filename: page });
 }
 console.log('OK: six hosted complete MyGeotab pages with HTTPS, distinct URLs and working JavaScript syntax.');
+
+
+const clean = JSON.parse(readFileSync('addin-config.restore-hosted-clean.json', 'utf8'));
+assert.equal(clean.version, '0.4.11');
+assert.equal(clean.name, manifest.name);
+assert.deepEqual(clean.files, {});
+assert.equal(clean.items.length, pages.length);
+assert.equal(new Set(clean.items.map(item => item.url)).size, pages.length);
+for (let i = 0; i < pages.length; i++) {
+  const item = clean.items[i];
+  assert.equal(item.url, host + '/' + pages[i], 'Geotab route must not include query string in ' + pages[i]);
+  assert.equal(new URL(item.url).search, '', 'Do not embed version parameters inside MyGeotab route');
+  assert.equal(new URL(item.url).hash, '');
+  assert.equal(item.category, 'AddIns');
+  assert.equal(item.path, 'ActivityLink/');
+  assert.equal(item.svgIcon, host + '/icon.svg');
+  assert.deepEqual(item.menuName, manifest.items[i].menuName);
+}
+console.log('OK: v0.4.11 six clean hosted Geotab URLs without route query parameters.');
