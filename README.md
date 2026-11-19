@@ -1,5 +1,18 @@
 # Fleet Telemetry Manager (MyGeotab Add-In)
 
+## Correção de abertura no MyGeotab · v0.4.3
+
+A instalação continua sendo **um único Fleet Telemetry Manager**, com seis páginas no mesmo manifesto. Não é necessário criar seis Add-Ins separados.
+
+**Causas investigadas:** os erros recentes do Console eram principalmente avisos internos do MyGeotab, sem um erro específico da aplicação. Além disso, a Geotab documenta incompatibilidade com hifens nas URLs externas de Add-Ins, enquanto o projeto usava uma URL Vercel com vários hifens. Também existiam scripts externos com atributo `defer`, cuja execução durante a injeção do HTML não era garantida.
+
+**Correções realizadas:** domínio público verificado `https://ftmbrunog2026.vercel.app` sem hifens, manifesto v0.4.3 para todas as seis páginas, scripts e estilos embutidos no HTML das páginas e teste HTTP real de status 200 + CORS com a origem `https://my.geotab.com`. O Trip 360 também usa um escopo JavaScript isolado para evitar redeclaração de variáveis ao navegar entre módulos.
+
+**Atualização:** edite a instalação existente Fleet Telemetry Manager, substitua integralmente a configuração com `addin-config.json` v0.4.3, salve e recarregue o MyGeotab com atualização forçada. **Não crie outro Add-In com o mesmo `name`.** Se o painel continuar sem abrir, capture os recursos solicitados no Network e o erro do Console, sem dados privados de frota ou tokens.
+
+O CI valida código, CORS e disponibilidade pública. Ainda é necessária homologação funcional dentro de uma base MyGeotab autorizada.
+
+
 ## Navegação MyGeotab v0.4.2
 
 Correção pontual para o caso em que apenas o menu **Fleet Telemetry Manager** aparece após importar a v0.4.1.

@@ -35,6 +35,6 @@ assert.match(css,/#app \.mileage-dashboard \.trend-panel\s*\{[\s\S]*?background:
 assert.match(css,/daily-axis-text/);
 const page=readFileSync('mileage/index.html','utf8');
 assert.match(page,/Evolução diária da quilometragem/);
-assert.match(page,/chart\.js\?v=0\.4\.1/);
+assert.match(page,/data-bundle="mileage\/chart\.js"/);
 assert.ok(readFileSync('mileage/app.js','utf8').includes('Model.dailySeries('));
 console.log('OK: evolução diária sem agrupamento, zeros, limites, SVG, cores e rolagem.');

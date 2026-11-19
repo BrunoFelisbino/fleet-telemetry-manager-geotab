@@ -5,12 +5,12 @@ import {Script} from 'node:vm';
 const read=p=>readFileSync(p,'utf8');
 const manifest=JSON.parse(read('addin-config.json'));
 assert.equal(manifest.name,'fleetTelemetryManager');
-assert.equal(manifest.version,'0.4.2');
+assert.equal(manifest.version,'0.4.3');
 const preview=JSON.parse(read('addin-config.preview.json'));
-assert.equal(preview.version,'0.4.2');
+assert.equal(preview.version,'0.4.3');
 assert.equal(preview.items.length,6);
-for(const item of [...manifest.items,...preview.items])assert.ok(item.url.includes('?v=0.4.2'));
-for(const item of preview.items)assert.ok(item.url.startsWith('https://fleet-telemetry-manager-geotab.vercel.app/'));
+for(const item of [...manifest.items,...preview.items])assert.ok(item.url.includes('?v=0.4.3'));
+for(const item of preview.items)assert.ok(item.url.startsWith('https://ftmbrunog2026.vercel.app/'));
 assert.equal(manifest.isSigned,false);
 assert.equal(manifest.items.length,6);
 for(const [source,configuration] of [['main',manifest],['preview',preview]]){
@@ -33,7 +33,7 @@ for(const p of paths.filter(x=>x.endsWith('.html'))){
   for(const m of scripts)new Script(m[1],{filename:p});
   assert.ok(!/(?:src|href)="\.\.?\//.test(page),'Referência relativa inválida para MyGeotab: '+p);
   for(const m of page.matchAll(/(?:src|href)="(https:\/\/fleet-telemetry-manager-geotab\.vercel\.app\/[^"]+)"/g)){
-    const asset=m[1].split('?')[0].replace('https://fleet-telemetry-manager-geotab.vercel.app/','');
+    const asset=m[1].split('?')[0].replace('https://ftmbrunog2026.vercel.app/','');
     assert.ok(existsSync(asset),'Recurso absoluto não encontrado: '+p+' -> '+m[1]);
   }
 }
@@ -45,15 +45,19 @@ assert.ok(manifest.items.some(x=>x.url.includes('/incidents/')));
 assert.ok(manifest.items.some(x=>x.url.includes('/mileage/')));
 assert.ok(read('mileage/app.js').includes('geotab.addin.fleetTelemetryManager'));
 assert.ok(read('mileage/index.html').includes('id="groupSearch"')&&read('mileage/index.html').includes('id="vehicleSearch"'));
-assert.ok(read('mileage/index.html').includes('https://fleet-telemetry-manager-geotab.vercel.app/mileage/filters.js?v=0.4.1'));
-assert.ok(read('mileage/filters.js').includes('selectedGroups')&&read('mileage/filters.js').includes('selectedVehicles'));
-assert.ok(read('mileage/index.html').includes('id="pdfBtn"'));
-assert.ok(read('mileage/index.html').includes('id="trendChart"'));
-assert.ok(read('mileage/index.html').includes('https://fleet-telemetry-manager-geotab.vercel.app/mileage/chart.js?v=0.4.1'));
-assert.ok(read('mileage/index.html').includes('https://fleet-telemetry-manager-geotab.vercel.app/mileage/app.js?v=0.4.1'));
-assert.ok(read('mileage/index.html').includes('https://fleet-telemetry-manager-geotab.vercel.app/mileage/model.js?v=0.4.1'));
+
+for(const path of ['index.html','mileage/index.html','incidents/index.html']){
+  const html=read(path);
+  const bundles=[...html.matchAll(/<script data-bundle="([^"]+)">\n([\s\S]*?)\n<\/script>/g)];
+  const expected=path==='index.html'?4:path==='mileage/index.html'?5:3;
+  assert.equal(bundles.length,expected,path+' must inline all its JS dependencies');
+  assert.ok(html.includes('geotab.addin.fleetTelemetryManager'),path+' missing entry point');
+  assert.ok(!/<script defer/.test(html),path+' must not rely on deferred JS');
+  for(const bundle of bundles){
+    assert.ok(existsSync(bundle[1]),'Missing bundle '+bundle[1]);
+    new Script(bundle[2],{filename:path+'::'+bundle[1]});
+  }
+}
+assert.ok(read('mileage/index.html').includes('data-bundle="mileage/chart.js"'));
 assert.ok(read('mileage/index.html').includes('id="groupFocusStatus"'));
-assert.ok(read('mileage/index.html').includes('https://fleet-telemetry-manager-geotab.vercel.app/mileage/pdf.js?v=0.4.1'));
-assert.ok(read('incidents/app.js').includes('geotab.addin.fleetTelemetryManager'));
-assert.ok(read('incidents/index.html').includes('https://fleet-telemetry-manager-geotab.vercel.app/incidents/app.js?v=0.4.1'));
-console.log('OK: manifesto v0.4.2, seis módulos visíveis na categoria AddIns, scripts e URLs.');
+console.log('OK: manifesto v0.4.3, seis módulos, código inline e domínio sem hífens.');

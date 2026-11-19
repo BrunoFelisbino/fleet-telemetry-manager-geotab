@@ -2,7 +2,7 @@ import assert from 'node:assert/strict';
 import {existsSync,readFileSync} from 'node:fs';
 import {Script} from 'node:vm';
 const read=p=>readFileSync(p,'utf8');
-const host='https://fleet-telemetry-manager-geotab.vercel.app';
+const host='https://ftmbrunog2026.vercel.app';
 const config=JSON.parse(read('vercel.json'));
 assert.equal(config.version,2);
 const rule=config.headers.find(x=>x.source==='/(.*)');
@@ -12,15 +12,16 @@ assert.equal(headers['access-control-allow-origin'],'*','MyGeotab origin needs c
 assert.ok(headers['access-control-allow-methods'].includes('GET'));
 for(const filename of ['addin-config.json','addin-config.preview.json']){
  const manifest=JSON.parse(read(filename));
- assert.equal(manifest.version,'0.4.2');
+ assert.equal(manifest.version,'0.4.3');
  assert.equal(manifest.items.length,6);
  assert.ok(manifest.items.every(x=>x.category==='AddIns'),'Os seis módulos precisam da categoria AddIns');
  assert.equal(manifest.name,'fleetTelemetryManager');
  const routes=['index.html','mileage/index.html','incidents/index.html','health/index.html','exceptions/index.html','trips/index.html'];
  for(let i=0;i<routes.length;i++){
    const item=manifest.items[i];
-   assert.equal(item.url,host+'/'+routes[i]+'?v=0.4.2','Every Add-In page must use the verified public host');
+   assert.equal(item.url,host+'/'+routes[i]+'?v=0.4.3','Every Add-In page must use the verified public host');
    assert.equal(item.svgIcon,host+'/icon.svg','Public icon must share CORS-enabled host');
+   assert.ok(!/[\-@#]/.test(item.url),'Geotab does not support - @ # in Add-In page URLs');
    assert.ok(existsSync(routes[i]));
  }
 }
@@ -28,6 +29,7 @@ const pages=['index.html','mileage/index.html','incidents/index.html','health/in
 for(const path of pages){
  const html=read(path);
  assert.ok(!html.includes('brunofelisbino.github.io'),'Do not reference GitHub Pages in loaded modules');
+ assert.ok(!html.includes('fleet-telemetry-manager-geotab.vercel.app'),'Obsolete hyphenated domain is not compatible with Geotab loader');
  assert.ok(!/(?:src|href)="\.\.?\//.test(html),'Relative URLs break when HTML is injected into MyGeotab: '+path);
  for(const match of html.matchAll(/(?:src|href)="(https:\/\/fleet-telemetry-manager-geotab\.vercel\.app\/[^"]+)"/g)){
    const file=match[1].slice(host.length+1).split('?')[0];
@@ -42,4 +44,4 @@ for(const path of pages){
 const trip=read('trips/index.html');
 assert.ok(trip.includes("function init(api){shell();"),'Trip page should mount UI before handling missing API');
 assert.ok(trip.includes('inicialização não recebida do MyGeotab'),'Trip must not stay indefinitely on loading');
-console.log('OK: v0.4.2 URLs, menu categories, cross-origin headers and translations.');
+console.log('OK: v0.4.3 host no-hyphen, menu categories, CORS and translations.');

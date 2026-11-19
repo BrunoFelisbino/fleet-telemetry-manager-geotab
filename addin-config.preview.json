@@ -1,66 +1,66 @@
 {
   "name": "fleetTelemetryManager",
   "supportEmail": "poze1988@gmail.com",
-  "version": "0.4.2",
+  "version": "0.4.3",
   "items": [
     {
-      "url": "https://fleet-telemetry-manager-geotab.vercel.app/index.html?v=0.4.2",
+      "url": "https://ftmbrunog2026.vercel.app/index.html?v=0.4.3",
       "path": "ActivityLink/",
       "menuName": {
         "en": "Fleet Telemetry Manager",
         "pt-BR": "Fleet Telemetry Manager"
       },
-      "svgIcon": "https://fleet-telemetry-manager-geotab.vercel.app/icon.svg",
+      "svgIcon": "https://ftmbrunog2026.vercel.app/icon.svg",
       "category": "AddIns"
     },
     {
-      "url": "https://fleet-telemetry-manager-geotab.vercel.app/mileage/index.html?v=0.4.2",
+      "url": "https://ftmbrunog2026.vercel.app/mileage/index.html?v=0.4.3",
       "path": "ActivityLink/",
       "menuName": {
         "en": "Fleet Mileage",
         "pt-BR": "Quilometragem da Frota"
       },
-      "svgIcon": "https://fleet-telemetry-manager-geotab.vercel.app/icon.svg",
+      "svgIcon": "https://ftmbrunog2026.vercel.app/icon.svg",
       "category": "AddIns"
     },
     {
-      "url": "https://fleet-telemetry-manager-geotab.vercel.app/incidents/index.html?v=0.4.2",
+      "url": "https://ftmbrunog2026.vercel.app/incidents/index.html?v=0.4.3",
       "path": "ActivityLink/",
       "menuName": {
         "en": "Incidents & SLA",
         "pt-BR": "Ocorrências e SLA"
       },
-      "svgIcon": "https://fleet-telemetry-manager-geotab.vercel.app/icon.svg",
+      "svgIcon": "https://ftmbrunog2026.vercel.app/icon.svg",
       "category": "AddIns"
     },
     {
-      "url": "https://fleet-telemetry-manager-geotab.vercel.app/health/index.html?v=0.4.2",
+      "url": "https://ftmbrunog2026.vercel.app/health/index.html?v=0.4.3",
       "path": "ActivityLink/",
       "menuName": {
         "en": "Fleet Health Score",
         "pt-BR": "Fleet Health Score"
       },
-      "svgIcon": "https://fleet-telemetry-manager-geotab.vercel.app/icon.svg",
+      "svgIcon": "https://ftmbrunog2026.vercel.app/icon.svg",
       "category": "AddIns"
     },
     {
-      "url": "https://fleet-telemetry-manager-geotab.vercel.app/exceptions/index.html?v=0.4.2",
+      "url": "https://ftmbrunog2026.vercel.app/exceptions/index.html?v=0.4.3",
       "path": "ActivityLink/",
       "menuName": {
         "en": "Fleet Exception 360",
         "pt-BR": "Fleet Exception 360"
       },
-      "svgIcon": "https://fleet-telemetry-manager-geotab.vercel.app/icon.svg",
+      "svgIcon": "https://ftmbrunog2026.vercel.app/icon.svg",
       "category": "AddIns"
     },
     {
-      "url": "https://fleet-telemetry-manager-geotab.vercel.app/trips/index.html?v=0.4.2",
+      "url": "https://ftmbrunog2026.vercel.app/trips/index.html?v=0.4.3",
       "path": "ActivityLink/",
       "menuName": {
         "en": "Fleet Trip 360",
         "pt-BR": "Fleet Trip 360"
       },
-      "svgIcon": "https://fleet-telemetry-manager-geotab.vercel.app/icon.svg",
+      "svgIcon": "https://ftmbrunog2026.vercel.app/icon.svg",
       "category": "AddIns"
     }
   ],
