@@ -4,7 +4,7 @@
 const Model=window.FleetMileageModel;
 const $=id=>document.getElementById(id);
 const LIMIT=4000,MIN_WINDOW=60000;
-let api=null,devices=[],groups=[],loaded=false,loading=false,token=0,last=null,rateSlot=0,bootstrapPromise=null,demoMode=false;
+let api=null,devices=[],groups=[],loaded=false,loading=false,token=0,last=null,rateSlot=0,bootstrapPromise=null,demoMode=false,filters=null;
 const safe=v=>String(v==null?'':v).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;').replace(/'/g,'&#39;');
 const fmt=(n,d=1)=>Number(n).toLocaleString('pt-BR',{minimumFractionDigits:d,maximumFractionDigits:d});
 const dt=iso=>{const d=new Date(iso);return Number.isFinite(d.getTime())?d.toLocaleString('pt-BR'):'N/D';};
@@ -63,22 +63,9 @@ async function bootstrap(){
   try{return await bootstrapPromise;}
   finally{bootstrapPromise=null;}
 }
-function fillGroups(){
-  const active=devices.filter(d=>Model.isActive(d));
-  const seen=new Set(active.flatMap(d=>(d.groups||[]).map(Model.id)));
-  const relevant=groups.filter(g=>g.id&&g.name&&Model.groupMembers(g.id,groups)&&
-    [...Model.groupMembers(g.id,groups)].some(id=>seen.has(id)));
-  relevant.sort((a,b)=>String(a.name).localeCompare(String(b.name),'pt-BR'));
-  $('groupFilter').innerHTML='<option value="">Frota total acessível</option>'+relevant.map(g=>
-    '<option value="'+safe(g.id)+'">'+safe(g.name)+'</option>').join('');
-}
-function fillVehicles(){
-  const previous=$('vehicleFilter').value;
-  const scoped=Model.devicesInScope(devices,groups,$('groupFilter').value,'');
-  $('vehicleFilter').innerHTML='<option value="">Todos os veículos</option>'+scoped.sort((a,b)=>String(a.name||a.licensePlate||'').localeCompare(String(b.name||b.licensePlate||''),'pt-BR')).map(d=>
-    '<option value="'+safe(d.id)+'">'+safe(d.name||d.licensePlate||d.id)+'</option>').join('');
-  if([...$('vehicleFilter').options].some(v=>v.value===previous))$('vehicleFilter').value=previous;
-}
+function fillGroups(){filters.setData(devices,groups);}
+function fillVehicles(){filters.refreshVehicles();}
+
 function localInput(d){const pad=x=>String(x).padStart(2,'0');return d.getFullYear()+'-'+pad(d.getMonth()+1)+'-'+pad(d.getDate())+'T'+pad(d.getHours())+':'+pad(d.getMinutes());}
 function toggleDates(){
   const show=$('periodFilter').value==='custom';
@@ -175,13 +162,13 @@ function fakeTrips(device){
 function renderDemo(){
   try{
     const period=Model.range($('periodFilter').value,$('fromInput').value,$('toInput').value);
-    const ds=Model.devicesInScope(devices,groups,$('groupFilter').value,$('vehicleFilter').value);
+    const ds=filters.scope();
     const map=new Map();
     for(const d of ds){
       const selected=fakeTrips(d).filter(t=>new Date(t.start)<=period.to&&new Date(t.stop)>=period.from);
       map.set(String(d.id),Model.summarizeVehicle(d,selected,period));
     }
-    render(Model.summarizeFleet(ds,map,groups,$('groupFilter').value),period,ds);
+    render(Model.summarizeFleet(ds,map,groups,filters.groups()),period,ds);
     $('status').textContent='PRÉVIA FICTÍCIA';
     message('PRÉVIA VISUAL COM DADOS FICTÍCIOS: filtros, totais e ranking calculados sobre veículos de exemplo.','err');
     $('scope').textContent='SIMULAÇÃO · '+period.label+' · '+ds.length+' veículos fictícios. Não representa cliente ou base Geotab.';
@@ -197,7 +184,7 @@ async function load(){
   try{
     await bootstrap();checkToken(req);
     const period=Model.range($('periodFilter').value,$('fromInput').value,$('toInput').value);
-    const ds=Model.devicesInScope(devices,groups,$('groupFilter').value,$('vehicleFilter').value);
+    const ds=filters.scope();
     const full=new Map();let i=0,done=0;
     updateProgress(0,ds.length);
     message('Consultando '+ds.length+' veículo(s). A conclusão depende do volume de viagens...');
@@ -215,7 +202,7 @@ async function load(){
     });
     await Promise.all(workers);checkToken(req);
     if(done!==ds.length)throw Error('Consulta incompleta: nem todos os veículos foram processados.');
-    const summary=Model.summarizeFleet(ds,full,groups,$('groupFilter').value);
+    const summary=Model.summarizeFleet(ds,full,groups,filters.groups());
     render(summary,period,ds);
     $('status').textContent='Consulta concluída';
   }catch(e){
@@ -239,10 +226,10 @@ function exportCsv(which){
 }
 function start(client){
   api=client||null;
+  filters=window.FleetMileageFilters.create({model:Model,onChange:()=>{invalidate();if(demoMode)renderDemo();}});
+  filters.init();
   $('loadBtn').addEventListener('click',load);
   $('cancelBtn').addEventListener('click',()=>{invalidate();message('Consulta cancelada. Nenhum resultado parcial será exportado.');});
-  $('groupFilter').addEventListener('change',()=>{fillVehicles();invalidate();});
-  $('vehicleFilter').addEventListener('change',invalidate);
   $('periodFilter').addEventListener('change',()=>{toggleDates();invalidate();});
   $('fromInput').addEventListener('change',invalidate);
   $('toInput').addEventListener('change',invalidate);
