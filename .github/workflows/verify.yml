@@ -18,4 +18,6 @@ jobs:
         with:
           node-version: '22'
       - name: Static validation
-        run: node scripts/verify.mjs
+        run: |
+          node scripts/verify.mjs
+          node scripts/verify-incidents.mjs
