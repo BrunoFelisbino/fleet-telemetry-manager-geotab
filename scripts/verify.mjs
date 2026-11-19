@@ -5,11 +5,14 @@ import {Script} from 'node:vm';
 const read=p=>readFileSync(p,'utf8');
 const manifest=JSON.parse(read('addin-config.json'));
 assert.equal(manifest.name,'fleetTelemetryManager');
-assert.equal(manifest.version,'0.4.4');
+assert.equal(manifest.version,'0.4.8');
 const preview=JSON.parse(read('addin-config.preview.json'));
 assert.equal(preview.version,'0.4.4');
 assert.equal(preview.items.length,6);
-for(const item of [...manifest.items,...preview.items])assert.ok(item.url.includes('?v=0.4.4'));
+for(const item of preview.items)assert.ok(item.url.includes('?v=0.4.4'));
+assert.deepEqual(manifest.files,{});
+assert.ok(read('addin-config.json').length<5000,'Do not embed the six full pages in JSON');
+assert.deepEqual(manifest.items.map(x=>x.url),['dashboard.html','mileage.html','incidents.html','health.html','exceptions.html','trips.html']);
 for(const item of preview.items)assert.ok(item.url.startsWith('https://ftmbrunog2026.vercel.app/'));
 assert.equal(manifest.isSigned,false);
 assert.equal(manifest.items.length,6);
@@ -23,7 +26,7 @@ for(const [source,configuration] of [['main',manifest],['preview',preview]]){
   }
 }
 
-for(const item of manifest.items){assert.ok(item.url.startsWith('https://'));assert.ok(item.svgIcon.startsWith('https://'));}
+for(const item of manifest.items){assert.ok(item.url.endsWith('.html'));assert.ok(!item.url.includes('://'),'Local Files URL expected');}
 const paths=['index.html','assets/app.css','assets/app.js','mileage/index.html','mileage/model.js','mileage/chart.js','mileage/filters.js','mileage/pdf.js','mileage/app.js','mileage/style.css','incidents/model.js','incidents/storage.js','incidents/app.js','incidents/style.css','incidents/index.html','print-options.js','health/index.html','health-pdf.js','exceptions/index.html','exceptions/audit.css','exceptions/audit.js','exceptions/pdf.js','trips/index.html','reports/premium.css','icon.svg'];
 for(const p of paths)assert.ok(existsSync(p),'Arquivo ausente: '+p);
 for(const p of paths.filter(x=>x.endsWith('.js')))new Script(read(p),{filename:p});
@@ -41,8 +44,8 @@ for(const p of ['health/index.html','exceptions/index.html','trips/index.html'])
 const main=read('assets/app.js');
 assert.ok(main.includes('idlingDuration')&&main.includes('isDeviceCommunicating'));
 assert.ok(!main.includes('localStorage'));
-assert.ok(manifest.items.some(x=>x.url.includes('/incidents/')));
-assert.ok(manifest.items.some(x=>x.url.includes('/mileage/')));
+assert.ok(manifest.items.some(x=>x.url==='incidents.html'));
+assert.ok(manifest.items.some(x=>x.url==='mileage.html'));
 assert.ok(read('mileage/app.js').includes('geotab.addin.fleetTelemetryManager'));
 assert.ok(read('mileage/index.html').includes('id="groupSearch"')&&read('mileage/index.html').includes('id="vehicleSearch"'));
 
@@ -57,4 +60,4 @@ for(const path of ['index.html','mileage/index.html','incidents/index.html','hea
 }
 assert.ok(read('mileage/index.html').includes('FleetMileageDailyChart'));
 assert.ok(read('mileage/index.html').includes('id="groupFocusStatus"'));
-console.log('OK: v0.4.4, seis páginas com script único, manifesto e namespace.');
+console.log('OK: v0.4.8, seis páginas reais, manifesto Files, script único e namespace.');
