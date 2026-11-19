@@ -4,7 +4,7 @@
 const Model=window.FleetMileageModel;
 const $=id=>document.getElementById(id);
 const LIMIT=4000,MIN_WINDOW=60000;
-let api=null,devices=[],groups=[],loaded=false,loading=false,token=0,last=null,rateSlot=0,bootstrapPromise=null,demoMode=false,filters=null;
+let api=null,devices=[],groups=[],loaded=false,loading=false,token=0,last=null,rateSlot=0,bootstrapPromise=null,demoMode=false,filters=null,fullReport=null,focusGroupId=null;
 const safe=v=>String(v==null?'':v).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;').replace(/'/g,'&#39;');
 const fmt=(n,d=1)=>Number(n).toLocaleString('pt-BR',{minimumFractionDigits:d,maximumFractionDigits:d});
 const dt=iso=>{const d=new Date(iso);return Number.isFinite(d.getTime())?d.toLocaleString('pt-BR'):'N/D';};
@@ -74,10 +74,15 @@ function toggleDates(){
 }
 function invalidate(){
   token++;
+  fullReport=null;focusGroupId=null;last=null;
+  $('clearGroupFocus').hidden=true;
+  $('groupFocusStatus').textContent='Visão completa dos grupos consultados.';
   last=null;loading=false;
   $('cancelBtn').hidden=true;$('loadBtn').disabled=false;
   $('groupCsv').disabled=true;$('vehicleCsv').disabled=true;$('pdfBtn').disabled=true;
   $('progressWrap').hidden=true;
+  resetVisual();
+  $('scope').textContent='Filtros alterados. Clique em Consultar para carregar os dados da nova seleção.';
   $('status').textContent=api?'Filtros alterados':'Aguardando MyGeotab';
   message('Filtros alterados. Clique em Consultar para atualizar os resultados.');
 }
@@ -92,6 +97,8 @@ function resetVisual(){
   $('trendInfo').textContent='Aguardando dados de viagens.';
   $('trendPeriod').textContent='Sem período consultado';
   $('groupChart').innerHTML='';
+  $('groupFocusStatus').textContent='Visão completa dos grupos consultados.';
+  $('clearGroupFocus').hidden=true;
   $('groupRows').innerHTML='<tr><td colspan="3">Sem resultados consolidados</td></tr>';
   $('vehicleRows').innerHTML='<tr><td colspan="5">Sem resultados consolidados</td></tr>';
   $('notes').innerHTML='<li>Os resultados só são exibidos quando a consulta completa terminar.</li>';
@@ -115,20 +122,37 @@ function renderVisualDashboard(summary,period){
   return trend;
 }
 function render(summary,period,selected){
+  fullReport={summary,period,selected};
+  focusGroupId=null;
+  renderFocusedView();
+}
+function renderFocusedView(){
+  if(!fullReport)return;
+  const {summary:all,period,selected}=fullReport;
+  const focus=focusGroupId===null?null:all.groupsRows.find(g=>String(g.groupId)===String(focusGroupId));
+  if(focusGroupId!==null&&!focus){focusGroupId=null;}
+  const chosen=focusGroupId===null?null:all.groupsRows.find(g=>String(g.groupId)===String(focusGroupId));
+  const summary=chosen?Model.focusSummary(all,chosen.groupId):all;
   const trend=renderVisualDashboard(summary,period);
-  last={summary,period,selected,trend};
+  last={summary,period,selected,trend,groupFocus:chosen?{id:chosen.groupId,name:chosen.name}:null};
+  $('groupFocusStatus').textContent=chosen?'Grupo em foco: '+chosen.name+' · '+summary.vehicles+' veículo(s) e '+fmt(summary.km,1)+' km. Clique em outro grupo para trocar.':'Visão completa dos grupos consultados.';
+  $('clearGroupFocus').hidden=!chosen;
   $('kpiBox').innerHTML=[
     card('KM total rodado',fmt(summary.km,1)+' km','Soma das viagens de todos os veículos elegíveis'),
     card('Frota selecionada',String(summary.vehicles),'Todos os veículos do filtro, com e sem viagem'),
     card('Média por veículo',summary.average==null?'N/D':fmt(summary.average,1)+' km','KM total dividido por veículos selecionados'),
     card('Veículos sem viagem',String(summary.stopped),'Sem viagens retornadas no período')
   ].join('');
-  const max=Math.max(1,...summary.groupsRows.map(g=>g.km));
-  $('groupChart').innerHTML=summary.groupsRows.slice(0,10).map(g=>
-    '<div class="bar-item"><span class="bar-name" title="'+safe(g.name)+'">'+safe(g.name)+'</span><div class="bar-rail"><div class="bar-fill" style="width:'+Math.min(100,100*g.km/max)+'%"></div></div><span class="bar-value">'+fmt(g.km,1)+' km</span></div>'
+  // Navegação sempre usa o resultado completo; demais seções mostram somente o grupo em foco.
+  const max=Math.max(1,...all.groupsRows.map(g=>g.km));
+  const groupClass=g=>!chosen?'':String(g.groupId)===String(chosen.groupId)?' is-focused':' is-dim';
+  const selectedGroup=g=>!!chosen&&String(g.groupId)===String(chosen.groupId);
+  $('groupChart').innerHTML=all.groupsRows.slice(0,10).map(g=>
+    '<button type="button" class="bar-item group-action'+groupClass(g)+'" data-group-id="'+safe(g.groupId)+'" aria-pressed="'+selectedGroup(g)+'" title="Mostrar apenas '+safe(g.name)+'">'+
+      '<span class="bar-name">'+safe(g.name)+'</span><span class="bar-rail"><span class="bar-fill" style="width:'+Math.min(100,100*g.km/max)+'%"></span></span><span class="bar-value">'+fmt(g.km,1)+' km</span></button>'
   ).join('')||'<p class="hint">Nenhum grupo identificado.</p>';
-  $('groupRows').innerHTML=summary.groupsRows.length?summary.groupsRows.map(g=>
-    '<tr><td>'+safe(g.name)+'</td><td>'+g.vehicles+'</td><td>'+fmt(g.km,1)+'</td></tr>'
+  $('groupRows').innerHTML=all.groupsRows.length?all.groupsRows.map(g=>
+    '<tr class="group-result-row'+groupClass(g)+'" data-group-id="'+safe(g.groupId)+'"><td><button type="button" class="group-table-button" data-group-id="'+safe(g.groupId)+'" aria-pressed="'+selectedGroup(g)+'" title="Mostrar apenas '+safe(g.name)+'">'+safe(g.name)+'</button></td><td>'+g.vehicles+'</td><td>'+fmt(g.km,1)+'</td></tr>'
   ).join(''):'<tr><td colspan="3">Sem grupo para exibir</td></tr>';
   $('vehicleRows').innerHTML=summary.vehiclesRows.length?summary.vehiclesRows.map(v=>
     '<tr><td><b>'+safe(v.name)+'</b>'+(v.plate?'<span class="data-note">'+safe(v.plate)+'</span>':'')+'</td><td>'+v.tripCount+'</td><td><b>'+fmt(v.km,1)+'</b></td><td>'+(v.odoStart==null?'N/D':fmt(v.odoStart,1))+'</td><td>'+(v.odoEnd==null?'N/D':fmt(v.odoEnd,1))+'</td></tr>'
@@ -143,9 +167,22 @@ function render(summary,period,selected){
   if(summary.boundaryTrips)notes.push(summary.boundaryTrips+' viagem(ns) cruzaram o limite do período e foram contadas integralmente. No gráfico diário, essas viagens são atribuídas ao primeiro/último dia do intervalo se começaram fora dele.');
   if(summary.withOdometer<summary.vehicles)notes.push(summary.vehicles-summary.withOdometer+' veículo(s) sem odômetro confiável na seleção: exibidos como N/D.');
   $('notes').innerHTML=notes.map(n=>'<li>'+safe(n)+'</li>').join('');
-  $('scope').textContent=period.label+' · '+dt(period.from)+' até '+dt(period.to)+' · '+primaryLabel(summary);
+  $('scope').textContent=(demoMode?'SIMULAÇÃO · ':'')+period.label+' · '+dt(period.from)+' até '+dt(period.to)+(chosen?' · Grupo em foco: '+chosen.name:'')+' · '+primaryLabel(summary);
   $('groupCsv').disabled=false;$('vehicleCsv').disabled=false;$('pdfBtn').disabled=false;
-  message('Consulta completa. '+primaryLabel(summary)+'.','ok');
+  message((demoMode?'SIMULAÇÃO COM DADOS FICTÍCIOS. ':'Consulta completa. ')+(chosen?'Grupo em foco: '+chosen.name+'. ':'')+primaryLabel(summary)+'.',demoMode?'err':'ok');
+}
+function selectResultGroup(event){
+  const target=event.target.closest('[data-group-id]');
+  if(!target||!fullReport)return;
+  const groupId=String(target.dataset.groupId||'');
+  if(!fullReport.summary.groupsRows.some(g=>String(g.groupId)===groupId))return;
+  focusGroupId=focusGroupId===groupId?null:groupId;
+  renderFocusedView();
+}
+function clearResultGroup(){
+  if(!fullReport)return;
+  focusGroupId=null;
+  renderFocusedView();
 }
 function bootDemo(){
   demoMode=true;loaded=true;
@@ -202,7 +239,7 @@ async function load(){
   if(!api){message('Abra este Add-In dentro do MyGeotab para buscar dados reais.','err');return;}
   if(loading){invalidate();}
   const req=++token;
-  loading=true;$('loadBtn').disabled=true;$('cancelBtn').hidden=false;$('progressWrap').hidden=false;resetVisual();
+  loading=true;fullReport=null;focusGroupId=null;last=null;$('loadBtn').disabled=true;$('cancelBtn').hidden=false;$('progressWrap').hidden=false;resetVisual();
   try{
     await bootstrap();checkToken(req);
     const period=Model.range($('periodFilter').value,$('fromInput').value,$('toInput').value);
@@ -248,7 +285,7 @@ function exportCsv(which){
 }
 function downloadPdf(){
   if(!last||!window.FleetMileagePdf){message('Consulte os dados e tente baixar o PDF novamente.','err');return;}
-  const groupNames=filters.groups().map(id=>(groups.find(g=>String(g.id)===id)||{}).name||id);
+  const groupNames=last.groupFocus?[last.groupFocus.name]:filters.groups().map(id=>(groups.find(g=>String(g.id)===id)||{}).name||id);
   const vehicleNames=filters.vehicles().map(id=>(devices.find(d=>String(d.id)===id)||{}).name||id);
   try{
     window.FleetMileagePdf.save({...last,groupNames,vehicleNames,demo:demoMode});
@@ -267,6 +304,9 @@ function start(client){
   $('groupCsv').addEventListener('click',()=>exportCsv('groups'));
   $('vehicleCsv').addEventListener('click',()=>exportCsv('vehicles'));
   $('pdfBtn').addEventListener('click',downloadPdf);
+  $('groupChart').addEventListener('click',selectResultGroup);
+  $('groupRows').addEventListener('click',selectResultGroup);
+  $('clearGroupFocus').addEventListener('click',clearResultGroup);
   toggleDates();
   if(api)bootstrap().catch(e=>message('Falha ao carregar frota: '+String(e.message||e),'err'));
   else if(demoMode)bootDemo();
