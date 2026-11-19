@@ -1,0 +1,60 @@
+<!doctype html>
+<html lang="pt-BR">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta http-equiv="Cache-Control" content="no-cache,no-store,must-revalidate">
+<title>Fleet Telemetry Manager · Geotab</title>
+<link rel="stylesheet" href="./assets/app.css?v=0.1.0">
+<script src="./print-options.js?v=0.1.0"></script>
+<script defer src="./assets/app.js?v=0.1.0"></script>
+</head>
+<body>
+<main id="app">
+  <header class="head">
+    <div class="title"><div class="ico" aria-hidden="true"><img src="./icon.svg" alt=""></div>
+    <div><strong>Fleet Telemetry Manager</strong><div class="sub">Gestão de Telemetria · MyGeotab</div></div></div>
+    <span class="pill" id="state">Aguardando MyGeotab</span>
+  </header>
+  <div class="bar">
+    <label>Grupo / operação <select id="groupFilter"><option value="">Todos os grupos</option></select></label>
+    <label>Veículo <select id="vehicleFilter"><option value="">Todos os veículos</option></select></label>
+    <label>Período <select id="periodFilter"><option value="7">7 dias</option><option value="30" selected>30 dias</option><option value="90">90 dias</option></select></label>
+    <button class="primary" type="button" id="refreshBtn">Atualizar</button>
+    <button type="button" id="exportCsv" disabled>CSV</button>
+    <button type="button" id="exportPdf" disabled>PDF / Imprimir</button>
+  </div>
+  <div class="info" id="scope">Nenhum dado consultado. Use uma sessão MyGeotab autorizada.</div>
+  <div class="alert" id="message" role="status">Aguardando conexão.</div>
+  <img id="printLogo" alt="Logo escolhido para o relatório" hidden>
+  <div class="section-head">Disponibilidade e cobertura</div>
+  <div class="metric-grid" id="availabilityCards"></div>
+  <div class="section-head">Tratamento e eficiência</div>
+  <div class="metric-grid" id="treatmentCards"></div>
+  <div class="section-head">Segurança e comportamento</div>
+  <div class="metric-grid" id="safetyCards"></div>
+  <div class="section-head">Eficiência e custos operacionais</div>
+  <div class="metric-grid" id="efficiencyCards"></div>
+  <section class="cols">
+    <div class="panel">
+      <div class="pt">Qualidade da comunicação</div>
+      <p class="hint" id="qualitySummary">Aguardando consulta.</p>
+      <div style="max-height:390px;overflow:auto"><table>
+        <thead><tr><th>Veículo</th><th>Último dado</th><th>Comunicação</th></tr></thead>
+        <tbody id="statusRows"><tr><td colspan="3">Sem dados</td></tr></tbody>
+      </table></div>
+    </div>
+    <div class="panel">
+      <div class="pt">Ocorrências e SLA</div>
+      <div class="warning">
+        <strong>Próximo módulo: tratamento auditável</strong>
+        <p class="hint">Classificação de alertas, responsáveis, prazos, ações corretivas, evidências e reincidência. Os indicadores dependentes de tratativas ficam como N/D até a implantação do módulo.</p>
+      </div>
+      <div class="pt" style="margin-top:18px">Qualidade e critérios</div>
+      <ul class="note-list" id="notes"><li>Sem estimativas inventadas.</li></ul>
+    </div>
+  </section>
+  <footer class="project-credit">Desenvolvido por Bruno Henrique Felisbino Gonçalves · MIT · Projeto independente e não oficial Geotab.</footer>
+</main>
+</body>
+</html>

@@ -1,0 +1,44 @@
+{
+  "name": "fleetTelemetryManager",
+  "supportEmail": "poze1988@gmail.com",
+  "version": "0.1.0",
+  "items": [
+    {
+      "url": "https://brunofelisbino.github.io/fleet-telemetry-manager-geotab/?v=0.1.0",
+      "path": "ActivityLink/",
+      "menuName": {
+        "en": "Fleet Telemetry Manager",
+        "pt-BR": "Fleet Telemetry Manager"
+      },
+      "svgIcon": "https://brunofelisbino.github.io/fleet-telemetry-manager-geotab/icon.svg"
+    },
+    {
+      "url": "https://brunofelisbino.github.io/fleet-telemetry-manager-geotab/health/?v=0.1.0",
+      "path": "ActivityLink/",
+      "menuName": {
+        "en": "Fleet Health Score",
+        "pt-BR": "Fleet Health Score"
+      },
+      "svgIcon": "https://brunofelisbino.github.io/fleet-telemetry-manager-geotab/icon.svg"
+    },
+    {
+      "url": "https://brunofelisbino.github.io/fleet-telemetry-manager-geotab/exceptions/?v=0.1.0",
+      "path": "ActivityLink/",
+      "menuName": {
+        "en": "Fleet Exception 360",
+        "pt-BR": "Fleet Exception 360"
+      },
+      "svgIcon": "https://brunofelisbino.github.io/fleet-telemetry-manager-geotab/icon.svg"
+    },
+    {
+      "url": "https://brunofelisbino.github.io/fleet-telemetry-manager-geotab/trips/?v=0.1.0",
+      "path": "ActivityLink/",
+      "menuName": {
+        "en": "Fleet Trip 360",
+        "pt-BR": "Fleet Trip 360"
+      },
+      "svgIcon": "https://brunofelisbino.github.io/fleet-telemetry-manager-geotab/icon.svg"
+    }
+  ],
+  "isSigned": false
+}
