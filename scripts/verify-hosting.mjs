@@ -11,10 +11,11 @@ const headers=Object.fromEntries(rule.headers.map(h=>[h.key.toLowerCase(),h.valu
 assert.equal(headers['access-control-allow-origin'],'*','MyGeotab origin needs cross-origin GET of public code');
 assert.ok(headers['access-control-allow-methods'].includes('GET'));
 const filesManifest=JSON.parse(read('addin-config.json'));
-assert.equal(filesManifest.version,'0.4.8');
-assert.deepEqual(filesManifest.items.map(x=>x.url),['dashboard.html','mileage.html','incidents.html','health.html','exceptions.html','trips.html']);
+assert.equal(filesManifest.version,'0.4.9');
+assert.deepEqual(filesManifest.items.map(x=>x.url),['dashboard049.html','mileage049.html','incidents049.html','health049.html','exceptions049.html','trips049.html']);
 assert.ok(filesManifest.items.every(x=>x.category==='AddIns'));
 assert.deepEqual(filesManifest.files,{});
+assert.equal(new Set(filesManifest.items.map(x=>x.url)).size,6,'Each Geotab page must have a unique cache-busting filename');
 for(const filename of ['addin-config.preview.json']){
  const manifest=JSON.parse(read(filename));
  assert.equal(manifest.version,'0.4.4');
@@ -54,4 +55,4 @@ for(const path of pages){
 const trip=read('trips/index.html');
 assert.ok(trip.includes("function init(api){shell();"),'Trip page should mount UI before handling missing API');
 assert.ok(trip.includes('inicialização não recebida do MyGeotab'),'Trip must not stay indefinitely on loading');
-console.log('OK: v0.4.8 Files manifest and legacy v0.4.4 host no-hyphen, CORS and translations.');
+console.log('OK: v0.4.9 Files manifest and legacy v0.4.4 host no-hyphen, CORS and translations.');
