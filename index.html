@@ -7,7 +7,9 @@
 <title>Fleet Telemetry Manager · Geotab</title>
 <link rel="stylesheet" href="./assets/app.css?v=0.1.0">
 <script src="./print-options.js?v=0.1.0"></script>
-<script defer src="./assets/app.js?v=0.1.0"></script>
+<script src="./incidents/model.js?v=0.2.0"></script>
+<script src="./incidents/storage.js?v=0.2.0"></script>
+<script defer src="./assets/app.js?v=0.2.0"></script>
 </head>
 <body>
 <main id="app">
@@ -47,8 +49,8 @@
     <div class="panel">
       <div class="pt">Ocorrências e SLA</div>
       <div class="warning">
-        <strong>Próximo módulo: tratamento auditável</strong>
-        <p class="hint">Classificação de alertas, responsáveis, prazos, ações corretivas, evidências e reincidência. Os indicadores dependentes de tratativas ficam como N/D até a implantação do módulo.</p>
+        <strong>Central de ocorrências e SLA</strong>
+        <p class="hint">O módulo de Ocorrências e SLA já permite registrar e acompanhar tratativas na base MyGeotab. Selecione um grupo operacional acima para consolidar os indicadores. Acesse a Central de Ocorrências pelo menu do MyGeotab. O resultado fica como N/D quando faltam permissões ou registros confiáveis.</p>
       </div>
       <div class="pt" style="margin-top:18px">Qualidade e critérios</div>
       <ul class="note-list" id="notes"><li>Sem estimativas inventadas.</li></ul>
