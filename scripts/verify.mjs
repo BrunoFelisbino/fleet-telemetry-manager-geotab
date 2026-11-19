@@ -21,9 +21,11 @@ for(const p of paths.filter(x=>x.endsWith('.html'))){
     assert.ok(existsSync(asset),'Referência local quebrada: '+p+' -> '+m[1]);
   }
 }
-for(const p of ['health/index.html','exceptions/index.html','trips/index.html','incidents/index.html'])assert.ok(read(p).includes('geotab.addin.fleetTelemetryManager'),'Namespace incorreto: '+p);
+for(const p of ['health/index.html','exceptions/index.html','trips/index.html'])assert.ok(read(p).includes('geotab.addin.fleetTelemetryManager'),'Namespace incorreto: '+p);
 const main=read('assets/app.js');
 assert.ok(main.includes('idlingDuration')&&main.includes('isDeviceCommunicating'));
 assert.ok(!main.includes('localStorage'));
 assert.ok(manifest.items.some(x=>x.url.includes('/incidents/')));
+assert.ok(read('incidents/app.js').includes('geotab.addin.fleetTelemetryManager'));
+assert.ok(read('incidents/index.html').includes('./app.js?v=0.2.0'));
 console.log('OK: manifesto, 5 módulos, scripts inline, assets relativos e namespace.');
