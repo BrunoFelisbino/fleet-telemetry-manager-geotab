@@ -107,7 +107,7 @@ function primaryGroup(vehicle,groups,selectedGroup){
   const g=map.get(String(attached[0]));return{id:String(g.id),name:String(g.name||g.id)};
 }
 function summarizeFleet(devices,data,groups,selectedGroup){
-  const rows=(devices||[]).map(d=>data.get(String(d.id))||summarizeVehicle(d,[],{from:new Date(0),to:new Date()}));
+  const rows=(devices||[]).map(d=>({...data.get(String(d.id))||summarizeVehicle(d,[],{from:new Date(0),to:new Date()})}));
   const withKm=rows.filter(r=>r.invalidCount===0);
   let km=0,trips=0,stopped=0,odometerAvailable=0,boundary=0;
   const buckets=new Map(),dailyTotals=new Map();
@@ -117,6 +117,7 @@ function summarizeFleet(devices,data,groups,selectedGroup){
     boundary+=r.boundaryTrips;
     for(const [day,dist] of Object.entries(r.dailyKm||{}))dailyTotals.set(day,(dailyTotals.get(day)||0)+dist);
     const group=primaryGroup(r,groups,selectedGroup),key=group.id;
+    r.groupId=key;
     if(!buckets.has(key))buckets.set(key,{groupId:key,name:group.name,km:0,vehicles:0,trips:0});
     const groupRow=buckets.get(key);groupRow.km+=r.km;groupRow.trips+=r.tripCount;groupRow.vehicles++;
   }
@@ -125,6 +126,32 @@ function summarizeFleet(devices,data,groups,selectedGroup){
     dailyRows:[...dailyTotals].sort((a,b)=>a[0].localeCompare(b[0])).map(([day,km])=>({day,km})),
     vehiclesRows:rows.slice().sort((a,b)=>b.km-a.km),
     groupsRows:[...buckets.values()].sort((a,b)=>b.km-a.km)};
+}
+
+/* Isola um grupo já agregado, sem requisição adicional nem dupla contagem. */
+function focusSummary(summary,groupId){
+  if(!summary||!Array.isArray(summary.groupsRows)||!Array.isArray(summary.vehiclesRows))throw Error('Faça uma consulta completa antes de escolher um grupo.');
+  const id=String(groupId||'');
+  const group=summary.groupsRows.find(g=>String(g.groupId)===id);
+  if(!group)throw Error('Grupo não disponível no resultado consultado.');
+  const rows=summary.vehiclesRows.filter(r=>String(r.groupId)===id);
+  const dailyTotals=new Map();
+  let km=0,trips=0,stopped=0,withOdometer=0,boundaryTrips=0;
+  for(const r of rows){
+    km+=r.km;trips+=r.tripCount;
+    if(!r.tripCount)stopped++;
+    if(r.odoStart!=null&&r.odoEnd!=null)withOdometer++;
+    boundaryTrips+=r.boundaryTrips||0;
+    for(const [day,dist] of Object.entries(r.dailyKm||{}))dailyTotals.set(day,(dailyTotals.get(day)||0)+dist);
+  }
+  return {
+    km,trips,stopped,vehicles:rows.length,
+    average:rows.length?km/rows.length:null,
+    withOdometer,boundaryTrips,
+    dailyRows:[...dailyTotals].sort((a,b)=>a[0].localeCompare(b[0])).map(([day,km])=>({day,km})),
+    vehiclesRows:rows.slice(),
+    groupsRows:[{...group,km,trips,vehicles:rows.length}]
+  };
 }
 
 function dailySeries(rows,period){
@@ -178,5 +205,5 @@ function trendBuckets(rows,period,maxBars=18){
   return bars;
 }
 
-root.FleetMileageModel={MS_DAY,id,isActive,groupMembers,devicesInScope,devicesInMultiScope,range,tripIdentity,boundaryTrip,summarizeVehicle,summarizeFleet,trendBuckets,dailySeries};
+root.FleetMileageModel={MS_DAY,id,isActive,groupMembers,devicesInScope,devicesInMultiScope,range,tripIdentity,boundaryTrip,summarizeVehicle,summarizeFleet,focusSummary,trendBuckets,dailySeries};
 })(typeof globalThis!=='undefined'?globalThis:this);
