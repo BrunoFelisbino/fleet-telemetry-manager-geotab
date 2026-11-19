@@ -84,6 +84,71 @@ button[disabled]{opacity:.78;cursor:wait}.spinner{width:14px;height:14px;display
 @media(max-width:550px){#app .form-pair,#app .filters-inline{grid-template-columns:1fr}#app .case-form button{width:100%}}
 
 </style>
+
+
+
+</head>
+<body>
+<div id="app">
+<header class="head">
+  <div class="title"><div class="ico" aria-hidden="true"><img src="https://ftmbrunog2026.vercel.app/icon.svg" alt=""></div><div><strong>Ocorrências e SLA</strong><div class="sub">Fleet Telemetry Manager · Tratativas auditáveis</div></div></div>
+  <span class="pill" id="sessionStatus">Aguardando MyGeotab</span>
+</header>
+<div class="bar">
+  <label>Operação / grupo <select id="groupSelect" required><option value="">Selecione um grupo</option></select></label>
+  <label>Período de análise <select id="periodSelect"><option value="7">7 dias</option><option value="30" selected>30 dias</option><option value="90">90 dias</option></select></label>
+  <button type="button" class="primary" id="reloadBtn" disabled>Atualizar ocorrências</button>
+  <button type="button" id="downloadBtn" disabled>Exportar CSV</button>
+</div>
+<div id="message" class="alert" role="status">Selecione um grupo para consultar as ocorrências.</div>
+<div class="section-head">Indicadores de tratativas</div>
+<div class="metric-grid" id="incidentKpis">
+  <div class="kpi"><span>Ocorrências registradas</span><strong class="value">N/D</strong></div>
+  <div class="kpi"><span>Alertas tratados no prazo</span><strong class="value">N/D</strong></div>
+  <div class="kpi"><span>Tempo médio de tratamento</span><strong class="value">N/D</strong></div>
+  <div class="kpi"><span>Reincidência de ocorrências</span><strong class="value">N/D</strong></div>
+</div>
+<div class="cols incidents-cols">
+  <section class="panel">
+    <div class="pt">Nova ocorrência</div>
+    <p class="hint">Registre uma ocorrência manualmente ou vincule um evento real da Geotab. O prazo deve ser definido pela política/SLA do contrato, não é preenchido automaticamente.</p>
+    <form id="createForm" class="case-form">
+      <label>Veículo <select id="vehicleSelect" required><option value="">Escolha a operação primeiro</option></select></label>
+      <div class="form-pair">
+        <label>Natureza <select id="categorySelect" required>
+          <option value="velocidade">Excesso de velocidade</option><option value="rota">Desvio de rota</option><option value="marcha_lenta">Marcha lenta</option><option value="conducao">Condução de risco</option><option value="comunicacao">Falha de comunicação</option><option value="mecanica">Indício mecânico</option><option value="uso_nao_autorizado">Utilização não autorizada</option><option value="outros">Outra</option>
+        </select></label>
+        <label>Criticidade <select id="severitySelect" required><option value="critica">Crítica</option><option value="alta">Alta</option><option value="media" selected>Média</option><option value="baixa">Baixa</option></select></label>
+      </div>
+      <label>Prazo de tratativa <input id="deadlineInput" type="datetime-local" required></label>
+      <label>Responsável / área <input id="ownerInput" maxlength="120" placeholder="Ex.: Manutenção de Frota" required></label>
+      <label>Descrição e contexto <textarea id="summaryInput" maxlength="900" rows="3" required placeholder="Descreva o alerta, a situação e a avaliação necessária."></textarea></label>
+      <label>Evento da Geotab (opcional) <select id="eventSelect"><option value="">Sem vinculação automática</option></select></label>
+      <button type="button" id="loadEventsBtn" disabled>Buscar eventos dos últimos 7 dias</button>
+      <button type="submit" class="primary" id="createBtn" disabled>Registrar ocorrência</button>
+      <div class="hint">Cada abertura e cada mudança de status é registrada separadamente no AddInData. Não há exclusão ou edição silenciosa nesta versão.</div>
+    </form>
+  </section>
+  <section class="panel">
+    <div class="pt">Central de acompanhamento</div>
+    <div class="filters-inline">
+      <label>Status <select id="statusFilter"><option value="">Todos</option><option value="aberta">Aberta</option><option value="em_analise">Em análise</option><option value="encaminhada">Encaminhada</option><option value="em_tratamento">Em tratamento</option><option value="concluida">Concluída</option><option value="justificada">Justificada</option><option value="reaberta">Reaberta</option></select></label>
+      <label>Pesquisar <input id="searchInput" placeholder="Veículo, descrição, responsável"></label>
+    </div>
+    <div class="tablewrap"><table><thead><tr><th>Veículo / assunto</th><th>Estado</th><th>Prazo</th><th></th></tr></thead><tbody id="casesBody"><tr><td colspan="4">Selecione um grupo</td></tr></tbody></table></div>
+    <div class="pt detail-header">Detalhes e histórico</div>
+    <div class="hint" id="caseDetail">Selecione uma ocorrência da lista.</div>
+    <form id="transitionForm" class="case-form" hidden>
+      <label>Próxima etapa <select id="nextStatusSelect" required></select></label>
+      <label>Responsável atualizado <input id="nextOwnerInput" maxlength="120" placeholder="Opcional: responsável / área"></label>
+      <label>Evidências, justificativa ou providências <textarea id="actionNotes" maxlength="900" rows="3" required placeholder="Informe a providência executada e referência de evidência, quando houver."></textarea></label>
+      <button class="primary" id="transitionBtn" type="submit" disabled>Salvar tratativa</button>
+    </form>
+    <ol class="audit-timeline" id="auditTimeline"></ol>
+  </section>
+</div>
+<footer class="project-credit">Desenvolvido por Bruno Henrique Felisbino Gonçalves · MIT · Dados somente da sessão autorizada do MyGeotab.</footer>
+</div>
 <script data-bundle="incidents/model.js">
 /* Regras puras de ocorrências: sem API e sem dados de demonstração. */
 (function(root){
@@ -420,67 +485,5 @@ window.geotab.addin.fleetTelemetryManager=function(){return{
 })();
 
 </script>
-</head>
-<body>
-<div id="app">
-<header class="head">
-  <div class="title"><div class="ico" aria-hidden="true"><img src="https://ftmbrunog2026.vercel.app/icon.svg" alt=""></div><div><strong>Ocorrências e SLA</strong><div class="sub">Fleet Telemetry Manager · Tratativas auditáveis</div></div></div>
-  <span class="pill" id="sessionStatus">Aguardando MyGeotab</span>
-</header>
-<div class="bar">
-  <label>Operação / grupo <select id="groupSelect" required><option value="">Selecione um grupo</option></select></label>
-  <label>Período de análise <select id="periodSelect"><option value="7">7 dias</option><option value="30" selected>30 dias</option><option value="90">90 dias</option></select></label>
-  <button type="button" class="primary" id="reloadBtn" disabled>Atualizar ocorrências</button>
-  <button type="button" id="downloadBtn" disabled>Exportar CSV</button>
-</div>
-<div id="message" class="alert" role="status">Selecione um grupo para consultar as ocorrências.</div>
-<div class="section-head">Indicadores de tratativas</div>
-<div class="metric-grid" id="incidentKpis">
-  <div class="kpi"><span>Ocorrências registradas</span><strong class="value">N/D</strong></div>
-  <div class="kpi"><span>Alertas tratados no prazo</span><strong class="value">N/D</strong></div>
-  <div class="kpi"><span>Tempo médio de tratamento</span><strong class="value">N/D</strong></div>
-  <div class="kpi"><span>Reincidência de ocorrências</span><strong class="value">N/D</strong></div>
-</div>
-<div class="cols incidents-cols">
-  <section class="panel">
-    <div class="pt">Nova ocorrência</div>
-    <p class="hint">Registre uma ocorrência manualmente ou vincule um evento real da Geotab. O prazo deve ser definido pela política/SLA do contrato, não é preenchido automaticamente.</p>
-    <form id="createForm" class="case-form">
-      <label>Veículo <select id="vehicleSelect" required><option value="">Escolha a operação primeiro</option></select></label>
-      <div class="form-pair">
-        <label>Natureza <select id="categorySelect" required>
-          <option value="velocidade">Excesso de velocidade</option><option value="rota">Desvio de rota</option><option value="marcha_lenta">Marcha lenta</option><option value="conducao">Condução de risco</option><option value="comunicacao">Falha de comunicação</option><option value="mecanica">Indício mecânico</option><option value="uso_nao_autorizado">Utilização não autorizada</option><option value="outros">Outra</option>
-        </select></label>
-        <label>Criticidade <select id="severitySelect" required><option value="critica">Crítica</option><option value="alta">Alta</option><option value="media" selected>Média</option><option value="baixa">Baixa</option></select></label>
-      </div>
-      <label>Prazo de tratativa <input id="deadlineInput" type="datetime-local" required></label>
-      <label>Responsável / área <input id="ownerInput" maxlength="120" placeholder="Ex.: Manutenção de Frota" required></label>
-      <label>Descrição e contexto <textarea id="summaryInput" maxlength="900" rows="3" required placeholder="Descreva o alerta, a situação e a avaliação necessária."></textarea></label>
-      <label>Evento da Geotab (opcional) <select id="eventSelect"><option value="">Sem vinculação automática</option></select></label>
-      <button type="button" id="loadEventsBtn" disabled>Buscar eventos dos últimos 7 dias</button>
-      <button type="submit" class="primary" id="createBtn" disabled>Registrar ocorrência</button>
-      <div class="hint">Cada abertura e cada mudança de status é registrada separadamente no AddInData. Não há exclusão ou edição silenciosa nesta versão.</div>
-    </form>
-  </section>
-  <section class="panel">
-    <div class="pt">Central de acompanhamento</div>
-    <div class="filters-inline">
-      <label>Status <select id="statusFilter"><option value="">Todos</option><option value="aberta">Aberta</option><option value="em_analise">Em análise</option><option value="encaminhada">Encaminhada</option><option value="em_tratamento">Em tratamento</option><option value="concluida">Concluída</option><option value="justificada">Justificada</option><option value="reaberta">Reaberta</option></select></label>
-      <label>Pesquisar <input id="searchInput" placeholder="Veículo, descrição, responsável"></label>
-    </div>
-    <div class="tablewrap"><table><thead><tr><th>Veículo / assunto</th><th>Estado</th><th>Prazo</th><th></th></tr></thead><tbody id="casesBody"><tr><td colspan="4">Selecione um grupo</td></tr></tbody></table></div>
-    <div class="pt detail-header">Detalhes e histórico</div>
-    <div class="hint" id="caseDetail">Selecione uma ocorrência da lista.</div>
-    <form id="transitionForm" class="case-form" hidden>
-      <label>Próxima etapa <select id="nextStatusSelect" required></select></label>
-      <label>Responsável atualizado <input id="nextOwnerInput" maxlength="120" placeholder="Opcional: responsável / área"></label>
-      <label>Evidências, justificativa ou providências <textarea id="actionNotes" maxlength="900" rows="3" required placeholder="Informe a providência executada e referência de evidência, quando houver."></textarea></label>
-      <button class="primary" id="transitionBtn" type="submit" disabled>Salvar tratativa</button>
-    </form>
-    <ol class="audit-timeline" id="auditTimeline"></ol>
-  </section>
-</div>
-<footer class="project-credit">Desenvolvido por Bruno Henrique Felisbino Gonçalves · MIT · Dados somente da sessão autorizada do MyGeotab.</footer>
-</div>
 </body>
 </html>
