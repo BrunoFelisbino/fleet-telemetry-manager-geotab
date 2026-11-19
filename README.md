@@ -32,7 +32,17 @@ A referência de indicadores recomenda **três meses de linha de base** antes da
 **Atenção aos campos:** o valor Trip.distance da API Geotab é em quilômetros, não em metros. Trip.stopDuration inclui veículo parado com motor desligado e não substitui Trip.idlingDuration.
 
 
-## Quilometragem da Frota (v0.3.0)
+## Release v0.4.0
+
+Esta versão padroniza os manifestos e os parâmetros de cache de todas as páginas como `0.4.0`.
+Inclui a seleção interativa de grupos operacionais no resultado, gráfico diário de KM, filtros múltiplos e exportação PDF por grupo.
+
+- **Manifesto padrão:** `addin-config.json` mantém o endereço histórico do GitHub Pages. Confirme se o Pages está habilitado antes de instalar.
+- **Manifesto para testes com o site hospedado:** `addin-config.preview.json` aponta para a URL estável `https://fleet-telemetry-manager-geotab.vercel.app/` associada à `main`.
+- Ao atualizar uma instalação existente no MyGeotab, reimporte/atualize o JSON; apenas atualizar o código no GitHub não substitui o manifesto salvo na base.
+- Validar em uma base de homologação antes do uso operacional.
+
+## Quilometragem da Frota (v0.4.0)
 
 Nova página \`/mileage/\`, separada para não sobrecarregar o painel geral com consultas de uma frota grande.
 
@@ -53,7 +63,7 @@ Nova página \`/mileage/\`, separada para não sobrecarregar o painel geral com 
 
 ### Testar agora
 
-**Prévia do visual com dados fictícios**: abra \`https://fleet-telemetry-manager-geot-git-6df792-poze1988-4802s-projects.vercel.app/mileage/?demo=1\`. O modo demonstrativo é explicitamente sinalizado e não consulta a Geotab.
+**Prévia do visual com dados fictícios**: abra \`https://fleet-telemetry-manager-geotab.vercel.app/mileage/?demo=1\`. O modo demonstrativo é explicitamente sinalizado e não consulta a Geotab.
 
 **Teste com dados reais somente em base homologada**: instale o conteúdo de \`addin-config.preview.json\` em **MyGeotab → Sistema / Configurações → Add-Ins** (nomenclatura do menu varia conforme versão/permissões). A versão de teste é hospedada em uma URL separada, aponta para a branch de desenvolvimento e utiliza a sessão e as permissões da base escolhida. Abra o menu "Quilometragem da Frota", filtre e clique em "Consultar".
 
