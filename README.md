@@ -1,5 +1,16 @@
 # Fleet Telemetry Manager (MyGeotab Add-In)
 
+## Navegação MyGeotab v0.4.2
+
+Correção pontual para o caso em que apenas o menu **Fleet Telemetry Manager** aparece após importar a v0.4.1.
+A documentação do menu redesenhado exige `category` para cada página de Add-In. Os seis itens do manifesto agora possuem `category: "AddIns"`, mantendo `path: "ActivityLink/"` para compatibilidade com a navegação anterior.
+Não foram alterados os cálculos, filtros, relatórios, scripts ou estilos das páginas nesta versão; os recursos JS/CSS continuam com cache v0.4.1 porque o conteúdo é idêntico.
+
+**Para atualizar:** substituir o JSON do **mesmo Add-In já instalado** por `addin-config.json` v0.4.2 em MyGeotab → Configurações do Sistema → Add-Ins, salvar e recarregar. Não criar outro registro com o mesmo nome.
+
+**Validação necessária:** verificar se o novo menu exibe Fleet Telemetry Manager, Quilometragem da Frota, Ocorrências e SLA, Fleet Health Score, Fleet Exception 360 e Fleet Trip 360. Os testes de CI verificam a estrutura do JSON, mas não simulam o menu autenticado do MyGeotab.
+
+
 Projeto novo e independente, baseado na estrutura visual e técnica dos projetos **Fleet Health Score**, **Fleet Exception 360** e **Fleet Trip 360** de Bruno Henrique Felisbino Gonçalves. Licença MIT.
 
 **Status: desenvolvimento / não homologado.** Os arquivos estão inicialmente na branch feat/telemetry-manager-mvp. O manifesto aponta para um endereço planejado de GitHub Pages, mas não significa que a hospedagem esteja ativa. Não instalar em produção sem testar e publicar de forma controlada.
