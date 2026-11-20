@@ -149,11 +149,17 @@ function trendBuckets(rows,period,maxBars=18){
   return bars;
 }
 
+// Foco local: usa somente resultados já consultados, sem alterar a seleção principal.
+function summarizeFocusedGroup(devices,results,groups,groupId){
+  if(!groupId)return summarizeFleet(devices,results,groups,[]);
+  const scoped=devicesInMultiScope(devices,groups,[String(groupId)],[]);
+  return summarizeFleet(scoped,results,groups,[String(groupId)]);
+}
 function filterGroupRows(rows,query){
   const normalize=value=>String(value||'').normalize('NFD').replace(/[\u0300-\u036f]/g,'').toLocaleLowerCase('pt-BR').trim();
   const needle=normalize(query);
   return needle?(rows||[]).filter(row=>normalize(row.name).includes(needle)):(rows||[]).slice();
 }
 
-root.FleetMileageModel={MS_DAY,id,isActive,groupMembers,devicesInScope,devicesInMultiScope,range,tripIdentity,boundaryTrip,summarizeVehicle,summarizeFleet,trendBuckets,filterGroupRows};
+root.FleetMileageModel={MS_DAY,id,isActive,groupMembers,devicesInScope,devicesInMultiScope,range,tripIdentity,boundaryTrip,summarizeVehicle,summarizeFleet,trendBuckets,filterGroupRows,summarizeFocusedGroup};
 })(typeof globalThis!=='undefined'?globalThis:this);
