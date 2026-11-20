@@ -17,6 +17,15 @@ Existe uma publicação Vercel **READY** do commit exato original 0.3.0: \`e26c9
 
 **Sem importar arquivos na Geotab e sem alterar as funcionalidades.**
 
+
+## Teste isolado já preparado (somente JSON)
+
+A Vercel recebeu o alias de teste **\`ftmbrunog2026teste.vercel.app\`** ligado ao deployment de recuperação \`dpl_Dg1obT8qN4Pxuojtqnv62LdNznqf\`. Esse deployment contém o código v0.3.0 sem mudanças funcionais, URLs exclusivas e cabeçalhos CORS.
+
+Para testar sem afetar a produção, salve um backup do JSON da instalação e **cole apenas \`addin-config.v030-teste.json\` na configuração do mesmo Add-In**. Não é necessário importar arquivos na aba Files. Esse manifesto usa o host de teste; o \`addin-config.v030-hosted.json\` usa o alias de produção e só deve ser utilizado depois de apontarmos esse alias para o deployment homologado.
+
+A atribuição do alias e o resultado das verificações de build não equivalem ao teste autenticado da Geotab. Valide a seleção de vários grupos, quilometragem, gráfico e PDF no MyGeotab antes de promover.
+
 ## Acompanhamento da publicação
 
 A nova branch produz prévia automática na Vercel. **Não instale o novo manifesto enquanto o alias público não estiver ligado ao novo deployment verificado.** O CI apenas verifica os fontes; não confirma carregamento real no MyGeotab.
