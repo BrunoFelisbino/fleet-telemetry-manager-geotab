@@ -32,7 +32,7 @@ for(let i=0;i<original.length;i++){
     const asset=resolve(dirname(target),item.split('?')[0]);
     assert.ok(existsSync(asset),'Missing relative script: '+target+' -> '+item);
   }
-  assert.ok(page.includes('geotab.addin.fleetTelemetryManager'),'Namespace missing: '+target);
+  assert.ok(page.includes('geotab.addin.fleetTelemetryManager') || scripts.some(s=>/^(\.\/|\.\.\/)/.test(s)&&read(resolve(dirname(target),s.split('?')[0])).includes('geotab.addin.fleetTelemetryManager')),'Namespace missing: '+target);
 }
 assert.ok(v.headers.some(rule=>rule.source==='/(.*)'&&rule.headers.some(h=>h.key==='Access-Control-Allow-Origin'&&h.value==='*')));
 assert.ok(json.items.every(item=>item.svgIcon==='https://ftmbrunog2026.vercel.app/icon.svg'));
