@@ -39,7 +39,7 @@ const devices=[
 ];
 const values=[100,80,30,40];
 const results=new Map(devices.map((d,i)=>[d.id,{
-  name:d.name,plate:'TEST'+i,km:values[i],tripCount:1,invalidCount:0,
+  name:d.name,groups:d.groups.map(group=>group.id),plate:'TEST'+i,km:values[i],tripCount:1,invalidCount:0,
   odoStart:1000,odoEnd:1000+values[i],boundaryTrips:0,
   dailyKm:{'2026-11-20':values[i]}
 }]));
