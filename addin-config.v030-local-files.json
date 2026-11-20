@@ -1,0 +1,69 @@
+{
+  "name": "fleetTelemetryManager",
+  "supportEmail": "poze1988@gmail.com",
+  "version": "0.3.1",
+  "items": [
+    {
+      "url": "restore030dashboard.html",
+      "path": "ActivityLink/",
+      "menuName": {
+        "en": "Fleet Telemetry Manager",
+        "pt-BR": "Fleet Telemetry Manager"
+      },
+      "svgIcon": "icon.svg",
+      "category": "AddIns"
+    },
+    {
+      "url": "restore030mileage.html",
+      "path": "ActivityLink/",
+      "menuName": {
+        "en": "Fleet Mileage",
+        "pt-BR": "Quilometragem da Frota"
+      },
+      "svgIcon": "icon.svg",
+      "category": "AddIns"
+    },
+    {
+      "url": "restore030incidents.html",
+      "path": "ActivityLink/",
+      "menuName": {
+        "en": "Incidents & SLA",
+        "pt-BR": "Ocorrências e SLA"
+      },
+      "svgIcon": "icon.svg",
+      "category": "AddIns"
+    },
+    {
+      "url": "restore030health.html",
+      "path": "ActivityLink/",
+      "menuName": {
+        "en": "Fleet Health Score",
+        "pt-BR": "Fleet Health Score"
+      },
+      "svgIcon": "icon.svg",
+      "category": "AddIns"
+    },
+    {
+      "url": "restore030exceptions.html",
+      "path": "ActivityLink/",
+      "menuName": {
+        "en": "Fleet Exception 360",
+        "pt-BR": "Fleet Exception 360"
+      },
+      "svgIcon": "icon.svg",
+      "category": "AddIns"
+    },
+    {
+      "url": "restore030trips.html",
+      "path": "ActivityLink/",
+      "menuName": {
+        "en": "Fleet Trip 360",
+        "pt-BR": "Fleet Trip 360"
+      },
+      "svgIcon": "icon.svg",
+      "category": "AddIns"
+    }
+  ],
+  "files": {},
+  "isSigned": false
+}

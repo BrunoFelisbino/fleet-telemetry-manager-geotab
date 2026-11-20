@@ -1,0 +1,53 @@
+name: Package original v0.3.0 for MyGeotab Files
+on:
+  push:
+    branches:
+      - fix/v030-geotab-local-files-recovery
+  pull_request:
+    branches:
+      - main
+  workflow_dispatch:
+permissions:
+  contents: read
+jobs:
+  package:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+        with:
+          persist-credentials: false
+      - name: Set up Node
+        uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+      - name: Verify original source
+        run: |
+          node scripts/verify.mjs
+          node scripts/verify-incidents.mjs
+          node scripts/verify-mileage.mjs
+          node scripts/verify-mileage-pdf.mjs
+      - name: Build local MyGeotab Files package
+        run: node scripts/build-v030-geotab-files.mjs
+      - name: Inspect bundled pages and archive
+        run: |
+          set -euo pipefail
+          test "$(find dist-v030-geotab/files -maxdepth 1 -name 'restore030*.html' | wc -l)" -eq 6
+          node --input-type=module -e "import {readFileSync} from 'node:fs'; import assert from 'node:assert/strict'; const m=JSON.parse(readFileSync('dist-v030-geotab/configuration.json')); assert.equal(m.items.length,6); assert.ok(m.items.every(i=>!i.url.includes('-')&&!i.url.includes('?')));"
+          cd dist-v030-geotab
+          zip -q -r fleet-telemetry-v030-files.zip files/
+          zip -q -r fleet-telemetry-v030-completo.zip configuration.json LEIA-ME.txt files/
+          unzip -t fleet-telemetry-v030-files.zip
+          unzip -t fleet-telemetry-v030-completo.zip
+      - name: Upload recovery package
+        uses: actions/upload-artifact@v4
+        with:
+          name: FleetTelemetry-v0.3.0-LocalFiles-Recovery
+          retention-days: 30
+          if-no-files-found: error
+          path: |
+            dist-v030-geotab/configuration.json
+            dist-v030-geotab/LEIA-ME.txt
+            dist-v030-geotab/files/
+            dist-v030-geotab/fleet-telemetry-v030-files.zip
+            dist-v030-geotab/fleet-telemetry-v030-completo.zip
