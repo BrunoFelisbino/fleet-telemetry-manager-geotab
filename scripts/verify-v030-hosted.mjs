@@ -36,4 +36,16 @@ for(let i=0;i<original.length;i++){
 }
 assert.ok(v.headers.some(rule=>rule.source==='/(.*)'&&rule.headers.some(h=>h.key==='Access-Control-Allow-Origin'&&h.value==='*')));
 assert.ok(json.items.every(item=>item.svgIcon==='https://ftmbrunog2026.vercel.app/icon.svg'));
+
+const test=JSON.parse(read('addin-config.v030-teste.json'));
+assert.equal(test.name,json.name);
+assert.equal(test.version,json.version);
+assert.equal(test.items.length,json.items.length);
+for(let i=0;i<test.items.length;i++){
+ const u=new URL(test.items[i].url);
+ assert.equal(u.hostname,'ftmbrunog2026teste.vercel.app');
+ assert.ok(!/[-@#]/.test(test.items[i].url));
+ assert.equal(u.pathname,new URL(json.items[i].url).pathname);
+}
+
 console.log('OK: six unchanged v0.3.0 HTML routes, original assets, clean URLs, Geotab namespace and Vercel CORS.');
