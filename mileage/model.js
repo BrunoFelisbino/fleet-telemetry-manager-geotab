@@ -149,5 +149,11 @@ function trendBuckets(rows,period,maxBars=18){
   return bars;
 }
 
-root.FleetMileageModel={MS_DAY,id,isActive,groupMembers,devicesInScope,devicesInMultiScope,range,tripIdentity,boundaryTrip,summarizeVehicle,summarizeFleet,trendBuckets};
+function filterGroupRows(rows,query){
+  const normalize=value=>String(value||'').normalize('NFD').replace(/[\u0300-\u036f]/g,'').toLocaleLowerCase('pt-BR').trim();
+  const needle=normalize(query);
+  return needle?(rows||[]).filter(row=>normalize(row.name).includes(needle)):(rows||[]).slice();
+}
+
+root.FleetMileageModel={MS_DAY,id,isActive,groupMembers,devicesInScope,devicesInMultiScope,range,tripIdentity,boundaryTrip,summarizeVehicle,summarizeFleet,trendBuckets,filterGroupRows};
 })(typeof globalThis!=='undefined'?globalThis:this);
