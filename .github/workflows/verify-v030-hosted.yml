@@ -1,0 +1,27 @@
+name: Validate hosted MyGeotab v0.3.0 JSON-only recovery
+on:
+  push:
+    branches:
+      - fix/v030-json-only-hosted-restore
+  pull_request:
+    branches:
+      - main
+permissions:
+  contents: read
+jobs:
+  verify:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          persist-credentials: false
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+      - name: Verify original v0.3 code and hosted routes
+        run: |
+          node scripts/verify.mjs
+          node scripts/verify-incidents.mjs
+          node scripts/verify-mileage.mjs
+          node scripts/verify-mileage-pdf.mjs
+          node scripts/verify-v030-hosted.mjs
