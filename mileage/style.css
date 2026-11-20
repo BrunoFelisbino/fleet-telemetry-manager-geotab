@@ -67,12 +67,13 @@
 #app .mileage-dashboard{grid-template-columns:minmax(0,1.7fr) minmax(0,1fr);margin-top:16px;margin-bottom:12px}
 #app .mileage-dashboard .panel{min-height:290px}
 #app .dashboard-meta{color:var(--mut);font-size:11px;white-space:nowrap}
-#app .trend-chart{display:flex;align-items:stretch;justify-content:space-between;gap:3px;height:178px;padding:8px 0 4px;border-bottom:1px solid var(--bd);overflow:hidden}
-#app .trend-chart .trend-col{height:100%;display:flex;flex:1 1 0;min-width:0;flex-direction:column;align-items:center;justify-content:end;gap:4px}
-#app .trend-chart .trend-fill-zone{flex:1;min-height:0;width:100%;display:flex;align-items:end;justify-content:center;position:relative}
-#app .trend-chart .trend-fill{width:min(100%,19px);min-height:1px;max-height:100%;background:#111827;border-radius:4px 4px 0 0;transition:height .2s ease-out}
-#app .trend-chart .trend-col:hover .trend-fill{background:#475569}
-#app .trend-chart .trend-label{font:10px/1 Consolas,monospace;color:var(--mut);white-space:nowrap;text-overflow:clip}
+#app .trend-chart{display:block;height:210px;min-height:180px;padding:0;margin:8px 0 0;border:0;overflow:hidden}
+#app .trend-chart .km-trend-svg{display:block;width:100%;height:100%;overflow:visible}
+#app .trend-chart .km-grid{stroke:#657b98;stroke-opacity:.30;stroke-width:1;stroke-dasharray:3 5;vector-effect:non-scaling-stroke}
+#app .trend-chart .km-axis{fill:#a9bad1;font:11px "Segoe UI",system-ui,sans-serif}
+#app .trend-chart .km-line{stroke:#4bc9ee;stroke-width:3;stroke-linecap:round;stroke-linejoin:round;vector-effect:non-scaling-stroke;filter:drop-shadow(0 0 4px rgba(75,201,238,.25))}
+#app .trend-chart .km-point{fill:#172436;stroke:#75e1ff;stroke-width:2.5;vector-effect:non-scaling-stroke;cursor:help}
+#app .trend-chart .km-point:focus{outline:none;stroke:#fff;stroke-width:4}
 #app .trend-chart .trend-placeholder{height:100%;display:grid;place-items:center;width:100%;color:var(--mut);font-size:12px}
 #app .trend-footer{display:flex;gap:12px;align-items:center;justify-content:space-between;color:var(--mut);font-size:11px;margin-top:12px}
 #app .top-vehicles-chart{display:grid;gap:13px;align-content:start;padding-top:12px}
@@ -88,8 +89,26 @@
 @media(max-width:1080px){#app .mileage-dashboard{grid-template-columns:1fr}}
 @media(max-width:600px){
  #app .mileage-dashboard{margin-top:12px}
- #app .trend-chart{gap:2px;height:156px}
- #app .trend-chart .trend-label{font-size:8px}
+ #app .trend-chart{height:176px;min-height:176px}
+ #app .trend-chart .km-axis{font-size:10px}
  #app .trend-footer{flex-wrap:wrap}
 }
-@media print{#app .mileage-dashboard{grid-template-columns:1fr 1fr}#app .trend-chart .trend-fill,#app .top-vehicles-chart .top-fill{print-color-adjust:exact;-webkit-print-color-adjust:exact}}
+
+/* Filtro local do card de KM por grupo: não dispara consulta à API. */
+#app .group-card-tools{display:flex;align-items:end;gap:10px;flex-wrap:wrap;margin:12px 0 4px}
+#app .group-card-search{display:grid;gap:5px;flex:1 1 220px;min-width:160px;font-size:11px;font-weight:650;color:var(--mut)}
+#app .group-card-search input{display:block;width:100%;height:36px;border:1px solid var(--bd);border-radius:9px;background:var(--card,#fff);color:var(--txt);padding:0 12px;font:12px "Segoe UI",system-ui,sans-serif}
+#app .group-card-search input:focus{outline:2px solid #4bc9ee;outline-offset:1px}
+#app .group-card-search input:disabled{opacity:.55}
+#app #groupCardClear{height:36px;border-radius:9px;padding:0 12px}
+#app #groupCardClear[hidden]{display:none}
+#app .group-card-count{font-size:11px;color:var(--mut);margin:0 0 10px;white-space:nowrap}
+#app .group-card-filter-hint{font-size:11px;line-height:1.45;color:var(--mut);margin:0}
+#app .trend-footer{color:#93a8c3}
+@media(max-width:600px){
+ #app .group-card-tools{align-items:end}
+ #app .group-card-search{flex-basis:100%}
+ #app .group-card-count{margin-bottom:10px}
+}
+
+@media print{#app .mileage-dashboard{grid-template-columns:1fr 1fr}#app .trend-chart .km-line,#app .trend-chart .km-point,#app .top-vehicles-chart .top-fill{print-color-adjust:exact;-webkit-print-color-adjust:exact}}
