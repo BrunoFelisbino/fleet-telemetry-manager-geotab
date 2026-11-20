@@ -1,5 +1,14 @@
 # Fleet Telemetry Manager (MyGeotab Add-In)
 
+## Recuperação da versão funcional 0.3.0 e ajustes visuais
+
+O código de cálculo, consultas, filtros múltiplos e PDF é preservado da versão funcional **0.3.0**. O manifesto de instalação **0.3.1** (`addin-config.json`) aponta para seis páginas HTTPS independentes em `ftmbrunog2026.vercel.app`, com cabeçalhos CORS configurados. Instalação **somente com o JSON** no Add-In existente, sem importar HTML/JS na aba Files. A configuração `addin-config.preview.json` usa `ftmbrunog2026teste.vercel.app` para testes.
+
+Na tela **Quilometragem da Frota**, o gráfico de evolução usa uma linha SVG de alto contraste, com grade, datas, área discreta e valores ao passar o mouse. O card **KM por grupo operacional** tem pesquisa por nome do grupo, insensível a acentos e maiúsculas. A busca filtra apenas o card, sua tabela e o CSV de grupos; não altera consultas à API, KPIs, seleção múltipla, classificação exclusiva dos veículos ou PDF.
+
+Antes de atualizar o MyGeotab com o manifesto hospedado, confirme que o alias de produção aponta para o deployment aprovado. Consulte `RECUPERACAO-V030-APENAS-JSON.md`. Os testes automáticos não substituem a homologação com dados reais.
+
+
 Projeto novo e independente, baseado na estrutura visual e técnica dos projetos **Fleet Health Score**, **Fleet Exception 360** e **Fleet Trip 360** de Bruno Henrique Felisbino Gonçalves. Licença MIT.
 
 **Status: desenvolvimento / não homologado.** Os arquivos estão inicialmente na branch feat/telemetry-manager-mvp. O manifesto aponta para um endereço planejado de GitHub Pages, mas não significa que a hospedagem esteja ativa. Não instalar em produção sem testar e publicar de forma controlada.

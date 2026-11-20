@@ -5,10 +5,10 @@ import {Script} from 'node:vm';
 const read=p=>readFileSync(p,'utf8');
 const manifest=JSON.parse(read('addin-config.json'));
 assert.equal(manifest.name,'fleetTelemetryManager');
-assert.equal(manifest.version,'0.3.0');
+assert.equal(manifest.version,'0.3.1');
 assert.equal(manifest.isSigned,false);
 assert.equal(manifest.items.length,6);
-for(const item of manifest.items){assert.ok(item.url.startsWith('https://'));assert.ok(item.svgIcon.startsWith('https://'));}
+for(const item of manifest.items){assert.ok(item.url.startsWith('https://ftmbrunog2026.vercel.app/'));assert.ok(item.svgIcon.startsWith('https://ftmbrunog2026.vercel.app/'));assert.ok(!/[-@#]/.test(item.url));}
 const paths=['index.html','assets/app.css','assets/app.js','mileage/index.html','mileage/model.js','mileage/filters.js','mileage/pdf.js','mileage/app.js','mileage/style.css','incidents/model.js','incidents/storage.js','incidents/app.js','incidents/style.css','incidents/index.html','print-options.js','health/index.html','health-pdf.js','exceptions/index.html','exceptions/audit.css','exceptions/audit.js','exceptions/pdf.js','trips/index.html','reports/premium.css','icon.svg'];
 for(const p of paths)assert.ok(existsSync(p),'Arquivo ausente: '+p);
 for(const p of paths.filter(x=>x.endsWith('.js')))new Script(read(p),{filename:p});

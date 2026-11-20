@@ -77,6 +77,7 @@ function invalidate(){
   last=null;loading=false;
   $('cancelBtn').hidden=true;$('loadBtn').disabled=false;
   $('groupCsv').disabled=true;$('vehicleCsv').disabled=true;$('pdfBtn').disabled=true;
+  $('groupCardSearch').disabled=true;
   $('progressWrap').hidden=true;
   $('status').textContent=api?'Filtros alterados':'Aguardando MyGeotab';
   message('Filtros alterados. Clique em Consultar para atualizar os resultados.');
@@ -86,30 +87,80 @@ function updateProgress(done,total){
   $('progressText').textContent=done+' / '+total+' veículos processados';
 }
 function resetVisual(){
+  last=null;
+  $('groupCsv').disabled=true;$('vehicleCsv').disabled=true;$('pdfBtn').disabled=true;
   $('kpiBox').querySelectorAll('.value').forEach(e=>e.textContent='N/D');
   $('trendChart').innerHTML='<div class="trend-placeholder">Consulte a frota para visualizar a evolução.</div>';
   $('topVehicles').innerHTML='<div class="trend-placeholder">Consulte a frota para visualizar o ranking.</div>';
   $('trendInfo').textContent='Aguardando dados de viagens.';
   $('trendPeriod').textContent='Sem período consultado';
   $('groupChart').innerHTML='';
+  $('groupCardCount').textContent='Aguardando consulta';
+  $('groupCardSearch').disabled=true;
+  $('groupCardClear').hidden=!$('groupCardSearch').value;
   $('groupRows').innerHTML='<tr><td colspan="3">Sem resultados consolidados</td></tr>';
   $('vehicleRows').innerHTML='<tr><td colspan="5">Sem resultados consolidados</td></tr>';
   $('notes').innerHTML='<li>Os resultados só são exibidos quando a consulta completa terminar.</li>';
 }
 function card(title,value,note){return '<article class="kpi"><span>'+safe(title)+'</span><strong class="value">'+safe(value)+'</strong><small class="context">'+safe(note)+'</small></article>';}
 function primaryLabel(total){return total.vehicles+' veículo(s) · '+total.trips+' viagens no período · '+total.withOdometer+' com odômetro disponível';}
+function renderLineTrend(trend){
+  if(!trend.length)return '<div class="trend-placeholder">Não há dados de viagens neste período.</div>';
+  const width=800,height=215,left=55,right=14,top=14,bottom=34;
+  const plotWidth=width-left-right,plotHeight=height-top-bottom,baseline=top+plotHeight;
+  const max=Math.max(1,...trend.map(row=>Number(row.km)||0));
+  const ceiling=max*1.12;
+  const x=i=>left+(trend.length===1?plotWidth/2:plotWidth*i/(trend.length-1));
+  const y=value=>top+plotHeight*(1-Math.max(0,Number(value)||0)/ceiling);
+  const pt=trend.map((row,i)=>[x(i),y(row.km)]);
+  const n=value=>Number(value).toFixed(1);
+  const axis=value=>value>=1000?fmt(value/1000,value>=10000?0:1)+' mil':fmt(value,0);
+  const line=pt.map(([xx,yy],i)=>(i?'L':'M')+n(xx)+' '+n(yy)).join(' ');
+  const area='M'+n(pt[0][0])+' '+n(baseline)+' '+line.replace(/^M/,' L')+' L'+n(pt[pt.length-1][0])+' '+n(baseline)+' Z';
+  const grid=Array.from({length:5},(_,i)=>{
+    const yy=top+plotHeight*i/4,km=ceiling*(1-i/4);
+    return '<line class="km-grid" x1="'+left+'" y1="'+n(yy)+'" x2="'+(width-right)+'" y2="'+n(yy)+'"/>'+
+      '<text class="km-axis" x="'+(left-8)+'" y="'+n(yy+4)+'" text-anchor="end">'+safe(axis(km))+'</text>';
+  }).join('');
+  const tickStep=Math.max(1,Math.ceil((trend.length-1)/7));
+  const labels=trend.map((row,i)=>{
+    if(i!==0&&i!==trend.length-1&&i%tickStep!==0)return '';
+    const anchor=i===0?'start':i===trend.length-1?'end':'middle';
+    return '<text class="km-axis km-date" x="'+n(x(i))+'" y="'+(height-8)+'" text-anchor="'+anchor+'">'+safe(row.label.split('–')[0])+'</text>';
+  }).join('');
+  const marks=trend.map((row,i)=>{
+    const label=safe(row.label+': '+fmt(row.km,1)+' km');
+    return '<circle class="km-point" cx="'+n(pt[i][0])+'" cy="'+n(pt[i][1])+'" r="4"><title>'+label+'</title></circle>';
+  }).join('');
+  return '<svg class="km-trend-svg" viewBox="0 0 '+width+' '+height+'" preserveAspectRatio="none" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">'+
+    '<defs><linearGradient id="kmTrendShade" x1="0" y1="0" x2="0" y2="1">'+
+    '<stop offset="0%" stop-color="#48c7ec" stop-opacity=".30"/>'+
+    '<stop offset="100%" stop-color="#48c7ec" stop-opacity="0"/></linearGradient></defs>'+
+    grid+'<path class="km-area" d="'+area+'" fill="url(#kmTrendShade)"/>'+
+    '<path class="km-line" d="'+line+'" fill="none"/>'+marks+labels+'</svg>';
+}
+function visibleGroupRows(){
+  return last?Model.filterGroupRows(last.summary.groupsRows,$('groupCardSearch').value):[];
+}
+function renderGroupCard(){
+  const rows=visibleGroupRows();
+  const max=Math.max(1,...rows.map(g=>g.km));
+  $('groupChart').innerHTML=rows.slice(0,10).map(g=>
+    '<div class="bar-item"><span class="bar-name" title="'+safe(g.name)+'">'+safe(g.name)+'</span><div class="bar-rail"><div class="bar-fill" style="width:'+Math.min(100,100*g.km/max)+'%"></div></div><span class="bar-value">'+fmt(g.km,1)+' km</span></div>'
+  ).join('')||'<p class="hint">'+(last?'Nenhum grupo corresponde ao filtro.':'Nenhum grupo identificado.')+'</p>';
+  $('groupRows').innerHTML=rows.length?rows.map(g=>
+    '<tr><td>'+safe(g.name)+'</td><td>'+g.vehicles+'</td><td>'+fmt(g.km,1)+'</td></tr>'
+  ).join(''):'<tr><td colspan="3">Nenhum grupo encontrado</td></tr>';
+  $('groupCardCount').textContent=last?rows.length+' de '+last.summary.groupsRows.length+' grupo(s)':'Aguardando consulta';
+  $('groupCardClear').hidden=!$('groupCardSearch').value;
+  $('groupCsv').disabled=!last||rows.length===0;
+}
+
 function renderVisualDashboard(summary,period){
   const trend=Model.trendBuckets(summary.dailyRows||[],period,16);
   const max=Math.max(0,...trend.map(x=>x.km));
-  const visible=trend.length;
   $('trendPeriod').textContent=period.label;
-  $('trendChart').innerHTML=trend.length?trend.map((bucket,i)=>{
-    const pct=max>0?Math.min(100,100*bucket.km/max):0;
-    const show=visible<=10||i%Math.ceil(visible/9)===0;
-    return '<div class="trend-col" title="'+safe(bucket.label+': '+fmt(bucket.km,1)+' km')+'">'+
-      '<div class="trend-fill-zone"><div class="trend-fill" style="height:'+(bucket.km?Math.max(1.5,pct):0)+'%"></div></div>'+
-      '<span class="trend-label">'+(show?safe(bucket.label.split('–')[0]):'·')+'</span></div>';
-  }).join(''):'<div class="trend-placeholder">Não há dados de viagens neste período.</div>';
+  $('trendChart').innerHTML=renderLineTrend(trend);
   $('trendChart').setAttribute('aria-label','Quilometragem do período: '+trend.map(x=>x.label+' '+fmt(x.km,1)+' km').join('; '));
   $('trendInfo').textContent=trend.length+' intervalos · Maior intervalo: '+fmt(max,1)+' km';
   const top=summary.vehiclesRows.slice(0,5),maxTop=Math.max(1,...top.map(x=>x.km));
@@ -128,13 +179,8 @@ function render(summary,period,selected){
     card('Média por veículo',summary.average==null?'N/D':fmt(summary.average,1)+' km','KM total dividido por veículos selecionados'),
     card('Veículos sem viagem',String(summary.stopped),'Sem viagens retornadas no período')
   ].join('');
-  const max=Math.max(1,...summary.groupsRows.map(g=>g.km));
-  $('groupChart').innerHTML=summary.groupsRows.slice(0,10).map(g=>
-    '<div class="bar-item"><span class="bar-name" title="'+safe(g.name)+'">'+safe(g.name)+'</span><div class="bar-rail"><div class="bar-fill" style="width:'+Math.min(100,100*g.km/max)+'%"></div></div><span class="bar-value">'+fmt(g.km,1)+' km</span></div>'
-  ).join('')||'<p class="hint">Nenhum grupo identificado.</p>';
-  $('groupRows').innerHTML=summary.groupsRows.length?summary.groupsRows.map(g=>
-    '<tr><td>'+safe(g.name)+'</td><td>'+g.vehicles+'</td><td>'+fmt(g.km,1)+'</td></tr>'
-  ).join(''):'<tr><td colspan="3">Sem grupo para exibir</td></tr>';
+  $('groupCardSearch').disabled=false;
+  renderGroupCard();
   $('vehicleRows').innerHTML=summary.vehiclesRows.length?summary.vehiclesRows.map(v=>
     '<tr><td><b>'+safe(v.name)+'</b>'+(v.plate?'<span class="data-note">'+safe(v.plate)+'</span>':'')+'</td><td>'+v.tripCount+'</td><td><b>'+fmt(v.km,1)+'</b></td><td>'+(v.odoStart==null?'N/D':fmt(v.odoStart,1))+'</td><td>'+(v.odoEnd==null?'N/D':fmt(v.odoEnd,1))+'</td></tr>'
   ).join(''):'<tr><td colspan="5">Sem veículos elegíveis</td></tr>';
@@ -148,7 +194,7 @@ function render(summary,period,selected){
   if(summary.withOdometer<summary.vehicles)notes.push(summary.vehicles-summary.withOdometer+' veículo(s) sem odômetro confiável na seleção: exibidos como N/D.');
   $('notes').innerHTML=notes.map(n=>'<li>'+safe(n)+'</li>').join('');
   $('scope').textContent=period.label+' · '+dt(period.from)+' até '+dt(period.to)+' · '+primaryLabel(summary);
-  $('groupCsv').disabled=false;$('vehicleCsv').disabled=false;$('pdfBtn').disabled=false;
+  $('groupCsv').disabled=visibleGroupRows().length===0;$('vehicleCsv').disabled=false;$('pdfBtn').disabled=false;
   message('Consulta completa. '+primaryLabel(summary)+'.','ok');
 }
 function bootDemo(){
@@ -244,7 +290,7 @@ function csvValue(v){let s=String(v==null?'':v);if(/^[=+\-@\t\r]/.test(s))s="'"+
 function exportCsv(which){
   if(!last)return;
   const rows=which==='groups'
-    ? [['Grupo','Veículos','Viagens','KM rodado'],...last.summary.groupsRows.map(x=>[x.name,x.vehicles,x.trips,x.km.toFixed(2)])]
+    ? [['Grupo','Veículos','Viagens','KM rodado'],...visibleGroupRows().map(x=>[x.name,x.vehicles,x.trips,x.km.toFixed(2)])]
     : [['Veículo','Placa','Viagens','KM rodado','Odômetro inicial estimado km','Odômetro final km','Origem'],...last.summary.vehiclesRows.map(x=>[x.name,x.plate,x.tripCount,x.km.toFixed(2),x.odoStart==null?'N/D':x.odoStart.toFixed(2),x.odoEnd==null?'N/D':x.odoEnd.toFixed(2),x.odoOrigin])];
   const content='\ufeff'+rows.map(row=>row.map(csvValue).join(';')).join('\r\n');
   const url=URL.createObjectURL(new Blob([content],{type:'text/csv;charset=utf-8'})),a=document.createElement('a');
@@ -268,6 +314,8 @@ function start(client){
   $('periodFilter').addEventListener('change',()=>{toggleDates();invalidate();});
   $('fromInput').addEventListener('change',invalidate);
   $('toInput').addEventListener('change',invalidate);
+  $('groupCardSearch').addEventListener('input',renderGroupCard);
+  $('groupCardClear').addEventListener('click',()=>{$('groupCardSearch').value='';renderGroupCard();$('groupCardSearch').focus();});
   $('groupCsv').addEventListener('click',()=>exportCsv('groups'));
   $('vehicleCsv').addEventListener('click',()=>exportCsv('vehicles'));
   $('pdfBtn').addEventListener('click',downloadPdf);

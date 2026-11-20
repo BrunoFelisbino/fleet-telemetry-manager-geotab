@@ -6,11 +6,11 @@
 <meta http-equiv="Cache-Control" content="no-cache,no-store,must-revalidate">
 <title>Quilometragem | Fleet Telemetry Manager</title>
 <link rel="stylesheet" href="../assets/app.css?v=0.3.0">
-<link rel="stylesheet" href="./style.css?v=0.3.2">
-<script src="./model.js?v=0.3.1"></script>
+<link rel="stylesheet" href="./style.css?v=0.3.4">
+<script src="./model.js?v=0.3.4"></script>
 <script src="./filters.js?v=0.3.1"></script>
 <script src="./pdf.js?v=0.3.2"></script>
-<script defer src="./app.js?v=0.3.2"></script>
+<script defer src="./app.js?v=0.3.4"></script>
 </head>
 <body>
 <main id="app" class="mileage-shell">
@@ -85,6 +85,14 @@
   <div class="panel">
     <div class="panel-heading"><div class="pt">KM por grupo operacional</div><button type="button" id="groupCsv" disabled>CSV de grupos</button></div>
     <p class="hint">Cada veículo entra uma única vez. Veículos associados a vários grupos são mostrados em “Múltiplos grupos” para não duplicar a quilometragem.</p>
+    <div class="group-card-tools">
+      <label class="group-card-search" for="groupCardSearch">Filtrar grupos
+        <input id="groupCardSearch" type="search" placeholder="Buscar grupo operacional..." autocomplete="off" aria-describedby="groupCardFilterHint" disabled>
+      </label>
+      <button type="button" id="groupCardClear" hidden>Limpar</button>
+      <span class="group-card-count" id="groupCardCount" role="status" aria-live="polite">Aguardando consulta</span>
+    </div>
+    <p class="group-card-filter-hint" id="groupCardFilterHint">Filtro local da lista e do CSV de grupos. Não altera os KPIs nem o PDF.</p>
     <div id="groupChart" class="bar-chart"></div>
     <div class="table-scroll"><table><thead><tr><th>Grupo</th><th>Veículos</th><th>KM total</th></tr></thead><tbody id="groupRows"><tr><td colspan="3">Aguardando consulta</td></tr></tbody></table></div>
   </div>
