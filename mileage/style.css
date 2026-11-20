@@ -124,3 +124,14 @@
 }
 
 @media print{#app .mileage-dashboard{grid-template-columns:1fr 1fr}#app .trend-chart .km-line,#app .trend-chart .km-point,#app .top-vehicles-chart .top-fill{print-color-adjust:exact;-webkit-print-color-adjust:exact}}
+
+
+/* Drilldown direto no resultado: a barra e a linha de grupo são superfícies clicáveis. */
+#app .bar-chart .group-bar-action{width:100%;font:inherit;text-align:left;padding:6px 7px;border:1px solid transparent;border-radius:9px;background:transparent;color:inherit;cursor:pointer}
+#app .bar-chart .group-bar-action:hover,#app .bar-chart .group-bar-action:focus-visible{background:rgba(75,201,238,.10);border-color:rgba(75,201,238,.38)}
+#app .bar-chart .group-bar-action.is-active{background:rgba(75,201,238,.15);border-color:rgba(75,201,238,.52)}
+#app .bar-chart .group-bar-action:focus-visible,#app .group-row-trigger:focus-visible{outline:2px solid #4bc9ee;outline-offset:2px}
+#app .group-result-row{cursor:pointer;transition:background .15s}
+#app .group-result-row:hover,#app .group-result-row:focus-within{background:rgba(75,201,238,.09)}
+#app .group-result-row.is-active{background:rgba(75,201,238,.13)}
+#app .group-row-trigger{display:inline-block;width:100%;border:0;background:transparent;padding:4px 0;text-align:left;font:inherit;font-weight:600;color:inherit;cursor:pointer;white-space:normal}
