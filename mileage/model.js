@@ -155,11 +155,24 @@ function summarizeFocusedGroup(devices,results,groups,groupId){
   const scoped=devicesInMultiScope(devices,groups,[String(groupId)],[]);
   return summarizeFleet(scoped,results,groups,[String(groupId)]);
 }
+// Drilldown de grupos agregados ("Múltiplos grupos" ou "Sem grupo").
+function summarizeFocusedBucket(devices,data,groups,selectedGroupIds,bucketId){
+  const key=String(bucketId||'');
+  if(!key)return summarizeFleet(devices,data,groups,selectedGroupIds||[]);
+  if(!['multiple','none','unassigned-selected'].includes(key)){
+    return summarizeFocusedGroup(devices,data,groups,key);
+  }
+  const scoped=(devices||[]).filter(device=>{
+    const normalized={...device,groups:(device.groups||[]).map(id)};
+    return primaryGroup(normalized,groups,selectedGroupIds||[]).id===key;
+  });
+  return summarizeFleet(scoped,data,groups,selectedGroupIds||[]);
+}
 function filterGroupRows(rows,query){
   const normalize=value=>String(value||'').normalize('NFD').replace(/[\u0300-\u036f]/g,'').toLocaleLowerCase('pt-BR').trim();
   const needle=normalize(query);
   return needle?(rows||[]).filter(row=>normalize(row.name).includes(needle)):(rows||[]).slice();
 }
 
-root.FleetMileageModel={MS_DAY,id,isActive,groupMembers,devicesInScope,devicesInMultiScope,range,tripIdentity,boundaryTrip,summarizeVehicle,summarizeFleet,trendBuckets,filterGroupRows,summarizeFocusedGroup};
+root.FleetMileageModel={MS_DAY,id,isActive,groupMembers,devicesInScope,devicesInMultiScope,range,tripIdentity,boundaryTrip,summarizeVehicle,summarizeFleet,trendBuckets,filterGroupRows,summarizeFocusedGroup,summarizeFocusedBucket};
 })(typeof globalThis!=='undefined'?globalThis:this);

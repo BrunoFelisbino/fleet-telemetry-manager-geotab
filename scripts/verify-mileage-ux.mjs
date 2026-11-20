@@ -13,11 +13,17 @@ for(const id of ['groupCardChoices','groupCardCount','groupCardKm','groupCardVeh
   assert.ok(markup.includes('id="'+id+'"'),'Missing UI '+id);
 }
 assert.ok(!markup.includes('id="groupCardSearch"'),'No text input: second filter must be clickable.');
-assert.ok(markup.includes('./app.js?v=0.3.5')&&markup.includes('./style.css?v=0.3.5')&&markup.includes('./model.js?v=0.3.5'));
+assert.ok(markup.includes('./app.js?v=0.3.6')&&markup.includes('./style.css?v=0.3.6')&&markup.includes('./model.js?v=0.3.6'));
 assert.ok(style.includes('.km-line')&&style.includes('.trend-point-tooltip')&&style.includes('.group-focus-chip'));
+assert.ok(style.includes('.group-bar-action')&&style.includes('.group-result-row')&&style.includes('.group-row-trigger'));
 assert.ok(appSource.includes("visibleGroupRows().map(x=>[x.name,x.vehicles,x.trips,x.km.toFixed(2)])"),'CSV must use current focus only.');
 assert.ok(appSource.includes("window.FleetMileagePdf.save({...last"),'PDF generation must remain intact.');
-assert.ok(appSource.includes("focusedGroupId=button.dataset.focusGroup||null;"),'Click must focus one group without changing primary selection.');
+assert.ok(appSource.includes("focusedGroupId=button.dataset.focusGroup||null;"),'Chips must still focus one group without changing primary selection.');
+assert.ok(appSource.includes("for(const containerId of ['groupChart','groupRows'])"),'Both group result areas must accept clicks.');
+assert.ok(appSource.includes("focusGroupFromCard(target.dataset.focusGroup);"),'Group row/chart clicks must focus the selected group.');
+assert.ok(appSource.includes("focusedGroupId=focusedGroupId===id?null:id;"),'Clicking a focused group again should reset the secondary focus.');
+assert.ok(appSource.includes('class="bar-item group-bar-action')&&appSource.includes('class="group-result-row'),'Both group chart and table must be clickable.');
+assert.ok(appSource.includes('class="group-row-trigger'),'Group table must include a keyboard-accessible button.');
 assert.ok(!appSource.includes("filters.groups().splice"),'Secondary filter must never mutate the main selection.');
 assert.ok(appSource.includes('render(summary,period,ds,full);'),'Real API results must be retained for secondary focus.');
 assert.ok(appSource.includes('period,ds,map);'),'Demo results must support the secondary focus.');
@@ -61,6 +67,14 @@ assert.equal(focusSemad.vehicles,1);
 assert.equal(all.km,250,'Clicking a focus does not mutate original summary');
 assert.equal(Model.summarizeFocusedGroup(devices,results,groups,null).km,250);
 assert.equal(Model.summarizeFocusedGroup(devices,results,groups,'UNKNOWN').km,0);
+assert.equal(Model.summarizeFocusedBucket(devices,results,groups,['COMURG003','COMURG001','SEMAD'],'COMURG003').km,130,'Click on 003 must focus its vehicles without new trips.');
+assert.equal(Model.summarizeFocusedBucket(devices,results,groups,['COMURG003','COMURG001','SEMAD'],'COMURG001').km,110,'Click on 001 must focus its vehicles.');
+const multiBucket=Model.summarizeFocusedBucket(devices,results,groups,['COMURG003','COMURG001','SEMAD'],'multiple');
+assert.equal(multiBucket.km,30,'Click on the multiple-groups row must show shared vehicles once.');
+assert.equal(multiBucket.vehicles,1);
+assert.equal(multiBucket.groupsRows[0].name,'Múltiplos grupos selecionados');
+assert.equal(Model.summarizeFocusedBucket(devices,results,groups,['COMURG003','COMURG001','SEMAD'],null).km,250,'Reset returns the original global result.');
+assert.equal(all.km,250,'Drilldown must not mutate original global totals.');
 
 const safe=value=>String(value).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;').replace(/'/g,'&#39;');
 const fmt=(n,d=1)=>Number(n).toLocaleString('pt-BR',{minimumFractionDigits:d,maximumFractionDigits:d});

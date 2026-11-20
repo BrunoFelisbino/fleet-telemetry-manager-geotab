@@ -144,7 +144,7 @@ function renderLineTrend(trend){
 function focusedGroupSummary(){
   if(!last)return null;
   if(!focusedGroupId)return last.summary;
-  return Model.summarizeFocusedGroup(last.selected,last.vehicleResults,groups,focusedGroupId);
+  return Model.summarizeFocusedBucket(last.selected,last.vehicleResults,groups,last.selectedGroupIds,focusedGroupId);
 }
 function visibleGroupRows(){
   const summary=focusedGroupSummary();
@@ -171,15 +171,24 @@ function renderGroupCard(){
   renderGroupChoices();
   const max=Math.max(1,...rows.map(g=>g.km));
   $('groupChart').innerHTML=rows.slice(0,10).map(g=>
-    '<div class="bar-item"><span class="bar-name" title="'+safe(g.name)+'">'+safe(g.name)+'</span><div class="bar-rail"><div class="bar-fill" style="width:'+Math.min(100,100*g.km/max)+'%"></div></div><span class="bar-value">'+fmt(g.km,1)+' km</span></div>'
+    '<button type="button" class="bar-item group-bar-action'+(String(g.groupId)===focusedGroupId?' is-active':'')+'" data-focus-group="'+safe(g.groupId)+'" aria-pressed="'+String(String(g.groupId)===focusedGroupId)+'" title="Focar em '+safe(g.name)+'">'+
+      '<span class="bar-name">'+safe(g.name)+'</span><span class="bar-rail"><span class="bar-fill" style="width:'+Math.min(100,100*g.km/max)+'%"></span></span><span class="bar-value">'+fmt(g.km,1)+' km</span></button>'
   ).join('')||'<p class="hint">'+(last?'Nenhum veículo pertence à frota focada.':'Nenhum grupo identificado.')+'</p>';
   $('groupRows').innerHTML=rows.length?rows.map(g=>
-    '<tr><td>'+safe(g.name)+'</td><td>'+g.vehicles+'</td><td>'+fmt(g.km,1)+'</td></tr>'
+    '<tr class="group-result-row'+(String(g.groupId)===focusedGroupId?' is-active':'')+'" data-focus-group="'+safe(g.groupId)+'" title="Clique para focar em '+safe(g.name)+'"><td><button type="button" class="group-row-trigger" data-focus-group="'+safe(g.groupId)+'" aria-pressed="'+String(String(g.groupId)===focusedGroupId)+'">'+safe(g.name)+'</button></td><td>'+g.vehicles+'</td><td>'+fmt(g.km,1)+'</td></tr>'
   ).join(''):'<tr><td colspan="3">Sem veículos neste foco</td></tr>';
   $('groupCardCount').textContent=last?(focusedGroupId?'1 de '+last.selectedGroupIds.length+' frotas em foco':'Visão de '+(last.selectedGroupIds.length||'todas as')+' frota(s)'):'Aguardando consulta';
   $('groupCardKm').textContent=summary?fmt(summary.km,1)+' km':'N/D';
   $('groupCardVehicles').textContent=summary?String(summary.vehicles):'N/D';
   $('groupCsv').disabled=!last||rows.length===0;
+}
+function focusGroupFromCard(groupId){
+  if(!last)return;
+  const id=String(groupId||'');
+  if(!id)return;
+  // Clicking an active row twice clears only the secondary focus.
+  focusedGroupId=focusedGroupId===id?null:id;
+  renderGroupCard();
 }
 function showTrendPoint(index){
   if(!last||!last.trend[index])return;
@@ -213,7 +222,7 @@ function renderVisualDashboard(summary,period){
 function render(summary,period,selected,vehicleResults){
   const trend=renderVisualDashboard(summary,period);
   const selectedGroupIds=filters.groups().map(String);
-  if(focusedGroupId&&!selectedGroupIds.includes(focusedGroupId))focusedGroupId=null;
+  if(focusedGroupId&&selectedGroupIds.length&&!selectedGroupIds.includes(focusedGroupId)&&!['multiple','unassigned-selected'].includes(focusedGroupId))focusedGroupId=null;
   last={summary,period,selected,trend,vehicleResults,selectedGroupIds};
   $('kpiBox').innerHTML=[
     card('KM total rodado',fmt(summary.km,1)+' km','Soma das viagens de todos os veículos elegíveis'),
@@ -355,6 +364,13 @@ function start(client){
   $('periodFilter').addEventListener('change',()=>{toggleDates();invalidate();});
   $('fromInput').addEventListener('change',invalidate);
   $('toInput').addEventListener('change',invalidate);
+  for(const containerId of ['groupChart','groupRows']){
+    $(containerId).addEventListener('click',event=>{
+      const target=event.target.closest('[data-focus-group]');
+      if(!target||!$(containerId).contains(target))return;
+      focusGroupFromCard(target.dataset.focusGroup);
+    });
+  }
   $('groupCardChoices').addEventListener('click',event=>{
     const button=event.target.closest('button[data-focus-group]');
     if(!button||!last)return;
