@@ -34,7 +34,7 @@ function devicesInMultiScope(devices,groups,selectedGroups,selectedVehicles){
 function selectedGroupForVehicle(vehicle,groups,selectedGroups){
   const selected=[...new Set((selectedGroups||[]).map(id).filter(Boolean))];
   if(!selected.length)return null;
-  const attached=new Set(vehicle.groups||[]);
+  const attached=new Set((vehicle.groups||[]).map(id));
   const matching=selected.filter(g=>[...groupMembers(g,groups)].some(member=>attached.has(member)));
   if(matching.length>1)return {id:'multiple',name:'Múltiplos grupos selecionados'};
   if(matching.length===1){
