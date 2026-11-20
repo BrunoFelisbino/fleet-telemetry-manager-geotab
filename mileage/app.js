@@ -4,7 +4,7 @@
 const Model=window.FleetMileageModel;
 const $=id=>document.getElementById(id);
 const LIMIT=4000,MIN_WINDOW=60000;
-let api=null,devices=[],groups=[],loaded=false,loading=false,token=0,last=null,rateSlot=0,bootstrapPromise=null,demoMode=false,filters=null;
+let api=null,devices=[],groups=[],loaded=false,loading=false,token=0,last=null,rateSlot=0,bootstrapPromise=null,demoMode=false,filters=null,focusedGroupId=null;
 const safe=v=>String(v==null?'':v).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;').replace(/'/g,'&#39;');
 const fmt=(n,d=1)=>Number(n).toLocaleString('pt-BR',{minimumFractionDigits:d,maximumFractionDigits:d});
 const dt=iso=>{const d=new Date(iso);return Number.isFinite(d.getTime())?d.toLocaleString('pt-BR'):'N/D';};
@@ -77,7 +77,6 @@ function invalidate(){
   last=null;loading=false;
   $('cancelBtn').hidden=true;$('loadBtn').disabled=false;
   $('groupCsv').disabled=true;$('vehicleCsv').disabled=true;$('pdfBtn').disabled=true;
-  $('groupCardSearch').disabled=true;
   $('progressWrap').hidden=true;
   $('status').textContent=api?'Filtros alterados':'Aguardando MyGeotab';
   message('Filtros alterados. Clique em Consultar para atualizar os resultados.');
@@ -96,8 +95,9 @@ function resetVisual(){
   $('trendPeriod').textContent='Sem período consultado';
   $('groupChart').innerHTML='';
   $('groupCardCount').textContent='Aguardando consulta';
-  $('groupCardSearch').disabled=true;
-  $('groupCardClear').hidden=!$('groupCardSearch').value;
+  $('groupCardChoices').innerHTML='<span class="group-card-filter-hint">Consulte as frotas para escolher um foco.</span>';
+  $('groupCardKm').textContent='N/D';
+  $('groupCardVehicles').textContent='N/D';
   $('groupRows').innerHTML='<tr><td colspan="3">Sem resultados consolidados</td></tr>';
   $('vehicleRows').innerHTML='<tr><td colspan="5">Sem resultados consolidados</td></tr>';
   $('notes').innerHTML='<li>Os resultados só são exibidos quando a consulta completa terminar.</li>';
@@ -130,31 +130,71 @@ function renderLineTrend(trend){
   }).join('');
   const marks=trend.map((row,i)=>{
     const label=safe(row.label+': '+fmt(row.km,1)+' km');
-    return '<circle class="km-point" cx="'+n(pt[i][0])+'" cy="'+n(pt[i][1])+'" r="4"><title>'+label+'</title></circle>';
+    return '<circle class="km-hit" data-trend-index="'+i+'" cx="'+n(pt[i][0])+'" cy="'+n(pt[i][1])+'" r="15" role="button" tabindex="0" aria-label="Mostrar '+label+'"><title>'+label+'</title></circle>'+
+      '<circle class="km-point" cx="'+n(pt[i][0])+'" cy="'+n(pt[i][1])+'" r="4" pointer-events="none"/>';
   }).join('');
-  return '<svg class="km-trend-svg" viewBox="0 0 '+width+' '+height+'" preserveAspectRatio="none" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">'+
+  return '<svg class="km-trend-svg" viewBox="0 0 '+width+' '+height+'" preserveAspectRatio="none" xmlns="http://www.w3.org/2000/svg" role="group" aria-label="Evolução da quilometragem">'+
     '<defs><linearGradient id="kmTrendShade" x1="0" y1="0" x2="0" y2="1">'+
     '<stop offset="0%" stop-color="#48c7ec" stop-opacity=".30"/>'+
     '<stop offset="100%" stop-color="#48c7ec" stop-opacity="0"/></linearGradient></defs>'+
     grid+'<path class="km-area" d="'+area+'" fill="url(#kmTrendShade)"/>'+
-    '<path class="km-line" d="'+line+'" fill="none"/>'+marks+labels+'</svg>';
+    '<path class="km-line" d="'+line+'" fill="none"/>'+marks+labels+'</svg>'+
+    '<div id="trendPointTooltip" class="trend-point-tooltip" role="status" aria-live="polite" hidden></div>';
+}
+function focusedGroupSummary(){
+  if(!last)return null;
+  if(!focusedGroupId)return last.summary;
+  return Model.summarizeFocusedGroup(last.selected,last.vehicleResults,groups,focusedGroupId);
 }
 function visibleGroupRows(){
-  return last?Model.filterGroupRows(last.summary.groupsRows,$('groupCardSearch').value):[];
+  const summary=focusedGroupSummary();
+  return summary?summary.groupsRows:[];
+}
+function renderGroupChoices(){
+  const groupIds=last?last.selectedGroupIds:[];
+  if(!groupIds.length){
+    $('groupCardChoices').innerHTML='<span class="group-card-filter-hint">Para usar o segundo filtro, escolha duas ou mais frotas no filtro principal e consulte.</span>';
+    return;
+  }
+  const button=(id,label)=>{
+    const active=focusedGroupId===id;
+    return '<button type="button" class="group-focus-chip'+(active?' is-active':'')+'" data-focus-group="'+safe(id||'')+'" aria-pressed="'+String(active)+'">'+safe(label)+'</button>';
+  };
+  $('groupCardChoices').innerHTML=button(null,'Todas as '+groupIds.length+' frotas')+
+    groupIds.map(id=>{
+      const group=groups.find(g=>String(g.id)===String(id));
+      return button(String(id),group?group.name:id);
+    }).join('');
 }
 function renderGroupCard(){
-  const rows=visibleGroupRows();
+  const summary=focusedGroupSummary(),rows=visibleGroupRows();
+  renderGroupChoices();
   const max=Math.max(1,...rows.map(g=>g.km));
   $('groupChart').innerHTML=rows.slice(0,10).map(g=>
     '<div class="bar-item"><span class="bar-name" title="'+safe(g.name)+'">'+safe(g.name)+'</span><div class="bar-rail"><div class="bar-fill" style="width:'+Math.min(100,100*g.km/max)+'%"></div></div><span class="bar-value">'+fmt(g.km,1)+' km</span></div>'
-  ).join('')||'<p class="hint">'+(last?'Nenhum grupo corresponde ao filtro.':'Nenhum grupo identificado.')+'</p>';
+  ).join('')||'<p class="hint">'+(last?'Nenhum veículo pertence à frota focada.':'Nenhum grupo identificado.')+'</p>';
   $('groupRows').innerHTML=rows.length?rows.map(g=>
     '<tr><td>'+safe(g.name)+'</td><td>'+g.vehicles+'</td><td>'+fmt(g.km,1)+'</td></tr>'
-  ).join(''):'<tr><td colspan="3">Nenhum grupo encontrado</td></tr>';
-  $('groupCardCount').textContent=last?rows.length+' de '+last.summary.groupsRows.length+' grupo(s)':'Aguardando consulta';
-  $('groupCardClear').hidden=!$('groupCardSearch').value;
+  ).join(''):'<tr><td colspan="3">Sem veículos neste foco</td></tr>';
+  $('groupCardCount').textContent=last?(focusedGroupId?'1 de '+last.selectedGroupIds.length+' frotas em foco':'Visão de '+(last.selectedGroupIds.length||'todas as')+' frota(s)'):'Aguardando consulta';
+  $('groupCardKm').textContent=summary?fmt(summary.km,1)+' km':'N/D';
+  $('groupCardVehicles').textContent=summary?String(summary.vehicles):'N/D';
   $('groupCsv').disabled=!last||rows.length===0;
 }
+function showTrendPoint(index){
+  if(!last||!last.trend[index])return;
+  const container=$('trendChart'),point=container.querySelector('.km-hit[data-trend-index="'+index+'"]'),tip=$('trendPointTooltip');
+  if(!point||!tip)return;
+  const entry=last.trend[index];
+  tip.innerHTML='<span>'+safe(entry.label)+'</span><strong>'+fmt(entry.km,1)+' km</strong>';
+  tip.hidden=false;
+  container.querySelectorAll('.km-point').forEach((dot,i)=>dot.classList.toggle('is-active',i===index));
+  const parent=container.getBoundingClientRect(),hit=point.getBoundingClientRect();
+  const x=hit.left+hit.width/2-parent.left;
+  tip.style.left=Math.max(4,Math.min(parent.width-tip.offsetWidth-4,x-tip.offsetWidth/2))+'px';
+  tip.style.top=Math.max(4,hit.top-parent.top-tip.offsetHeight-12)+'px';
+}
+
 
 function renderVisualDashboard(summary,period){
   const trend=Model.trendBuckets(summary.dailyRows||[],period,16);
@@ -170,16 +210,17 @@ function renderVisualDashboard(summary,period){
   ).join(''):'<div class="trend-placeholder">Nenhum veículo elegível.</div>';
   return trend;
 }
-function render(summary,period,selected){
+function render(summary,period,selected,vehicleResults){
   const trend=renderVisualDashboard(summary,period);
-  last={summary,period,selected,trend};
+  const selectedGroupIds=filters.groups().map(String);
+  if(focusedGroupId&&!selectedGroupIds.includes(focusedGroupId))focusedGroupId=null;
+  last={summary,period,selected,trend,vehicleResults,selectedGroupIds};
   $('kpiBox').innerHTML=[
     card('KM total rodado',fmt(summary.km,1)+' km','Soma das viagens de todos os veículos elegíveis'),
     card('Frota selecionada',String(summary.vehicles),'Todos os veículos do filtro, com e sem viagem'),
     card('Média por veículo',summary.average==null?'N/D':fmt(summary.average,1)+' km','KM total dividido por veículos selecionados'),
     card('Veículos sem viagem',String(summary.stopped),'Sem viagens retornadas no período')
   ].join('');
-  $('groupCardSearch').disabled=false;
   renderGroupCard();
   $('vehicleRows').innerHTML=summary.vehiclesRows.length?summary.vehiclesRows.map(v=>
     '<tr><td><b>'+safe(v.name)+'</b>'+(v.plate?'<span class="data-note">'+safe(v.plate)+'</span>':'')+'</td><td>'+v.tripCount+'</td><td><b>'+fmt(v.km,1)+'</b></td><td>'+(v.odoStart==null?'N/D':fmt(v.odoStart,1))+'</td><td>'+(v.odoEnd==null?'N/D':fmt(v.odoEnd,1))+'</td></tr>'
@@ -240,7 +281,7 @@ function renderDemo(){
       const selected=fakeTrips(d).filter(t=>new Date(t.start)<=period.to&&new Date(t.stop)>=period.from);
       map.set(String(d.id),Model.summarizeVehicle(d,selected,period));
     }
-    render(Model.summarizeFleet(ds,map,groups,filters.groups()),period,ds);
+    render(Model.summarizeFleet(ds,map,groups,filters.groups()),period,ds,map);
     $('status').textContent='PRÉVIA FICTÍCIA';
     message('PRÉVIA VISUAL COM DADOS FICTÍCIOS: filtros, totais e ranking calculados sobre veículos de exemplo.','err');
     $('scope').textContent='SIMULAÇÃO · '+period.label+' · '+ds.length+' veículos fictícios. Não representa cliente ou base Geotab.';
@@ -275,7 +316,7 @@ async function load(){
     await Promise.all(workers);checkToken(req);
     if(done!==ds.length)throw Error('Consulta incompleta: nem todos os veículos foram processados.');
     const summary=Model.summarizeFleet(ds,full,groups,filters.groups());
-    render(summary,period,ds);
+    render(summary,period,ds,full);
     $('status').textContent='Consulta concluída';
   }catch(e){
     if(req!==token)return;
@@ -314,8 +355,25 @@ function start(client){
   $('periodFilter').addEventListener('change',()=>{toggleDates();invalidate();});
   $('fromInput').addEventListener('change',invalidate);
   $('toInput').addEventListener('change',invalidate);
-  $('groupCardSearch').addEventListener('input',renderGroupCard);
-  $('groupCardClear').addEventListener('click',()=>{$('groupCardSearch').value='';renderGroupCard();$('groupCardSearch').focus();});
+  $('groupCardChoices').addEventListener('click',event=>{
+    const button=event.target.closest('button[data-focus-group]');
+    if(!button||!last)return;
+    focusedGroupId=button.dataset.focusGroup||null;
+    renderGroupCard();
+  });
+  $('trendChart').addEventListener('click',event=>{
+    const dot=event.target.closest('.km-hit[data-trend-index]');
+    if(dot)showTrendPoint(Number(dot.dataset.trendIndex));
+  });
+  $('trendChart').addEventListener('keydown',event=>{
+    const dot=event.target.closest('.km-hit[data-trend-index]');
+    if(dot&&(event.key==='Enter'||event.key===' ')){
+      event.preventDefault();
+      showTrendPoint(Number(dot.dataset.trendIndex));
+    }else if(event.key==='Escape'&&$('trendPointTooltip')){
+      $('trendPointTooltip').hidden=true;
+    }
+  });
   $('groupCsv').addEventListener('click',()=>exportCsv('groups'));
   $('vehicleCsv').addEventListener('click',()=>exportCsv('vehicles'));
   $('pdfBtn').addEventListener('click',downloadPdf);
