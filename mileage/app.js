@@ -87,6 +87,8 @@ function updateProgress(done,total){
   $('progressText').textContent=done+' / '+total+' veículos processados';
 }
 function resetVisual(){
+  last=null;
+  $('groupCsv').disabled=true;$('vehicleCsv').disabled=true;$('pdfBtn').disabled=true;
   $('kpiBox').querySelectorAll('.value').forEach(e=>e.textContent='N/D');
   $('trendChart').innerHTML='<div class="trend-placeholder">Consulte a frota para visualizar a evolução.</div>';
   $('topVehicles').innerHTML='<div class="trend-placeholder">Consulte a frota para visualizar o ranking.</div>';
@@ -128,7 +130,7 @@ function renderLineTrend(trend){
   }).join('');
   const marks=trend.map((row,i)=>{
     const label=safe(row.label+': '+fmt(row.km,1)+' km');
-    return '<circle class="km-point" cx="'+n(pt[i][0])+'" cy="'+n(pt[i][1])+'" r="4" tabindex="0" aria-label="'+label+'"><title>'+label+'</title></circle>';
+    return '<circle class="km-point" cx="'+n(pt[i][0])+'" cy="'+n(pt[i][1])+'" r="4"><title>'+label+'</title></circle>';
   }).join('');
   return '<svg class="km-trend-svg" viewBox="0 0 '+width+' '+height+'" preserveAspectRatio="none" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">'+
     '<defs><linearGradient id="kmTrendShade" x1="0" y1="0" x2="0" y2="1">'+
@@ -192,7 +194,7 @@ function render(summary,period,selected){
   if(summary.withOdometer<summary.vehicles)notes.push(summary.vehicles-summary.withOdometer+' veículo(s) sem odômetro confiável na seleção: exibidos como N/D.');
   $('notes').innerHTML=notes.map(n=>'<li>'+safe(n)+'</li>').join('');
   $('scope').textContent=period.label+' · '+dt(period.from)+' até '+dt(period.to)+' · '+primaryLabel(summary);
-  $('groupCsv').disabled=false;$('vehicleCsv').disabled=false;$('pdfBtn').disabled=false;
+  $('groupCsv').disabled=visibleGroupRows().length===0;$('vehicleCsv').disabled=false;$('pdfBtn').disabled=false;
   message('Consulta completa. '+primaryLabel(summary)+'.','ok');
 }
 function bootDemo(){
