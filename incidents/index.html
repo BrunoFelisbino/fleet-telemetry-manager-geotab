@@ -11,12 +11,13 @@
 <script src="./storage.js?v=0.2.0"></script>
 <script defer src="./app.js?v=0.2.0"></script>
 </head>
-<body>
+<body class="ftm-ui">
 <div id="app">
 <header class="head">
   <div class="title"><div class="ico" aria-hidden="true"><img src="../icon.svg" alt=""></div><div><strong>Ocorrências e SLA</strong><div class="sub">Fleet Telemetry Manager · Tratativas auditáveis</div></div></div>
   <span class="pill" id="sessionStatus">Aguardando MyGeotab</span>
 </header>
+<div class="ftm-source-legend" aria-label="Origem dos indicadores"><strong>Origem:</strong><span data-dot>API MyGeotab</span><span>Dados sujeitos a permissões, sensores e regras da base</span><span>Sem valores simulados</span></div>
 <div class="bar">
   <label>Operação / grupo <select id="groupSelect" required><option value="">Selecione um grupo</option></select></label>
   <label>Período de análise <select id="periodSelect"><option value="7">7 dias</option><option value="30" selected>30 dias</option><option value="90">90 dias</option></select></label>
@@ -72,5 +73,6 @@
 </div>
 <footer class="project-credit">Desenvolvido por Bruno Henrique Felisbino Gonçalves · MIT · Dados somente da sessão autorizada do MyGeotab.</footer>
 </div>
+<link rel="stylesheet" href="../ui/fleet-refresh.css?v=1.0.0" media="screen" />
 </body>
 </html>

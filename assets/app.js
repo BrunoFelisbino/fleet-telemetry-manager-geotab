@@ -194,7 +194,7 @@
       }
       render(devices,stat,h,complete,issues);
       var incidentsOk=await updateCaseIndicators(devices);
-      message(!incidentsOk||issues||h.errors||h.truncated||devices.length>LIMIT_VEHICLES?'Consulta parcial. Verifique as observações.':'Consulta concluída. Indicadores sem fonte adequada aparecem como N/D.','ok');
+      var partial=!incidentsOk||issues||h.errors||h.truncated||devices.length>LIMIT_VEHICLES;message(partial?'Consulta parcial. Verifique as observações.':'Consulta concluída. Indicadores sem fonte adequada aparecem como N/D.',partial?'warn':'ok');
       el('state').textContent='MyGeotab conectado';
     }catch(e){console.error(e);message('Falha ao consultar API: '+String(e.message||e),'err');}
     finally{el('refreshBtn').disabled=false;}

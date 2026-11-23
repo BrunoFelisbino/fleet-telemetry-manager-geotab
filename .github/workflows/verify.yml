@@ -24,3 +24,4 @@ jobs:
           node scripts/verify-mileage.mjs
           node scripts/verify-mileage-pdf.mjs
           node scripts/verify-mileage-ux.mjs
+          node scripts/verify-five-addins.mjs

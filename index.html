@@ -11,7 +11,7 @@
 <script src="./incidents/storage.js?v=0.2.0"></script>
 <script defer src="./assets/app.js?v=0.2.0"></script>
 </head>
-<body>
+<body class="ftm-ui">
 <main id="app">
   <header class="head">
     <div class="title"><div class="ico" aria-hidden="true"><img src="./icon.svg" alt=""></div>
@@ -26,7 +26,8 @@
     <button type="button" id="exportCsv" disabled>CSV</button>
     <button type="button" id="exportPdf" disabled>PDF / Imprimir</button>
   </div>
-  <div class="info" id="scope">Nenhum dado consultado. Use uma sessão MyGeotab autorizada.</div>
+  <div class="ftm-source-legend" aria-label="Origem dos indicadores"><strong>Origem:</strong><span data-dot>API MyGeotab</span><span>Dados sujeitos a permissões, sensores e regras da base</span><span>Sem valores simulados</span></div>
+<div class="info" id="scope">Nenhum dado consultado. Use uma sessão MyGeotab autorizada.</div>
   <div class="alert" id="message" role="status">Aguardando conexão.</div>
   <img id="printLogo" alt="Logo escolhido para o relatório" hidden>
   <div class="section-head">Disponibilidade e cobertura</div>
@@ -58,5 +59,6 @@
   </section>
   <footer class="project-credit">Desenvolvido por Bruno Henrique Felisbino Gonçalves · MIT · Projeto independente e não oficial Geotab.</footer>
 </main>
+<link rel="stylesheet" href="./ui/fleet-refresh.css?v=1.0.0" media="screen" />
 </body>
 </html>

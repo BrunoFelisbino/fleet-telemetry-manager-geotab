@@ -1,8 +1,12 @@
 # Fleet Telemetry Manager (MyGeotab Add-In)
 
+## Versão 0.4.0: revisão dos cinco Add-Ins
+
+A versão 0.4.0 atualiza Dashboard, Fleet Health Score, Fleet Exception 360, Ocorrências e SLA e Fleet Trip 360. **O KM Rodado (`mileage/mileage030.html`) e seus recursos permanecem inalterados**, incluindo rota, gráficos, filtros, cálculos e PDF. Os manifestos `addin-config.json` e `addin-config.preview.json` usam a versão 0.4.0; os arquivos `addin-config.v030-*` permanecem como recuperação da versão 0.3.1. A mudança no repositório não equivale a publicar um novo manifesto na conta MyGeotab. Consulte `docs/REVISAO-CINCO-ADDINS.md`.
+
 ## Recuperação da versão funcional 0.3.0 e ajustes visuais
 
-O código de cálculo, consultas, filtros múltiplos e PDF é preservado da versão funcional **0.3.0**. O manifesto de instalação **0.3.1** (`addin-config.json`) aponta para seis páginas HTTPS independentes em `ftmbrunog2026.vercel.app`, com cabeçalhos CORS configurados. Instalação **somente com o JSON** no Add-In existente, sem importar HTML/JS na aba Files. A configuração `addin-config.preview.json` usa `ftmbrunog2026teste.vercel.app` para testes.
+O código de cálculo, consultas, filtros múltiplos e PDF é preservado da versão funcional **0.3.0**. O manifesto de instalação **0.4.0** (`addin-config.json`) aponta para seis páginas HTTPS independentes em `ftmbrunog2026.vercel.app`, com cabeçalhos CORS configurados. Instalação **somente com o JSON** no Add-In existente, sem importar HTML/JS na aba Files. A configuração `addin-config.preview.json` usa `ftmbrunog2026teste.vercel.app` para testes.
 
 Na tela **Quilometragem da Frota**, o gráfico de evolução usa uma linha SVG de alto contraste, com grade, datas, área discreta e **valores de KM ao clicar em um ponto** (Enter ou espaço pelo teclado). O card **KM por grupo operacional** tem um **segundo filtro por clique**: depois de selecionar três frotas no filtro superior e realizar a consulta, escolha um dos chips para mostrar somente aquela frota no card, na tabela, no contador de KM e no CSV de grupos, sem somar os dados das outras. Os outros grupos permanecem selecionados para alternar o foco instantaneamente, sem novas chamadas à Geotab. O botão «Todas as frotas» restaura a visão agregada. Se um veículo pertence a mais de uma das frotas, ele é contabilizado **uma única vez no grupo em foco**; a visão agregada mantém o bucket exclusivo «Múltiplos grupos selecionados» para não duplicar o total geral. O filtro secundário não altera os KPIs globais nem o PDF, que permanecem referentes ao filtro principal.
 
