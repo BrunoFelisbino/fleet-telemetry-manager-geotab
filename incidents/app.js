@@ -69,7 +69,15 @@ function selectCase(id){
   renderList();
 }
 async function reload(){
-  if(!api||!groupId())return;
+  if(!api)return;
+  if(!groupId()){
+    cases=[];loaded=false;selectedCase='';events=[];
+    recordMetrics();renderList();selectCase('');
+    $('downloadBtn').disabled=true;
+    $('createBtn').disabled=true;
+    msg('Selecione uma operação para consultar ocorrências.');
+    return;
+  }
   if(loading)return;loading=true;$('reloadBtn').disabled=true;loaded=false;
   try{
     msg('Consultando tratativas no grupo selecionado...');
