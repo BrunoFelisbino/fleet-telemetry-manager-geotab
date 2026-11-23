@@ -1,0 +1,126 @@
+/* Fleet Telemetry Manager vNext: escopo apenas às cinco páginas revisadas.
+   Nunca referenciar esta folha em /mileage/mileage030.html. */
+body.ftm-ui {
+  --bg: #f5f6f8; --card: #fff; --card2: #f8f9fb; --txt: #1b2029;
+  --mut: #616a78; --mut2: #818a98; --bd: #e5e8ee;
+  --blue: #394150; --blue2: #252c36; --green: #18846a;
+  --yellow: #ad7b20; --orange: #bd6435; --red: #c7444b;
+  --shadow: 0 3px 16px rgba(21,26,34,.045);
+  --mono: ui-monospace, SFMono-Regular, Consolas, monospace;
+  background: var(--bg) !important; color: var(--txt);
+  font-family: Inter, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+  color-scheme: light;
+}
+body.ftm-ui, body.ftm-ui #app {
+  background-image: none !important;
+  background-color: var(--bg) !important;
+  background-size: auto !important;
+}
+body.ftm-ui #app {max-width: 1560px; margin: 0 auto; padding: 18px 24px 28px}
+.ftm-ui .head {
+  display:flex; align-items:center; justify-content:space-between; gap:12px;
+  padding: 20px 22px; border: 1px solid var(--bd); border-radius: 20px;
+  background: linear-gradient(140deg, #fff 20%, #f6f7f9 100%);
+  box-shadow:none; margin-bottom: 14px;
+}
+.ftm-ui .head .title {font-size: 19px; font-weight: 750; line-height: 1.32; letter-spacing:-.025em}
+.ftm-ui .head .sub {font: 500 11px/1.5 Inter,system-ui,sans-serif; letter-spacing:0; margin-top:4px; color:var(--mut)}
+.ftm-ui .head .ico {width:43px; height:43px; border-radius:13px; flex-shrink:0}
+.ftm-ui .pill {font: 600 11px/1.3 Inter,system-ui,sans-serif; border-radius:999px; padding:8px 12px; color:var(--mut); background:#fff; border-color:var(--bd)}
+.ftm-ui .bar {
+  display:flex; align-items:flex-end; flex-wrap:wrap; gap:10px; padding:16px;
+  border-radius:18px; background:var(--card); border:1px solid var(--bd);
+  box-shadow:none; margin-bottom:12px;
+}
+.ftm-ui label,.ftm-ui .datefield {font-weight:600; color:var(--mut)}
+.ftm-ui input,.ftm-ui select,.ftm-ui button,.ftm-ui textarea {
+  font-family:Inter,-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;
+  font-size:12px; letter-spacing:0;
+}
+.ftm-ui input,.ftm-ui select,.ftm-ui textarea {
+  height:auto; min-height:37px; background:#fff; border:1px solid #dfe3e9;
+  color:var(--txt); border-radius:10px; padding:8px 11px;
+}
+.ftm-ui input:focus-visible,.ftm-ui select:focus-visible,.ftm-ui textarea:focus-visible,
+.ftm-ui button:focus-visible,.ftm-ui [tabindex]:focus-visible {
+  outline:2px solid #5f758c; outline-offset:2px;
+}
+.ftm-ui button {
+  min-height:37px; height:auto; padding:8px 13px; border-radius:10px;
+  border:1px solid var(--bd); color:var(--txt); background:#fff; font-weight:650;
+  transition: background .16s ease, box-shadow .16s ease, transform .16s ease;
+}
+.ftm-ui button:hover:not(:disabled) {background:#f1f3f5; transform:translateY(-1px)}
+.ftm-ui button:disabled {opacity:.55; transform:none; cursor:not-allowed}
+.ftm-ui button.primary,.ftm-ui .primary {
+  background:#222a34; border-color:#222a34; color:#fff; box-shadow:none;
+}
+.ftm-ui button.primary:hover:not(:disabled) {background:#3c4755}
+.ftm-ui .info {padding:12px 17px; border-radius:13px; background:#fafbfc; box-shadow:none; color:var(--mut)}
+.ftm-ui .panel,.ftm-ui .kpi {
+  background:var(--card); border:1px solid var(--bd);
+  border-radius:18px; box-shadow:var(--shadow);
+}
+.ftm-ui .panel {padding:19px 20px; min-width:0}
+.ftm-ui .kpi {padding:18px; min-height:123px}
+.ftm-ui .kpi span {font:650 11px/1.5 Inter,system-ui,sans-serif; letter-spacing:0; text-transform:none; color:var(--mut)}
+.ftm-ui .kpi b,.ftm-ui .kpi .value {font-family:var(--mono); font-size:clamp(20px,2vw,29px); font-weight:750; letter-spacing:-.04em; color:var(--txt)}
+.ftm-ui .kpi small {color:var(--mut); font-size:11px; line-height:1.45}
+.ftm-ui .section-head,.ftm-ui .pt {font:750 12px/1.5 Inter,system-ui,sans-serif; color:var(--txt); letter-spacing:0; text-transform:none}
+.ftm-ui .pt:before,.ftm-ui .section-head:before {background:#3c4755; height:12px}
+.ftm-ui .grid {gap:12px; grid-template-columns:repeat(auto-fit,minmax(188px,1fr))}
+.ftm-ui #app .metric-grid {gap:12px}
+.ftm-ui th {background:#f7f8fa; font:700 10px/1.5 Inter,system-ui,sans-serif; color:#626c78; padding:11px 12px; border-bottom:1px solid var(--bd)}
+.ftm-ui td {font-size:12px; color:var(--txt); border-bottom:1px solid #edf0f2; padding:12px}
+.ftm-ui tbody tr:hover td {background:#f7f9fb}
+.ftm-ui .map {border-radius:14px; border-color:var(--bd)}
+.ftm-ui .badge,.ftm-ui .filterpill,.ftm-ui .chip {font-family:Inter,system-ui,sans-serif; font-weight:650; letter-spacing:0}
+.ftm-ui .filterpill {background:#f1f3f6; border-color:#dde1e7; color:var(--txt)}
+.ftm-ui .problem.active td,.ftm-ui .case-row.active td {background:#edf2f7 !important}
+.ftm-ui .reason div,.ftm-ui #app #caseDetail {border-radius:12px; background:#f8f9fb}
+.ftm-ui .trend-panel {box-shadow:none}
+.ftm-ui .alert {border-radius:12px; padding:12px 16px; line-height:1.55; background:#f4f6f9; border-color:#dde3ea; color:#354252}
+.ftm-ui .alert.ok {background:#eff9f5; color:#166b54; border-color:#cee7db}
+.ftm-ui .alert.err {background:#fff2f2; color:#a12c35; border-color:#f0ced1}
+.ftm-ui .ftm-source-legend {
+  display:flex; gap:8px 18px; flex-wrap:wrap; align-items:center;
+  margin: 0 0 16px; padding:10px 14px; color:var(--mut);
+  font-size:11px; line-height:1.6; border:1px solid var(--bd);
+  border-radius:12px; background:rgba(255,255,255,.72);
+}
+.ftm-ui .ftm-source-legend strong {color:var(--txt); font-weight:700}
+.ftm-ui .ftm-source-legend [data-dot]:before {
+  content:""; display:inline-block; width:7px; height:7px;
+  border-radius:50%; background:#697787; margin-right:8px;
+}
+.ftm-ui .project-credit {border-top:1px solid var(--bd); padding-top:18px; margin-top:26px}
+.ftm-ui dialog {border:1px solid var(--bd); border-radius:18px; background:#fff; color:var(--txt); box-shadow:0 22px 75px rgba(10,18,31,.2)}
+.ftm-ui dialog::backdrop {background:rgba(9,14,22,.45);backdrop-filter:blur(4px)}
+@media(max-width:1024px) {
+  .ftm-ui #app .metric-grid{grid-template-columns:repeat(2,minmax(0,1fr))}
+  .ftm-ui .cols,.ftm-ui .cols3{grid-template-columns:1fr !important}
+}
+@media(max-width:680px) {
+  body.ftm-ui #app{padding:10px 11px 22px}
+  .ftm-ui .head{padding:16px; align-items:flex-start}
+  .ftm-ui .head .title{font-size:17px}
+  .ftm-ui .bar {padding:12px; flex-direction:column; align-items:stretch}
+  .ftm-ui .bar label,.ftm-ui .bar input,.ftm-ui .bar select,.ftm-ui .bar button {width:100%;min-width:0!important}
+  .ftm-ui .grid,.ftm-ui #app .metric-grid{grid-template-columns:repeat(2,minmax(0,1fr))}
+  .ftm-ui .kpi{padding:14px;min-height:102px}
+  .ftm-ui .kpi b,.ftm-ui .kpi .value{font-size:21px}
+  .ftm-ui .panel {padding:14px}
+  .ftm-ui .ftm-source-legend{gap:4px 10px}
+  .ftm-ui .head .pill {max-width:45%; overflow-wrap:anywhere}
+}
+@media(max-width:370px) {
+  .ftm-ui #app .metric-grid,.ftm-ui .grid{grid-template-columns:1fr}
+}
+@media (prefers-reduced-motion:reduce) {
+  .ftm-ui button{transition:none}
+}
+@media print {
+  body.ftm-ui,body.ftm-ui #app{background:#fff!important}
+  .ftm-ui .bar,.ftm-ui .ftm-source-legend {display:none!important}
+  .ftm-ui .panel,.ftm-ui .kpi,.ftm-ui .head{box-shadow:none!important}
+}
