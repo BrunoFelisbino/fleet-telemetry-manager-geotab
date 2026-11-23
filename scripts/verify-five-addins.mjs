@@ -18,10 +18,10 @@ for(const page of pages){
   assert.equal(source.split(theme).length-1,1,'Tema duplicado ou ausente: '+page);
   assert.ok(source.indexOf(theme)>source.lastIndexOf('</script>'),'Tema foi inserido dentro de um script: '+page);
   assert.ok(source.includes('class="ftm-ui"'),'Escopo do tema ausente: '+page);
-  for(const script of source.matchAll(/<script(?:\\s[^>]*)?>([\\s\\S]*?)<\\/script>/g)){
+  for(const script of source.matchAll(/<script(?:\s[^>]*)?>([\s\S]*?)<\/script>/g)){
     if(script[1].trim())new Script(script[1],{filename:page});
   }
-  for(const tag of source.matchAll(/href="(\\.{1,2}\\/ui\\/[^"]+)"/g)){
+  for(const tag of source.matchAll(/href="(\.{1,2}\/ui\/[^"]+)"/g)){
     assert.ok(existsSync(resolve(dirname(page),tag[1].split('?')[0])),'CSS ausente em '+page);
   }
 }
