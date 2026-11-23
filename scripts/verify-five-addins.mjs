@@ -14,10 +14,11 @@ const pages=[
 assert.ok(existsSync('ui/fleet-refresh.css'),'Tema compartilhado ausente');
 for(const page of pages){
   const source=read(page);
-  const theme='fleet-refresh.css?v=1.0.0';
+  const theme='https://ftmbrunog2026.vercel.app/ui/fleet-refresh.css?v=1.0.1';
   assert.equal(source.split(theme).length-1,1,'Tema duplicado ou ausente: '+page);
   assert.ok(source.indexOf(theme)>source.lastIndexOf('</script>'),'Tema foi inserido dentro de um script: '+page);
   assert.ok(source.includes('class="ftm-ui"'),'Escopo do tema ausente: '+page);
+  assert.ok(!source.includes('href="../ui/fleet-refresh.css')&&!source.includes('href="./ui/fleet-refresh.css'),'CSS relativo não funciona dentro do MyGeotab: '+page);
   for(const script of source.matchAll(/<script(?:\s[^>]*)?>([\s\S]*?)<\/script>/g)){
     if(script[1].trim())new Script(script[1],{filename:page});
   }
@@ -26,10 +27,20 @@ for(const page of pages){
   }
 }
 assert.ok(!read('mileage/mileage030.html').includes('fleet-refresh.css'),'KM Rodado não pode carregar novo tema');
+for(const page of ['exceptions/exceptions030.html','exceptions/index.html']){
+  const body=read(page);
+  assert.ok(body.includes('function exceptionViewReady()'),'Guarda DOM ausente: '+page);
+  assert.ok(body.includes('if(token!==loadToken||!exceptionViewReady())return'),'Resultado assíncrono sem proteção: '+page);
+}
+for(const dir of ['translations','incidents/translations','exceptions/translations','health/translations','trips/translations']){
+  assert.ok(existsSync(dir+'/pt-BR.json'),'Tradução pt-BR ausente: '+dir);
+  const dictionary=JSON.parse(read(dir+'/pt-BR.json'));
+  assert.ok(dictionary && typeof dictionary==='object'&&!Array.isArray(dictionary),'Tradução inválida: '+dir);
+}
 assert.ok(!read('mileage/index.html').includes('fleet-refresh.css'),'KM Rodado não pode carregar novo tema');
 assert.ok(!read('addin-config.json').includes('fleet-refresh.css'),'Manifesto original deve permanecer sem alterações');
-assert.equal(JSON.parse(read('addin-config.json')).version,'0.4.0','A versão de produção deve ser 0.4.0');
-assert.equal(JSON.parse(read('addin-config.preview.json')).version,'0.4.0','A versão de prévia deve ser 0.4.0');
+assert.equal(JSON.parse(read('addin-config.json')).version,'0.4.1','A versão de produção deve ser 0.4.0');
+assert.equal(JSON.parse(read('addin-config.preview.json')).version,'0.4.1','A versão de prévia deve ser 0.4.0');
 assert.equal(JSON.parse(read('addin-config.v030-hosted.json')).version,'0.3.1','A recuperação v0.3.1 deve permanecer disponível');
 const trip=read('trips/trips030.html');
 assert.ok(trip.includes('Promise.allSettled'),'Trip deve distinguir falhas de fontes');

@@ -189,6 +189,6 @@ if(!window.geotab)window.geotab={addin:{}};if(!window.geotab.addin)window.geotab
 window.geotab.addin.fleetTelemetryManager=function(){return{initialize:function(api,state,cb){try{init(api)}catch(e){console.error(e);const root=$('app');if(root)root.innerHTML='<div style="padding:20px;color:#991b1b">Erro ao iniciar Fleet Health Score: '+(e.message||e)+'</div>'}if(cb)cb()},focus:function(){if(map)setTimeout(()=>map.invalidateSize(),200)},blur:function(){}}};
 })();
 </script>
-<link rel="stylesheet" href="../ui/fleet-refresh.css?v=1.0.0" media="screen" />
+<link rel="stylesheet" href="https://ftmbrunog2026.vercel.app/ui/fleet-refresh.css?v=1.0.1" media="screen" />
 </body>
 </html>

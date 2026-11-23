@@ -1,5 +1,9 @@
 # Fleet Telemetry Manager (MyGeotab Add-In)
 
+## Hotfix 0.4.1: navegação MyGeotab
+
+Corrigida a URL da folha de estilos compartilhada para endereço HTTPS absoluto na Vercel, evitando que o MyGeotab procure `/ui/fleet-refresh.css` em `my.geotab.com`. O Fleet Exception 360 passa a ignorar respostas assíncronas quando seus filtros já foram removidos da tela. Criados dicionários `pt-BR.json` para as cinco páginas revisadas, evitando erros 404 de tradução. O **mileage030 segue sem alterações de código ou rota**. Outros erros de Add-Ins de terceiros não são tratados por este projeto.
+
 ## Versão 0.4.0: revisão dos cinco Add-Ins
 
 A versão 0.4.0 atualiza Dashboard, Fleet Health Score, Fleet Exception 360, Ocorrências e SLA e Fleet Trip 360. **O KM Rodado (`mileage/mileage030.html`) e seus recursos permanecem inalterados**, incluindo rota, gráficos, filtros, cálculos e PDF. Os manifestos `addin-config.json` e `addin-config.preview.json` usam a versão 0.4.0; os arquivos `addin-config.v030-*` permanecem como recuperação da versão 0.3.1. A mudança no repositório não equivale a publicar um novo manifesto na conta MyGeotab. Consulte `docs/REVISAO-CINCO-ADDINS.md`.
