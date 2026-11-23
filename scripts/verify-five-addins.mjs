@@ -28,6 +28,9 @@ for(const page of pages){
 assert.ok(!read('mileage/mileage030.html').includes('fleet-refresh.css'),'KM Rodado não pode carregar novo tema');
 assert.ok(!read('mileage/index.html').includes('fleet-refresh.css'),'KM Rodado não pode carregar novo tema');
 assert.ok(!read('addin-config.json').includes('fleet-refresh.css'),'Manifesto original deve permanecer sem alterações');
+assert.equal(JSON.parse(read('addin-config.json')).version,'0.4.0','A versão de produção deve ser 0.4.0');
+assert.equal(JSON.parse(read('addin-config.preview.json')).version,'0.4.0','A versão de prévia deve ser 0.4.0');
+assert.equal(JSON.parse(read('addin-config.v030-hosted.json')).version,'0.3.1','A recuperação v0.3.1 deve permanecer disponível');
 const trip=read('trips/trips030.html');
 assert.ok(trip.includes('Promise.allSettled'),'Trip deve distinguir falhas de fontes');
 assert.ok(trip.includes('Falha na fonte obrigatória Trip'),'Trip não pode mascarar falhas');
