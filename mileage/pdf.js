@@ -150,7 +150,19 @@ async function save(report){
     if(printOptions===null)return 0;
   }
   const logo=printOptions&&printOptions.includeLogo?printOptions.logo:'';
-  const html='<!DOCTYPE html><html><head><meta charset="UTF-8"><title>Quilometragem</title><link rel="stylesheet" href="../reports/premium.css?v=0.1.3"><style>body{background:#fff;padding:24px}.logo{max-height:48px;margin-bottom:12px}</style></head><body>'+(logo?'<img class="logo" src="'+logo+'" alt="Logo"/>':'')+'<h1>Quilometragem da Frota</h1><p>Relatorio gerado a partir da consulta completa.</p></body></html>';
+  const s=report.summary||{},period=report.period||{},groups=s.groupsRows||[],vehicles=s.vehiclesRows||[],trend=report.trend||[];
+  const dateDetail=(period.label||'')+' · '+new Date(period.from||Date.now()).toLocaleDateString('pt-BR')+' a '+new Date(period.to||Date.now()).toLocaleDateString('pt-BR');
+  let html='<!DOCTYPE html><html><head><meta charset="UTF-8"><title>Quilometragem</title><link rel="stylesheet" href="../reports/premium.css?v=0.1.3"><style>body{background:#fff;padding:24px}.logo{max-height:48px;margin-bottom:12px}table{width:100%;border-collapse:collapse;font-size:11px}th,td{border:1px solid #ddd;padding:6px}th{background:#f0f9ff}</style></head><body>';
+  if(logo)html+='<img class="logo" src="'+logo+'" alt="Logo"/>';
+  html+='<h1>Quilometragem da Frota</h1><p>'+dateDetail+'</p>';
+  html+='<div style="display:flex;gap:12px;margin:12px 0"><div><b>KM TOTAL</b><br>'+Number(s.km||0).toFixed(1)+' km</div><div><b>VEICULOS</b><br>'+(s.vehicles||0)+'</div><div><b>MEDIA/VEICULO</b><br>'+Number(s.average||0).toFixed(1)+' km</div><div><b>SEM VIAGEM</b><br>'+(s.stopped||0)+'</div></div>';
+  html+='<h2>Top grupos</h2><table><thead><tr><th>Grupo</th><th>Veiculos</th><th>Viagens</th><th>KM</th></tr></thead><tbody>';
+  groups.slice(0,10).forEach(g=>{html+='<tr><td>'+g.name+'</td><td>'+g.vehicles+'</td><td>'+g.trips+'</td><td>'+Number(g.km||0).toFixed(1)+'</td></tr>';});
+  html+='</tbody></table>';
+  html+='<h2>Top veiculos</h2><table><thead><tr><th>Veiculo</th><th>Viagens</th><th>KM</th><th>Odo ini</th><th>Odo fim</th></tr></thead><tbody>';
+  vehicles.slice(0,15).forEach(v=>{html+='<tr><td>'+v.name+(v.plate?' / '+v.plate:'')+'</td><td>'+v.tripCount+'</td><td>'+Number(v.km||0).toFixed(1)+'</td><td>'+(v.odoStart==null?'N/D':Number(v.odoStart).toFixed(1))+'</td><td>'+(v.odoEnd==null?'N/D':Number(v.odoEnd).toFixed(1))+'</td></tr>';});
+  html+='</tbody></table>';
+  html+='</body></html>';
   const w=window.open('','_blank');if(!w){alert('Permita pop-ups para abrir o PDF.');return 0;}w.document.open();w.document.write(html);w.document.close();
   setTimeout(()=>w.print(),500);
   return 1;
