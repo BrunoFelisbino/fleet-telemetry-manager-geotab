@@ -143,14 +143,17 @@ function make(report){
   }
   return C.finalize();
 }
-function save(report){
-  const bytes=make(report),url=URL.createObjectURL(new Blob([bytes],{type:'application/pdf'})),a=document.createElement('a');
-  const date=new Date();
-  const pad=n=>String(n).padStart(2,'0');
-  a.href=url;a.download='quilometragem-frota-'+date.getFullYear()+'-'+pad(date.getMonth()+1)+'-'+pad(date.getDate())+'.pdf';
-  document.body.appendChild(a);a.click();a.remove();
-  setTimeout(()=>URL.revokeObjectURL(url),30000);
-  return bytes.length;
+async function save(report){
+  let printOptions={includeLogo:false,logo:''};
+  if(window.PrintOptions){
+    try{printOptions=await window.PrintOptions.ask({title:'Imprimir Quilometragem',subtitle:'Inclua um logo no cabecalho do PDF.'});}catch(e){printOptions={includeLogo:false,logo:''};}
+    if(printOptions===null)return 0;
+  }
+  const logo=printOptions&&printOptions.includeLogo?printOptions.logo:'';
+  const html='<!DOCTYPE html><html><head><meta charset="UTF-8"><title>Quilometragem</title><link rel="stylesheet" href="../reports/premium.css?v=0.1.3"><style>body{background:#fff;padding:24px}.logo{max-height:48px;margin-bottom:12px}</style></head><body>'+(logo?'<img class="logo" src="'+logo+'" alt="Logo"/>':'')+'<h1>Quilometragem da Frota</h1><p>Relatorio gerado a partir da consulta completa.</p></body></html>';
+  const w=window.open('','_blank');if(!w){alert('Permita pop-ups para abrir o PDF.');return 0;}w.document.open();w.document.write(html);w.document.close();
+  setTimeout(()=>w.print(),500);
+  return 1;
 }
 root.FleetMileagePdf={make,save};
 })(typeof globalThis!=='undefined'?globalThis:this);
